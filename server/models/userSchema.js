@@ -4,28 +4,46 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-
   },
   email: {
     type: String,
     required: true,
-    unique: true,
-    trim: true,
-    lowercase: true,
-    match: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/, // Basic email format validation
   },
+  // phone: {
+  //   type: Number,
+  //   required: true,
+  // },
   password: {
     type: String,
-    required: true
+    required: true,
   },
-  isAdmin: {
+  // role: {
+  //   type: Number,
+  //   default: 2000,
+  // },
+  // pic: {
+  //   type: Object,
+  // },
+  isVerify: {
     type: Boolean,
     default: false,
   },
   isAccess: {
     type: Boolean,
-    default: false,
+    default: true,
   },
+  JWT: {
+    type: String,
+    default: "",
+  },
+  OTP: {
+    type: String,
+    default: "",
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now()
+  }
 });
 
 const User = mongoose.model('User', userSchema);
