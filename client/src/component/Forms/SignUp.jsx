@@ -4,8 +4,10 @@ import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
 import { useFormik } from "formik";
 import { signupValidation } from "../signupValidation";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
+  const navigate = useNavigate();
   const [error, setError] = useState(null);
   const { values, handleChange, handleSubmit, errors } = useFormik({
     initialValues: {
@@ -42,6 +44,7 @@ function Signup() {
         } else {
           console.log("Signup successful:", response.data);
           // Reset form values or redirect to another page upon successful signup
+          navigate("/signin");
         }
       } catch (error) {
         console.error("Error during signup:", error);
