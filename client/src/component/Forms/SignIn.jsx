@@ -32,7 +32,7 @@ function Signin() {
         } else {
           console.log("Signin successful:", response.data);
           // Redirect to the dashboard or home page upon successful signin
-          navigate("/dashboard");
+          navigate("/");
         }
       } catch (error) {
         console.error("Error during signin:", error);

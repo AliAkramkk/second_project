@@ -9,4 +9,7 @@ export const signupValidation = Yup.object({
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password")], "Password not matched")
     .required("Please enter the Confirmpassword"),
+phone: Yup.string()
+.matches(/^\+(?:[0-9]●?){6,14}[0-9]$/, 'Invalid phone number format') 
+.required('Please enter a phone number'),
 });

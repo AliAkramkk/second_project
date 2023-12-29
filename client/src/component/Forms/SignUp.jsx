@@ -15,6 +15,7 @@ function Signup() {
       email: "",
       password: "",
       confirmPassword: "",
+      phone: "",
     },
     validationSchema: signupValidation,
     onSubmit: async (values) => {
@@ -155,6 +156,26 @@ function Signup() {
                 <p className="text-red-500 text-xs mt-1">
                   {errors.confirmPassword}
                 </p>
+              )}
+            </div>
+            <br />
+            <div>
+              <label htmlFor="phone" className="sr-only">
+                Phone
+              </label>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                autoComplete="tel"
+                value={values.phone}
+                onChange={handleChange}
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                placeholder="Phone"
+              />
+              {errors.phone && (
+                <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
               )}
             </div>
           </div>
