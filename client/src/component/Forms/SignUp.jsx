@@ -1,73 +1,76 @@
 import React, { useState } from "react";
-import axios from "axios";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
 import { useFormik } from "formik";
 import { signupValidation } from "../signupValidation";
 import { useNavigate } from "react-router-dom";
-
+import { axiosPrivate } from "../../api/axios";
+// Signup component
 function Signup() {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
-  const { values, handleChange, handleSubmit, errors } = useFormik({
-    initialValues: {
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      phone: "",
-    },
-    validationSchema: signupValidation,
-    onSubmit: async (values) => {
-      try {
-        const response = await axios.post(
-          "http://localhost:3000/signup",
-          values
-        );
 
-        if (
-          response.data.errors &&
-          response.data.error.includes("already exists")
-        ) {
-          // Use SweetAlert for error notification
+  // Formik hook for form handling
+  const { values, handleChange, handleSubmit, errors, setFieldValue } =
+    useFormik({
+      initialValues: {
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        phone: "",
+        isChef: false,
+      },
+      validationSchema: signupValidation,
+      onSubmit: async (values) => {
+        try {
+          // Axios request with proper headers and data
+          const response = await axiosPrivate.post("/signup", values);
+
+          // Handle different scenarios based on the response
+          if (
+            response.data.errors &&
+            response.data.error.includes("already exists")
+          ) {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: response.data.error,
+            });
+          } else if (response.data.errors) {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: response.data.error,
+            });
+          } else {
+            console.log("Signup successful:", response.data);
+            navigate("/otp"); // Redirect to the signin page upon successful signup
+          }
+        } catch (error) {
+          console.error("Error during signup:", error);
+          console.log("Error response from server:", error.response);
+
+          // Display the error message from the server, if available
+          const errorMessage =
+            error.response?.data?.error || "An error occurred during signup.";
+
+          console.log("Received error message:", errorMessage);
+
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: response.data.error,
+            text: errorMessage,
           });
-        } else if (response.data.errors) {
-          // Use SweetAlert for other errors
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: response.data.error,
-          });
-        } else {
-          console.log("Signup successful:", response.data);
-          // Reset form values or redirect to another page upon successful signup
-          navigate("/signin");
+
+          setError(errorMessage);
         }
-      } catch (error) {
-        console.error("Error during signup:", error);
-        console.log("Error response from server:", error.response);
+      },
+    });
 
-        // Display the error message from the server, if available
-        const errorMessage =
-          error.response?.data?.error || "An error occurred during signup.";
-
-        console.log("Received error message:", errorMessage);
-
-        // Use SweetAlert for error notification
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: errorMessage,
-        });
-
-        setError(errorMessage);
-      }
-    },
-  });
+  const handleCheckboxChange = () => {
+    setFieldValue("isChef", !values.isChef);
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -178,6 +181,26 @@ function Signup() {
                 <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
               )}
             </div>
+            <br />
+            <label className="flex items-center gap-2 relative">
+              <input
+                type="checkbox"
+                name="isChef"
+                checked={values.isChef}
+                onChange={handleCheckboxChange}
+                className="hidden"
+              />
+              <div className="w-12 h-6 bg-gray-300 rounded-full p-1 flex items-center">
+                <div
+                  className={`bg-${
+                    values.isChef ? "blue" : "gray"
+                  }-500 w-5 h-5 rounded-full shadow-md transform duration-300 ease-in-out ${
+                    values.isChef ? "translate-x-6" : "translate-x-1"
+                  }`}
+                ></div>
+              </div>
+              <p className="ml-2">Are you a chef ?</p>
+            </label>
           </div>
 
           <div>
