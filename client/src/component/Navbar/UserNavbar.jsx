@@ -1,7 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { auth, logOut } from "../../context/authReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Spin as Hamburger } from "hamburger-react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 function UserNavbar() {
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const user = useSelector(auth);
+  const usenavigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const HandlelogOut = (e) => {
+    e.preventDefault();
+    dispatch(logOut());
+  };
+
+  const handleLogin = () => {
+    usenavigate("/signin");
+  };
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
     <nav className="bg-gray-800 p-4">
       <div className="container mx-auto flex justify-between items-center">
@@ -14,38 +38,46 @@ function UserNavbar() {
           <Link to="/" className="text-white hover:text-gray-300 transition">
             Home
           </Link>
-          <Link
-            to="/about"
-            className="text-white hover:text-gray-300 transition"
-          >
-            About
-          </Link>
-          <Link
-            to="/blog"
-            className="text-white hover:text-gray-300 transition"
-          >
-            Blog
-          </Link>
-          {/* {user ? (
-            // If user is logged in, show profile and user's name
-            <>
-              <Link
-                to="/profile"
-                className="text-white hover:text-gray-300 transition"
-              >
-                Profile
-              </Link>
-              <span className="text-white">{user.name}</span>
-            </>
+          {/* Add more links as needed */}
+        </div>
+        <div className="md:hidden" onClick={toggleMobileMenu}>
+          <Hamburger />
+        </div>
+        {isMobileMenuOpen && (
+          <div className="mobile-menu md:hidden">
+            {/* Add mobile menu links */}
+          </div>
+        )}
+        <div className="flex items-center space-x-4">
+          {!user?.user ? (
+            <div className="hidden md:flex items-center space-x-4">
+              <a href="/signin" className="logbutton" onClick={handleLogin}>
+                LOGIN
+              </a>
+            </div>
           ) : (
-            // If user is not logged in, show login link
-            <Link
-              to="/login"
-              className="text-white hover:text-gray-300 transition"
-            >
-              Login
-            </Link>
-          )} */}
+            <>
+              <div
+                className="flex items-center space-x-2 cursor-pointer"
+                onClick={() => {
+                  usenavigate("/user/profile");
+                }}
+              >
+                {user?.pro ? (
+                  user.pro
+                ) : (
+                  <FontAwesomeIcon className="me-1" icon={faUser} size="lg" />
+                )}
+                <span className="text-white">{user?.user}</span>
+              </div>
+              <button
+                className="border rounded px-2 py-1 text-white"
+                onClick={HandlelogOut}
+              >
+                Logout
+              </button>
+            </>
+          )}
         </div>
       </div>
     </nav>

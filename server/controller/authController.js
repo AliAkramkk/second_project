@@ -18,13 +18,13 @@ const signUp_post = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ errors: true, error: 'Email already exists.' });
     } else {
-      const { otp, secret } = await public_controlls.genarateOTP();
+      const { otp, secret } = await public_controller.genarateOTP();
 
       // Hash the password using bcrypt
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-      const newUser = await User.create({
+      const newUser = new User({
         username,
         email,
         password: hashedPassword,
@@ -34,7 +34,7 @@ const signUp_post = async (req, res) => {
       });
       await newUser.save();
       res.cookie("id", newUser._id, { maxAge: 500000, httpOnly: true });
-      public_controlls.sendemailotp(email, otp);
+      public_controller.sendemailotp(email, otp);
       res.status(201).json({ message: "enter your otp" });
     }
     // Additional security measures (optional)
@@ -54,8 +54,10 @@ const signIn_post = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (user) {
-      console.log(1);
-      if (password === user.password) {
+      console.log("user", user);
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      console.log(isPasswordValid);
+      if (isPasswordValid) {
         console.log(2);
         if (user.isVerify == true) {
           console.log(3);
@@ -88,7 +90,7 @@ const signIn_post = async (req, res) => {
               id: user._id
             });
           } else {
-
+            console.log(5)
             res.status(400).json({ message: "You are Blocked 🙄" });
           }
         } else {
@@ -104,19 +106,24 @@ const signIn_post = async (req, res) => {
     console.log(error.message);
   }
 };
+
 const userVerifyOTP = async (req, res) => {
   try {
     const { OTP } = req.body;
+    console.log(OTP);
     const id = req.cookies.id;
+    console.log(req.cookies);
+    console.log("ID:", id);
+
     // console.log(id)
-    let user = await user_schema.findOne({ _id: id });
+    let user = await User.findOne({ _id: id });
     const secret = user.OTP;
-    const isValid = public_controlls.verifyOTP(secret, OTP);
+    const isValid = public_controller.verifyOTP(secret, OTP);
     if (isValid == true) {
       // console.log(isValid);
       const role = user.role;
 
-      await user_schema.updateOne({ _id: id }, { $set: { isVerify: true } });
+      await User.updateOne({ _id: id }, { $set: { isVerify: true } });
 
       res.clearCookie("id");
 

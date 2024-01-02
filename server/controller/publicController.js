@@ -47,6 +47,7 @@ const deleteFromCloud = async (publicId) => {
 const genarateOTP = async () => {
   try {
     const otps = Math.floor(1000 + Math.random() * 9000);
+    console.log(otps);
     const otp = otps.toString();
     const secret = crypto.createHash("sha256").update(otp).digest("hex");
 
@@ -69,14 +70,16 @@ const verifyOTP = (secret, otp) => {
 const sendemailotp = async (email, otp) => {
   try {
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      requireTLS: true,
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
       auth: {
-        user: "akramkorakkottil@gmail.com",
-        pass: "mnfpzaetsetikufj",
+        user: 'akramkorakkottil@gmail.com',
+        pass: 'zuvlydretngxazpl',
       },
+      tls: {
+        rejectUnauthorized: false
+      }
     });
 
     const mailoptions = {

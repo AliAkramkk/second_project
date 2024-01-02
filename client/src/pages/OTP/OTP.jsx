@@ -35,11 +35,16 @@ const OTP = () => {
 
   const handleSubmit = (e) => {
     let OTP = otp.join("");
-    console.log(OTP);
+
+    console.log({
+      OTP,
+      user: { id: user.id, token: user.token, role: user.role },
+    });
+
     e.preventDefault();
     axios
       .post(
-        "/user/verifyotp",
+        "/verifyotp",
         { OTP, user },
         {
           headers: { "Content-Type": "application/json" },
@@ -50,10 +55,11 @@ const OTP = () => {
         console.log(response.data.message);
         console.log(response.status);
         if (response.data.message == 2000) {
-          usenavigate("/login");
+          usenavigate("/signin");
         } else if (response.data.message == 3000) {
           console.log("in if");
-          usenavigate("/chef/login", { replace: true });
+          usenavigate("/signin");
+          // usenavigate("/chef/login", { replace: true });
         }
       })
       .catch((error) => {
@@ -69,6 +75,7 @@ const OTP = () => {
 
   return (
     <div className="otp-container">
+      <p>An OTP is send to your mail</p>
       <h1>Enter OTP</h1>
       <div className="otp-input">
         {otp.map((digit, index) => (

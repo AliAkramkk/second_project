@@ -2,8 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const cors = require('cors');
+const admin_route = require('./routes/adminRoute')
 const authRouter = require('./routes/authRoute');
-// const jwtMiddleware = require('./middleware/jwtmiddleware'); // Correct the import
+const cookieParser = require('cookie-parser');
 
 const app = express();
 app.use(express.json());
@@ -23,9 +24,10 @@ mongoose.connect(DB_URL)
   });
 
 app.use(cors({ credentials: true, origin: 'http://localhost:5173' }));
-
+app.use(cookieParser())
 // Handle preflight requests
 app.options('*', cors());
 
 // app.use(jwtMiddleware);
 app.use(authRouter);
+app.use("/admin", admin_route)
