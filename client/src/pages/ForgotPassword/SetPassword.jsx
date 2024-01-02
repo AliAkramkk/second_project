@@ -25,7 +25,9 @@ const SetPassword = () => {
       const response = await axiosPrivate.post("/reset-password", { password });
       if (response.status === 201) {
         toast.success(response.data.message, { duration: 3000 });
-        navigate("/signin");
+        setTimeout(() => {
+          navigate("/signin");
+        }, 3000);
       } else {
         toast.error(response.data.message);
       }

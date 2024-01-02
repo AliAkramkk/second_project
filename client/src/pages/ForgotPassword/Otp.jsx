@@ -42,8 +42,10 @@ const Otp = () => {
       const response = await axiosPrivate.post("/forgot-otp", { OTP });
       console.log(response);
       if (response.status === 201) {
-        toast.success(response.data.message);
-        navigate("/reset-password");
+        toast.success(response.data.message, { duration: 3000 });
+        setTimeout(() => {
+          navigate("/reset-password");
+        }, 3000);
       } else {
         toast.error(response.data.message);
       }
