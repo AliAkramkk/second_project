@@ -139,6 +139,9 @@ function Signin() {
           </button>
           {/* <button onClick={() => loginWithRedirect()}>Log In</button> */}
         </div>
+        <div className="mt-8 text-lg border-t border-[#002D74] py-5 text-[#002D74] text-center dark:text-blue-400">
+          <a href="/forgot-password">Forgot your password?</a>
+        </div>
       </div>
     </div>
   );

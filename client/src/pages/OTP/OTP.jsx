@@ -10,7 +10,6 @@ const OTP = () => {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
   const usenavigate = useNavigate();
-
   const handleChange = (e, index) => {
     const value = e.target.value;
 

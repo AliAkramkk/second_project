@@ -137,10 +137,69 @@ const userVerifyOTP = async (req, res) => {
   }
 };
 
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  console.log(email);
+  const newEmail = await User.findOne({ email });
+  if (newEmail) {
+    const { otp, secret } = await public_controller.genarateOTP();
+    res.cookie("id", newEmail._id, { maxAge: 500000, httpOnly: true });
+    newEmail.OTP = secret
+    newEmail.save()
+    public_controller.sendemailotp(email, otp);
+    res.status(201).json({ message: "enter your otp" });
+  } else {
+    res.status(400).json({ message: 'email not exist' })
+    console.log('no email');
+  }
+}
 
+const forgotOtp = async (req, res) => {
 
+  const { OTP } = req.body
+  console.log("otp", OTP);
+  const id = req.cookies.id;
+  console.log("id", id);
+  const userData = await User.findOne({ _id: id })
+  console.log("userData", userData);
+  const secret = userData.OTP;
+  const isValid = public_controller.verifyOTP(secret, OTP);
+  if (isValid) {
+    res.cookie("id", userData._id, { maxAge: 500000, httpOnly: true });
+    console.log("OTp match");
+    res.status(201).json({ message: 'OTP success' })
+  } else {
+    console.log("otp fail");
+    res.status(400).json({ message: "Wrong OTP" })
+  }
+
+}
+
+const resetPassword = async (req, res) => {
+  const { password } = req.body
+  console.log("pass", password);
+
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+  const id = req.cookies.id;
+  const userData = await User.findOne({ _id: id })
+
+  if (userData) {
+    userData.password = hashedPassword
+    userData.save()
+    res.status(201).json({ message: 'success the resetpassword' })
+  }
+  else {
+    res.status(400).json({ message: 'faild the reset password' })
+  }
+
+}
 module.exports = {
   signUp_post,
   signIn_post,
   userVerifyOTP,
+  forgotPassword,
+  forgotOtp,
+  resetPassword
 };

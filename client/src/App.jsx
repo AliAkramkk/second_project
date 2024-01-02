@@ -8,6 +8,9 @@ import Layout from "./features/Layout";
 import User from "./routers/User";
 import Admin from "./routers/Admin";
 import Chef from "./routers/Chef";
+import ForgetPassword from "./pages/ForgotPassword/ForgetPassword";
+import Otp from "./pages/ForgotPassword/Otp";
+import SetPassword from "./pages/ForgotPassword/SetPassword";
 
 function App() {
   return (
@@ -20,6 +23,9 @@ function App() {
         <Route exact path="/signin" element={<UserSignin />} />
         <Route path="/otp" element={<OTP />} />
         <Route exact path="/signup" element={<UserSignup />} />
+        <Route exact path="/forgot-password" element={<ForgetPassword />} />
+        <Route exact path="/forgot-otp" element={<Otp />} />
+        <Route exact path="/reset-password" element={<SetPassword />} />
       </Route>
     </Routes>
   );
