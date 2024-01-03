@@ -13,7 +13,7 @@ function ForgetPassword() {
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
-    console.log("hello");
+   
     try {
       const response = await axiosPrivate.post("/forgotPassword", { email });
       if (response.status === 201) {

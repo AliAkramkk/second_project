@@ -139,13 +139,12 @@ const userVerifyOTP = async (req, res) => {
 
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
-  console.log(email);
-  const newEmail = await User.findOne({ email });
-  if (newEmail) {
+  const newUser = await User.findOne({ email });
+  if (newUser) {
     const { otp, secret } = await public_controller.genarateOTP();
-    res.cookie("id", newEmail._id, { maxAge: 500000, httpOnly: true });
-    newEmail.OTP = secret
-    newEmail.save()
+    res.cookie("id", newUser._id, { maxAge: 500000, httpOnly: true });
+    newUser.OTP = secret
+    newUser.save()
     public_controller.sendemailotp(email, otp);
     res.status(201).json({ message: "enter your otp" });
   } else {
