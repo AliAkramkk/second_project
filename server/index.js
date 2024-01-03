@@ -5,6 +5,7 @@ const cors = require('cors');
 const admin_route = require('./routes/adminRoute')
 const authRouter = require('./routes/authRoute');
 const cookieParser = require('cookie-parser');
+const user_router = require('./routes/userRoute');
 
 const app = express();
 app.use(express.json());
@@ -31,3 +32,4 @@ app.options('*', cors());
 // app.use(jwtMiddleware);
 app.use(authRouter);
 app.use("/admin", admin_route)
+app.use("/user", user_router)

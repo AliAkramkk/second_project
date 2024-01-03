@@ -1,8 +1,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
+import Home from "./pages/User/Home/Home";
 import UserSignup from "./pages/SignUp/UserSignup";
-import UserSignin from "./pages/SignUp/UserSignin";
+import UserSignin from "./pages/SignIn/UserSignin";
 import OTP from "./pages/OTP/Otp";
 import Layout from "./features/Layout";
 import User from "./routers/User";

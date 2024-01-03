@@ -1,7 +1,8 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import RequerAuth from "../features/RequerAuth";
-import Profile from "../pages/User/Profile";
+import Profile from "../pages/User/UserProfile/Profile";
+
 const Role = 2000;
 function User() {
   return (

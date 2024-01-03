@@ -4,8 +4,8 @@ import UserNavbar from "../../component/Navbar/UserNavbar";
 function UserSignin() {
   return (
     <>
-      {<UserNavbar />}
-      {<Signin />}
+      <UserNavbar />
+      <Signin />
     </>
   );
 }
