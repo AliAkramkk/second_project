@@ -21,9 +21,11 @@ function ChefNavbar() {
   const handlelogin = () => {
     usenavigate("/signin");
   };
+
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
+
   return (
     <nav className="bg-gray-800 p-4">
       <div className="container mx-auto flex justify-between items-center">
@@ -39,56 +41,33 @@ function ChefNavbar() {
           >
             DASHBOARD
           </Link>
-          {/* <Link
-            to="/admin/userlist"
-            className="text-white hover:text-gray-300 transition"
-          >
-            STUDENTS
-          </Link> */}
-          {/* <Link
-            to="/admin/cheflist"
-            className="text-white hover:text-gray-300 transition"
-          >
-            CHEFS
-          </Link> */}
-          {/* <Link
-            to="/admin/allcourses"
-            className="text-white hover:text-gray-300 transition"
-          >
-            ALL COURSES
-          </Link> */}
-          {/* <Link
-            to="/admin/payments"
-            className="text-white hover:text-gray-300 transition"
-          >
-            PAYMENTS
-          </Link> */}
+          {/* Add other navigation links as needed */}
         </div>
         <div className="md:hidden" onClick={toggleMobileMenu}>
           <Hamburger />
         </div>
         {isMobileMenuOpen && (
           <div className="mobile-menu md:hidden">
-            <a href="#" className="nav-link">
+            <Link to="/home" className="nav-link">
               Home
-            </a>
-            <a href="#" className="nav-link">
+            </Link>
+            <Link to="/course" className="nav-link">
               Course
-            </a>
-            <a href="#" className="nav-link">
+            </Link>
+            <Link to="/community" className="nav-link">
               Community
-            </a>
-            <a href="#" className="nav-link">
+            </Link>
+            <Link to="/blog" className="nav-link">
               Blog
-            </a>
+            </Link>
             {!user?.user ? (
-              <a href="#" className="nav-link">
+              <Link to="/login" className="nav-link">
                 Login
-              </a>
+              </Link>
             ) : (
-              <a href="#" className="nav-link">
+              <Link to="/profile" className="nav-link">
                 Profile
-              </a>
+              </Link>
             )}
           </div>
         )}
@@ -97,20 +76,20 @@ function ChefNavbar() {
             className="hidden signinandsignup md:flex space-x-4"
             onClick={handlelogin}
           >
-            <a href="#" className="logbutton">
+            <Link to="/login" className="logbutton">
               <span></span>
               <span></span>
               <span></span>
               <span></span>
               LOGIN
-            </a>
+            </Link>
           </div>
         ) : (
-          <>
+          <div className="flex items-center space-x-4">
             <div
-              className="hidden cursor-pointer signinandsignup md:flex items-end"
+              className="cursor-pointer flex items-end"
               onClick={() => {
-                usenavigate("/user/profile");
+                usenavigate("/chef/profile");
               }}
             >
               {user?.pro ? (
@@ -120,13 +99,10 @@ function ChefNavbar() {
               )}{" "}
               {user?.user}
             </div>
-            <button
-              className="ms-3 mt-2 border rounded p-1"
-              onClick={HandlelogOut}
-            >
-              logout
+            <button className="border rounded p-1" onClick={HandlelogOut}>
+              Logout
             </button>
-          </>
+          </div>
         )}
       </div>
     </nav>

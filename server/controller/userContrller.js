@@ -1,7 +1,7 @@
 const User = require('../models/userSchema')
 const cloudinary = require('../config/cloudinary')
 
-const getStudents = async (req, res) => {
+const getStudent = async (req, res) => {
   try {
     const id = req.params.id
 
@@ -28,9 +28,9 @@ const editProfile = async (req, res) => {
         { email: email },
         {
           $set: {
-            pic: data.url, // Assuming 'url' is the property where Cloudinary stores the image URL
-            username,
-            phone,
+            pic: data.url || undefined, // Assuming 'url' is the property where Cloudinary stores the image URL
+            username: data.username || undefined,
+            phone: data.phone || undefined,
           },
         },
         { new: true } // Return the updated document
@@ -60,6 +60,6 @@ const editProfile = async (req, res) => {
 };
 
 module.exports = {
-  getStudents,
+  getStudent,
   editProfile
 }

@@ -5,7 +5,7 @@ import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 
 import EditProfile from "./EditProfile";
 
-function ProfilePage({ data }) {
+function ProfilePage({ data, fetchData, setData }) {
   const dateTimeString = data.createdAt;
   const dateOnlyString = dateTimeString ? dateTimeString.split("T")[0] : "";
   console.log(data);
@@ -33,7 +33,7 @@ function ProfilePage({ data }) {
           <img
             className="object-cover object-center h-32"
             src={data.pic}
-            alt="Woman looking front"
+            alt="t"
           />
         </div>
         <div className="text-center mt-2">
@@ -69,6 +69,8 @@ function ProfilePage({ data }) {
           isEditModalOpen={isEditModalOpen}
           setIsEditModalOpen={setIsEditModalOpen}
           userData={data}
+          fetchData={fetchData}
+          setData={setData}
         />
       )}
     </>

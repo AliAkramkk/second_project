@@ -1,11 +1,25 @@
 import React, { useState } from "react";
+import Swal from "sweetalert2";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { axiosPrivate } from "../../api/axios";
 
-const EditProfile = ({ isEditModalOpen, setIsEditModalOpen, userData }) => {
-  const [username, setUsername] = useState("");
-  const [phone, setPhone] = useState("");
+const editProfileValidation = Yup.object({
+  username: Yup.string().min(3).required("Please enter a valid username"),
+  phone: Yup.string()
+    .matches(/^\+(?:[0-9]●?){6,14}[0-9]$/, "Invalid phone number format")
+    .required("Please enter a valid phone number"),
+});
+
+const EditProfile = ({
+  isEditModalOpen,
+  setIsEditModalOpen,
+  userData,
+  setData,
+}) => {
   const [profilePicture, setProfilePicture] = useState(null);
   const [finalImage, setFinalImage] = useState(null);
+
   const toggleModal = () => {
     setIsEditModalOpen(false);
   };
@@ -33,23 +47,32 @@ const EditProfile = ({ isEditModalOpen, setIsEditModalOpen, userData }) => {
     };
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axiosPrivate.patch("/user/editprofile", {
-        username,
-        phone,
-        email: userData.email,
-        pic: finalImage,
-      });
+  const { values, errors, handleChange, handleSubmit } = useFormik({
+    initialValues: {
+      username: userData.username,
+      phone: userData.phone || "",
+    },
+    validationSchema: editProfileValidation,
+    onSubmit: async (values) => {
+      try {
+        const response = await axiosPrivate.patch("/user/editprofile", {
+          username: values.username,
+          phone: values.phone,
+          email: userData.email,
+          pic: finalImage,
+        });
 
-      console.log("success edit profile");
-      console.log(response.data.message);
-      setIsEditModalOpen(false);
-    } catch (error) {
-      console.log("somthing went wrong");
-    }
-  };
+        console.log("success edit profile");
+        console.log("abcd", response.data.updatedUser.username);
+        console.log("state", values.username);
+
+        setData(response?.data?.updatedUser);
+        setIsEditModalOpen(false);
+      } catch (error) {
+        console.log("something went wrong", error);
+      }
+    },
+  });
 
   return (
     <>
@@ -118,13 +141,15 @@ const EditProfile = ({ isEditModalOpen, setIsEditModalOpen, userData }) => {
                   </label>
                   <input
                     type="text"
-                    name="name"
-                    id="name"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder={userData.username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required=""
+                    name="username"
+                    value={values.username}
+                    onChange={handleChange}
                   />
+                  {errors.username && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.username}
+                    </p>
+                  )}
                 </div>
                 <div class="col-span-2">
                   <label
@@ -136,14 +161,12 @@ const EditProfile = ({ isEditModalOpen, setIsEditModalOpen, userData }) => {
                   <input
                     type="text"
                     name="phone"
-                    id="phone"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder={
-                      userData.phone ? userData.phone : "enter phone number"
-                    }
-                    onChange={(e) => setPhone(e.target.value)}
-                    required=""
+                    value={values.phone}
+                    onChange={handleChange}
                   />
+                  {errors.phone && (
+                    <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+                  )}
                 </div>
               </div>
               <button
