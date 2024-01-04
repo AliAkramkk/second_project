@@ -1,14 +1,10 @@
 const nodemailer = require('nodemailer');
 const crypto = require('crypto')
-const cloudinary = require('cloudinary').v2;
+
 const fs = require('fs')
 
 
-cloudinary.config({
-  cloud_name: 'dix9tfwiz',
-  api_key: '356477111366662',
-  api_secret: 'CYL9UeAxSeeRY3sRsIiCPgQ3cZc'
-});
+
 
 const uploadimage = async (onefile) => {
   try {

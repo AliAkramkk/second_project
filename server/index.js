@@ -6,9 +6,13 @@ const admin_route = require('./routes/adminRoute')
 const authRouter = require('./routes/authRoute');
 const cookieParser = require('cookie-parser');
 const user_router = require('./routes/userRoute');
-
+const bodyParser = require('body-parser');
+const path = require('path')
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }))
+
+app.use(express.urlencoded({ extended: true }))
+app.use(express.static(path.resolve() + "/public"))
 
 const { DB_URL, PORT } = process.env;
 // Connect to MongoDB

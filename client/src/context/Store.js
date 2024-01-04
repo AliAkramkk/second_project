@@ -30,5 +30,17 @@ const store = configureStore({
     }).concat(apiSlice.middleware),
   devTools: true,
 });
+// const store = configureStore({
+//   reducer: reducer,
+//   middleware: (getDefaultMiddleware) =>
+//     getDefaultMiddleware({
+//       serializableCheck: {
+//         ignoredActions: ['persist/PERSIST'],
+//       },
+//     }).concat(apiSlice.middleware),
+//   devTools: true,
+// });
+
+
 
 export default store;

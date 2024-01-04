@@ -54,15 +54,15 @@ const signIn_post = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (user) {
-      console.log("user", user);
+
       const isPasswordValid = await bcrypt.compare(password, user.password);
-      console.log(isPasswordValid);
+      // console.log(isPasswordValid);
       if (isPasswordValid) {
-        console.log(2);
+        // console.log(2);
         if (user.isVerify == true) {
-          console.log(3);
+          // console.log(3);
           if (user.isAccess == true) {
-            console.log(4);
+            // console.log(4);
             const accesstoken = jwt.sign(
               { email: user.email },
               process.env.ACCESS_TOKEN_SECRET,
@@ -110,10 +110,9 @@ const signIn_post = async (req, res) => {
 const userVerifyOTP = async (req, res) => {
   try {
     const { OTP } = req.body;
-    console.log(OTP);
+
     const id = req.cookies.id;
-    console.log(req.cookies);
-    console.log("ID:", id);
+
 
     // console.log(id)
     let user = await User.findOne({ _id: id });
@@ -156,19 +155,19 @@ const forgotPassword = async (req, res) => {
 const forgotOtp = async (req, res) => {
 
   const { OTP } = req.body
-  console.log("otp", OTP);
+
   const id = req.cookies.id;
-  console.log("id", id);
+
   const userData = await User.findOne({ _id: id })
-  console.log("userData", userData);
+
   const secret = userData.OTP;
   const isValid = public_controller.verifyOTP(secret, OTP);
   if (isValid) {
     res.cookie("id", userData._id, { maxAge: 500000, httpOnly: true });
-    console.log("OTp match");
+
     res.status(201).json({ message: 'OTP success' })
   } else {
-    console.log("otp fail");
+
     res.status(400).json({ message: "Wrong OTP" })
   }
 
@@ -176,7 +175,6 @@ const forgotOtp = async (req, res) => {
 
 const resetPassword = async (req, res) => {
   const { password } = req.body
-  console.log("pass", password);
 
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);

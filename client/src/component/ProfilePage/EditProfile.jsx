@@ -1,50 +1,53 @@
 import React, { useState } from "react";
 import { axiosPrivate } from "../../api/axios";
 
-const EditProfile = ({
-  isEditModalOpen,
-  setIsEditModalOpen,
-  userData,
-  role,
-}) => {
+const EditProfile = ({ isEditModalOpen, setIsEditModalOpen, userData }) => {
   const [username, setUsername] = useState("");
-  const [firstname, setFirstname] = useState("");
-  const [lastnane, setLastname] = useState("");
   const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [finalImage, setFinalImage] = useState(null);
   const toggleModal = () => {
     setIsEditModalOpen(false);
   };
 
+  const isValidFileUploaded = (file) => {
+    const validExtensions = ["png", "jpeg", "jpg"];
+    const fileExtension = file.type.split("/")[1];
+    return validExtensions.includes(fileExtension);
+  };
+
+  const handleImage = (e) => {
+    if (isValidFileUploaded(e.target.files[0])) {
+      setProfilePicture(e.target.files[0]);
+      ImageTOBase(e.target.files[0]);
+    } else {
+      setErrMessage("Invalid File type");
+    }
+  };
+
+  const ImageTOBase = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setFinalImage(reader.result);
+    };
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const userForm = {
-      username: username,
-      firstname: firstname,
-      lastname: lastnane,
-      phone: phone,
-      address: address,
-      city: city,
-      state: state,
-      user_id: userData.id,
-    };
+    try {
+      const response = await axiosPrivate.patch("/user/editprofile", {
+        username,
+        phone,
+        email: userData.email,
+        pic: finalImage,
+      });
 
-    if (role) {
-      try {
-        const response = await axiosPrivate.put("/editprofile", userForm, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        });
-        console.log("success edit profile");
-        console.log(response.data.message);
-      } catch (error) {
-        console.log("somthing went wrong");
-      }
+      console.log("success edit profile");
+      console.log(response.data.message);
+      setIsEditModalOpen(false);
+    } catch (error) {
+      console.log("somthing went wrong");
     }
   };
 
@@ -93,7 +96,22 @@ const EditProfile = ({
               <div class="grid gap-4 mb-4 grid-cols-2">
                 <div class="col-span-2">
                   <label
-                    for="name"
+                    htmlFor="profilePicture"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Profile Picture
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name="proimage"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    onChange={handleImage}
+                  />
+                </div>
+                <div class="col-span-2">
+                  <label
+                    htmlFor="name"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     UserName
@@ -108,109 +126,22 @@ const EditProfile = ({
                     required=""
                   />
                 </div>
-                <div class="col-span-2 sm:col-span-1">
-                  <label
-                    for="firstname"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    FirstName
-                  </label>
-                  <input
-                    type="text"
-                    name="price"
-                    id="price"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    onChange={(e) => setFirstname(e.target.value)}
-                    required=""
-                  />
-                </div>
-                <div class="col-span-2 sm:col-span-1">
-                  <label
-                    for="lastname"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    LastName
-                  </label>
-                  <input
-                    type="text"
-                    name="price"
-                    id="price"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    onChange={(e) => setLastname(e.target.value)}
-                    required=""
-                  />
-                </div>
                 <div class="col-span-2">
                   <label
-                    for="number"
+                    htmlFor="number"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Phone
                   </label>
                   <input
                     type="text"
-                    name="name"
-                    id="name"
+                    name="phone"
+                    id="phone"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    // placeholder={
-                    //   userData.phone ? userData.phone : "enter phone number"
-                    // }
+                    placeholder={
+                      userData.phone ? userData.phone : "enter phone number"
+                    }
                     onChange={(e) => setPhone(e.target.value)}
-                    required=""
-                  />
-                </div>
-                <div class="col-span-2">
-                  <label
-                    for="address"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Address
-                  </label>
-                  <input
-                    type="text"
-                    name="address"
-                    id="address"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    // placeholder={
-                    //   userData.address ? userData.address : "enter address"
-                    // }
-                    onChange={(e) => setAddress(e.target.value)}
-                    required=""
-                  />
-                </div>
-                <div class="col-span-2 sm:col-span-1">
-                  <label
-                    for="city"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    City
-                  </label>
-                  <input
-                    type="text"
-                    name="city"
-                    id="city"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    // placeholder={userData.city ? userData.city : "enter city"}
-                    onChange={(e) => setCity(e.target.value)}
-                    required=""
-                  />
-                </div>
-                <div class="col-span-2 sm:col-span-1">
-                  <label
-                    for="state"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    State
-                  </label>
-                  <input
-                    type="text"
-                    name="price"
-                    id="price"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    // placeholder={
-                    //   userData.state ? userData.state : "enter state"
-                    // }
-                    onChange={(e) => setState(e.target.value)}
                     required=""
                   />
                 </div>
