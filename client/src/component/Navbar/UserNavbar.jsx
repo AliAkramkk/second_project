@@ -51,7 +51,11 @@ function UserNavbar() {
         <div className="flex items-center space-x-4">
           {!user?.user ? (
             <div className="hidden md:flex items-center space-x-4">
-              <a href="/signin" className="logbutton" onClick={handleLogin}>
+              <a
+                href="/signin"
+                className="border rounded px-2 py-1 text-white"
+                onClick={handleLogin}
+              >
                 LOGIN
               </a>
             </div>

@@ -30,16 +30,16 @@ function ChefNavbar() {
     <nav className="bg-gray-800 p-4">
       <div className="container mx-auto flex justify-between items-center">
         <div>
-          <Link to="/" className="text-white text-2xl font-bold">
+          <Link to="/chef/" className="text-white text-2xl font-bold">
             Let's Cook
           </Link>
         </div>
         <div className="flex space-x-4">
           <Link
-            to="/admin"
+            to="/chef/courseList"
             className="text-white hover:text-gray-300 transition"
           >
-            DASHBOARD
+            CLASSES
           </Link>
           {/* Add other navigation links as needed */}
         </div>
@@ -95,9 +95,9 @@ function ChefNavbar() {
               {user?.pro ? (
                 user.pro
               ) : (
-                <FontAwesomeIcon className="me-3" icon={faUser} size="2x" />
-              )}{" "}
-              {user?.user}
+                <FontAwesomeIcon className="me-1" icon={faUser} size="lg" />
+              )}
+              <span className="text-white">{user?.user}</span>
             </div>
             <button className="border rounded p-1" onClick={HandlelogOut}>
               Logout

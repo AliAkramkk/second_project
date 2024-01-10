@@ -134,37 +134,44 @@ const OTP = () => {
   };
 
   return (
-    <div className="otp-container">
-      <p>
-        An OTP is sent to your email. Time left:{" "}
-        {String(Math.floor(timer / 60)).padStart(2, "0")}:
-        {String(timer % 60).padStart(2, "0")}
-      </p>
-      <h1>Enter OTP</h1>
-      <div className="otp-input">
-        {otp.map((digit, index) => (
-          <input
-            key={index}
-            type="number"
-            maxLength="1"
-            value={digit}
-            onChange={(e) => handleChange(e, index)}
-            className="otp-digit"
-            ref={inputRefs[index]}
-          />
-        ))}
+    <div className="flex justify-center items-center h-screen">
+      <div className="bg-white rounded-lg shadow-md dark:bg-neutral-800 p-8">
+        <p className="mb-4">
+          An OTP is sent to your email. Time left:{" "}
+          {String(Math.floor(timer / 60)).padStart(2, "0")}:
+          {String(timer % 60).padStart(2, "0")}
+        </p>
+        <h2 className="text-lg font-semibold mb-4">Enter OTP</h2>
+        <div className="flex space-x-2">
+          {otp.map((digit, index) => (
+            <input
+              key={index}
+              type="number"
+              maxLength="1"
+              value={digit}
+              onChange={(e) => handleChange(e, index)}
+              className="w-12 h-12 border border-gray-300 rounded text-center animation-fade-in"
+              ref={inputRefs[index]}
+            />
+          ))}
+        </div>
+        <div className="mt-4 space-x-4">
+          <button
+            onClick={handleSubmit}
+            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+          >
+            Submit
+          </button>
+          <button
+            onClick={handleResend}
+            disabled={resendDisabled}
+            className="w-full bg-gray-300 text-gray-700 py-2 rounded hover:bg-gray-400"
+          >
+            Resend OTP
+          </button>
+        </div>
+        <Toaster />
       </div>
-      <button onClick={handleSubmit} className="submit-button">
-        Submit
-      </button>
-      <button
-        onClick={handleResend}
-        disabled={resendDisabled}
-        className="resend-button"
-      >
-        Resend OTP
-      </button>
-      <Toaster />
     </div>
   );
 };

@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { axiosPrivate } from "../../api/axios";
+import toast, { Toaster } from "react-hot-toast";
 
 const editProfileValidation = Yup.object({
   username: Yup.string().min(3).required("Please enter a valid username"),
@@ -35,7 +36,7 @@ const EditProfile = ({
       setProfilePicture(e.target.files[0]);
       ImageTOBase(e.target.files[0]);
     } else {
-      setErrMessage("Invalid File type");
+      ("Invalid File type");
     }
   };
 
@@ -182,6 +183,7 @@ const EditProfile = ({
             </form>
           </div>
         </div>
+        <Toaster />
       </div>
       {/* )} */}
     </>

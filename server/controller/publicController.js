@@ -1,10 +1,19 @@
 const nodemailer = require('nodemailer');
 const crypto = require('crypto')
+const util = require('util');
+const execPromise = util.promisify(require('child_process').exec);
+const cloudinary = require('cloudinary').v2;
+const fs = require("fs");
+// const course_schema = require("..");
 
-const fs = require('fs')
 
+const ffmpegPath = 'C:\\ffmpeg\\bin\\ffmpeg.exe'; // Update with the correct path
 
-
+cloudinary.config({
+  cloud_name: "dix9tfwiz",
+  api_key: "356477111366662",
+  api_secret: "CYL9UeAxSeeRY3sRsIiCPgQ3cZc",
+});
 
 const uploadimage = async (onefile) => {
   try {
@@ -29,6 +38,51 @@ const uploadimage = async (onefile) => {
     return image;
   } catch (error) {
     console.log(error.message);
+  }
+};
+const uploadVideo = async (videoFile) => {
+  try {
+    console.log("Video File:", videoFile);
+    const outputDirectory = "./compressed_videos";
+    const compressedVideoPath = `${outputDirectory}/${Date.now()}_compressed.mp4`;
+
+    if (!fs.existsSync(outputDirectory)) {
+      fs.mkdirSync(outputDirectory, { recursive: true });
+    }
+
+    const ffmpegCommand = `"${ffmpegPath}" -i "${videoFile.tempFilePath}" -c:v libx265 -preset medium -crf 32 -c:a aac -strict -2 "${compressedVideoPath}"`;
+    await execPromise(ffmpegCommand);
+
+    const result = await cloudinary.uploader.upload(compressedVideoPath, {
+      resource_type: "video",
+      public_id: `${Date.now()}`,
+      folder: "Let'sCook",
+      eager: [
+        { width: 300, height: 300, crop: "pad", audio_codec: "none" },
+        {
+          width: 160,
+          height: 100,
+          crop: "crop",
+          gravity: "south",
+          audio_codec: "none",
+        },
+      ],
+      eager_async: true,
+      eager_notification_url: "https://mysite.example.com/notify_endpoint",
+      max_file_size: 100000000,
+    });
+
+    fs.unlinkSync(compressedVideoPath);
+
+    let video = {
+      url: result.url,
+      public_id: result.public_id,
+    };
+
+    return video;
+  } catch (error) {
+    console.log(error.message);
+    throw error;
   }
 };
 
@@ -102,5 +156,6 @@ module.exports = {
   genarateOTP,
   verifyOTP,
   sendemailotp,
-  deleteFromCloud
+  deleteFromCloud,
+  uploadVideo,
 }

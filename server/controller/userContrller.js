@@ -16,7 +16,7 @@ const getStudent = async (req, res) => {
 
 const editProfile = async (req, res) => {
   try {
-    const { username, phone, email, pic } = req.body;
+    const { email, pic, username, phone } = req.body;
     let updatedUser;
 
     if (pic) {

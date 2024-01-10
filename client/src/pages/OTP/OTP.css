@@ -27,6 +27,7 @@ h1 {
   text-align: center;
   outline: none;
   transition: all 0.3s ease;
+  animation: fadeIn 0.3s ease forwards;
 }
 
 .otp-digit:focus {
@@ -62,15 +63,12 @@ h1 {
   }
 }
 
-.otp-digit {
-  animation: fadeIn 0.3s ease forwards;
-}
-
 /* Matching text quotes */
 .matching-text {
   font-size: 16px;
   color: #333;
   margin-top: 20px;
+  animation: slideInUp 0.5s ease forwards;
 }
 
 /* Animation for matching text */
@@ -85,15 +83,11 @@ h1 {
   }
 }
 
-.matching-text {
-  animation: slideInUp 0.5s ease forwards;
-}
-
 .submit-button:hover {
   background-color: #45a049;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
--webkit-appearance: none;
+  -webkit-appearance: none;
 }
