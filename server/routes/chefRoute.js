@@ -8,6 +8,7 @@ chef_route.get('/getcourse/:course_id', chefController.getVideoCourse)
 chef_route.put('/changeCourse', chefController.handleChangeCourse)
 chef_route.delete('/deleteCourse/:id', chefController.deleteCourse)
 chef_route.put('/delete-chapter', chefController.deleteChapter)
+chef_route.post('/add-chapter', chefController.addChapter)
 
 
 module.exports = chef_route;

@@ -204,7 +204,7 @@ const ChefVidoes = () => {
               <div className="flex justify-center mt-4">
                 <button
                   onClick={() =>
-                    usenavigate("/chef/addchapter", {
+                    usenavigate("/chef/add-chapter", {
                       state: { id: video._id },
                     })
                   }

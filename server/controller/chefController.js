@@ -149,6 +149,46 @@ const deleteChapter = async (req, res) => {
   }
 }
 
+const addChapter = async (req, res) => {
+  try {
+    const { chapterNo, title, description } = JSON.parse(req.body.formdata);
+    const { id } = req.body;
+
+    const duplicate = await course_schema.findOne({
+      chapters: { $elemMatch: { id: chapterNo } },
+    });
+    if (duplicate) {
+      res.status(500).json({ message: "Chapter is allredy existed !" });
+    } else {
+
+      const uploadVideoResult = await public_controller.uploadVideo(
+        req.files.demoVideo
+      );
+      const uploadImageResult = await public_controller.uploadimage(
+        req.files.coverImage
+      );
+      const newChapter = {
+        id: chapterNo,
+        title,
+        description,
+        coverImage: uploadImageResult,
+        demoVideo: uploadVideoResult,
+      };
+
+      // console.log(newCourse);
+      const savedChapter = await course_schema.updateOne(
+        { _id: id },
+        { $push: { chapters: newChapter } }
+      );
+
+      res.status(201).json({ message: "Chapter uploaded successfully !" });
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: "Internal server error" })
+  }
+}
+
 module.exports = {
   getStudent,
   addCourse,
@@ -156,5 +196,6 @@ module.exports = {
   getVideoCourse,
   handleChangeCourse,
   deleteCourse,
-  deleteChapter
+  deleteChapter,
+  addChapter
 };

@@ -33,7 +33,9 @@ const validationSchema = Yup.object().shape({
 });
 
 const AddCourse = () => {
-  const [coverImage, setCoverImage] = useState();
+  const [coverImage, setCoverImage] = useState(
+    "https://thumbs.dreamstime.com/b/add-photo-simple-icon-image-thumbnail-sign-picture-placeholder-symbol-classic-flat-style-quality-design-element-simple-add-photo-220710759.jpg"
+  );
   const [demoVideo, setDemoVideo] = useState();
   const navigate = useNavigate();
   const user = useSelector(auth);
