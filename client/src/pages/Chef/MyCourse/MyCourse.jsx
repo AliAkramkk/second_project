@@ -2,28 +2,159 @@ import React, { useState, useEffect } from "react";
 import ChefNavbar from "../../../component/Navbar/ChefNavbar";
 import { axiosPrivate } from "../../../api/axios";
 import toast, { Toaster } from "react-hot-toast";
-import { selectCurrentId } from "../../../context/authReducer";
+import { auth } from "../../../context/authReducer";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  faArrowRight,
+  faEye,
+  faEyeSlash,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const MyCourse = () => {
+  const user = useSelector(auth);
+  const [listAllClicked, setListAllClicked] = useState(true);
+  const [unlistAllClicked, setUnlistAllClicked] = useState(false);
+  const [videos, setVideos] = useState([]);
   const [list, setList] = useState([]);
-  const id = useSelector(selectCurrentId);
+  const navigate = useNavigate();
+
+  const handleshowcourses = async (id) => {
+    try {
+      const changedResponse = await axiosPrivate.put("/chef/handleShowCourse", {
+        id,
+      });
+      toast.success(changedResponse.data.message);
+
+      const response = await axiosPrivate.get("/chef/myCourse", {
+        params: { user: user },
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const filteredCourses = response.data.courses.filter((course) =>
+        listAllClicked ? course.isShow : !course.isShow
+      );
+
+      setList(filteredCourses);
+      setVideos(response.data.courses);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axiosPrivate.get(`/chef/myCourse/${id}`);
+        const response = await axiosPrivate.get("/chef/myCourse", {
+          params: { user: user },
+          headers: { "Content-Type": "application/json" },
+        });
+
+        const filteredCourses = response.data.courses.filter((course) =>
+          listAllClicked ? course.isShow : !course.isShow
+        );
+
+        setList(filteredCourses);
+        setVideos(response.data.courses);
       } catch (error) {
-        console.log(error);
+        console.error("Error ", error);
       }
     }
+
     fetchData();
-  }, []);
+  }, [listAllClicked, user]);
+
+  const handleListAll = () => {
+    setListAllClicked(true);
+    setUnlistAllClicked(false);
+  };
+
+  const handleUnlistAll = () => {
+    setUnlistAllClicked(true);
+    setListAllClicked(false);
+  };
+
+  const standardButtonStyle =
+    "px-4 py-2 transition duration-300 ease-in-out rounded-md";
+  const activeButtonStyle =
+    "bg-black text-white shadow-lg shadow-red-950 scale-110";
+  const inactiveButtonStyle =
+    "bg-black border-white border text-white hover:bg-white hover:text-black";
+
   return (
     <>
       <ChefNavbar />
-      <h1>My Course</h1>
       <Toaster />
+      <div className="flex justify-start ms-20 gap-4 mt-4">
+        <button
+          onClick={handleListAll}
+          className={`btn ${
+            listAllClicked ? activeButtonStyle : inactiveButtonStyle
+          } ${standardButtonStyle}`}
+        >
+          Listed
+        </button>
+        <button
+          onClick={handleUnlistAll}
+          className={`btn ${
+            unlistAllClicked ? activeButtonStyle : inactiveButtonStyle
+          } ${standardButtonStyle}`}
+        >
+          Unlisted
+        </button>
+      </div>
+      <div className="text-center mt-8 mb-8 hvr-wobble-bottom w-full">
+        <h2 className="text-3xl font-bold text-black-600">MY COURSES</h2>
+      </div>
+      <div className="flex justify-center sm:justify-start gap-7 sm:ms-16   flex-wrap mt-8">
+        {list.map((video, index) => (
+          <div
+            key={video.id}
+            className="video-card w-72 bg-gray-200 mx-2 rounded-md my-4 overflow-hidden hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105"
+          >
+            <img
+              src={video.coverImage?.url}
+              alt={video.title}
+              className="w-full h-48 object-cover"
+            />
+            <div className="p-4">
+              <h3 className="text-xl font-bold mb-2">{video.title}</h3>
+              <div className="justify-between flex">
+                <button
+                  onClick={() =>
+                    navigate("/chef/videos", { state: { id: video._id } })
+                  }
+                  className={`btn hvr-shutter-in-horizontal justify-center border-y rounded-md border-black  text-white bg-black py-2-500 px-4 py-2 hover:bg-black-700 ${standardButtonStyle}`}
+                >
+                  Continue
+                  <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
+                </button>
+                <button
+                  onClick={() => handleshowcourses(video._id)}
+                  className={`btn ${
+                    video.isShow
+                      ? "text-yellow-500 hover:text-yellow-700"
+                      : "text-white hover:text-green-700"
+                  } hvr-shutter-in-horizontal justify-center border-y rounded-md border-blacktext-white bg-black py-2-500 px-4 py-2 hover:bg-black-700 ${standardButtonStyle}`}
+                >
+                  {video.isShow ? (
+                    <>
+                      <FontAwesomeIcon icon={faEyeSlash} className="mr-2" />
+                      Hide
+                    </>
+                  ) : (
+                    <>
+                      <FontAwesomeIcon icon={faEye} className="mr-2" />
+                      Show
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </>
   );
 };

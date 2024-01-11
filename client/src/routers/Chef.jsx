@@ -6,6 +6,7 @@ import Profile from "../pages/User/UserProfile/Profile";
 import Classes from "../pages/Chef/Classes/Classes";
 import AddCourse from "../pages/Chef/AddCourse/AddCourse";
 import MyCourse from "../pages/Chef/MyCourse/MyCourse";
+import ChefVidoes from "../pages/Chef/ChefVideos/ChefVidoes";
 const Role = 3000;
 function Chef() {
   return (
@@ -16,6 +17,7 @@ function Chef() {
       <Route path="/courseList" element={<Classes />} />
       <Route path="/add-course" element={<AddCourse />} />
       <Route path="/my-course" element={<MyCourse />} />
+      <Route path="/videos" element={<ChefVidoes />} />
     </Routes>
   );
 }
