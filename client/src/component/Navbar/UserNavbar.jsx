@@ -36,7 +36,13 @@ function UserNavbar() {
         </div>
         <div className="flex space-x-4">
           <Link to="/" className="text-white hover:text-gray-300 transition">
-            Home
+            HOME
+          </Link>
+          <Link
+            to="/all-courses"
+            className="text-white hover:text-gray-300 transition"
+          >
+            COURSE
           </Link>
           {/* Add more links as needed */}
         </div>
@@ -46,43 +52,62 @@ function UserNavbar() {
         {isMobileMenuOpen && (
           <div className="mobile-menu md:hidden">
             {/* Add mobile menu links */}
+            <a href="#" className="nav-link">
+              Home
+            </a>
+            <a href="#" className="nav-link">
+              Course
+            </a>
+            <a href="#" className="nav-link">
+              Community
+            </a>
+            <a href="#" className="nav-link">
+              Blog
+            </a>
+            {!user?.user ? (
+              <a href="#" className="nav-link">
+                Login
+              </a>
+            ) : (
+              <a href="#" className="nav-link">
+                Profile
+              </a>
+            )}
           </div>
         )}
-        <div className="flex items-center space-x-4">
-          {!user?.user ? (
-            <div className="hidden md:flex items-center space-x-4">
-              <a
-                href="/signin"
-                className="border rounded px-2 py-1 text-white"
-                onClick={handleLogin}
-              >
-                LOGIN
-              </a>
+        {!user?.user ? (
+          <div className="hidden md:flex items-center space-x-4">
+            <a
+              href="/signin"
+              className="border rounded px-2 py-1 text-white"
+              onClick={handleLogin}
+            >
+              LOGIN
+            </a>
+          </div>
+        ) : (
+          <>
+            <div
+              className="flex items-center space-x-2 cursor-pointer"
+              onClick={() => {
+                usenavigate("/user/profile");
+              }}
+            >
+              {user?.pro ? (
+                user.pro
+              ) : (
+                <FontAwesomeIcon className="me-1" icon={faUser} size="lg" />
+              )}
+              <span className="text-white">{user?.user}</span>
             </div>
-          ) : (
-            <>
-              <div
-                className="flex items-center space-x-2 cursor-pointer"
-                onClick={() => {
-                  usenavigate("/user/profile");
-                }}
-              >
-                {user?.pro ? (
-                  user.pro
-                ) : (
-                  <FontAwesomeIcon className="me-1" icon={faUser} size="lg" />
-                )}
-                <span className="text-white">{user?.user}</span>
-              </div>
-              <button
-                className="border rounded px-2 py-1 text-white"
-                onClick={HandlelogOut}
-              >
-                Logout
-              </button>
-            </>
-          )}
-        </div>
+            <button
+              className="border rounded px-2 py-1 text-white"
+              onClick={HandlelogOut}
+            >
+              Logout
+            </button>
+          </>
+        )}
       </div>
     </nav>
   );

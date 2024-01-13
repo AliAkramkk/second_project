@@ -287,7 +287,7 @@ const ChefVidoes = () => {
                   {/* More Button (Ellipsis) */}
                   <button
                     onClick={() =>
-                      usenavigate("/chef/videodetailes", {
+                      usenavigate("/chef/video-details", {
                         state: { video: chapter },
                       })
                     }

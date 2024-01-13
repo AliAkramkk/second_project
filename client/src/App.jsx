@@ -11,6 +11,7 @@ import Chef from "./routers/Chef";
 import ForgetPassword from "./pages/ForgotPassword/ForgetPassword";
 import Otp from "./pages/ForgotPassword/Otp";
 import SetPassword from "./pages/ForgotPassword/SetPassword";
+import AllCourse from "./pages/User/AllCourses/AllCourse";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/user/*" element={<User />} />
         <Route path="/admin/*" element={<Admin />} />
         <Route path="/chef/*" element={<Chef />} />
+
         <Route exact path="/" element={<Home />} />
         <Route exact path="/signin" element={<UserSignin />} />
         <Route path="/otp" element={<OTP />} />
@@ -26,6 +28,7 @@ function App() {
         <Route exact path="/forgot-password" element={<ForgetPassword />} />
         <Route exact path="/forgot-otp" element={<Otp />} />
         <Route exact path="/reset-password" element={<SetPassword />} />
+        <Route path="/all-courses" element={<AllCourse />} />
       </Route>
     </Routes>
   );
