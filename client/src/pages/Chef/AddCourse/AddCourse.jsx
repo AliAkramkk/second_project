@@ -124,7 +124,7 @@ const AddCourse = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
       if (response.status === 201) {
-        toast.success(response.data.message, { duration: 3000 });
+        toast.success(response.data.message);
 
         // Update the navigate call here
         navigate("/chef/my-course");
@@ -173,7 +173,7 @@ const AddCourse = () => {
                     type="file"
                     accept="image/*"
                     onChange={(e) => setCoverImage(e.target.files[0])}
-                    className="bg-blue-500 text-white py-2 px-4 rounded w-full mb-4"
+                    className="bg-black text-white py-2 px-4 rounded w-full mb-4"
                   />
 
                   {/* Demo Video Section */}
@@ -191,7 +191,7 @@ const AddCourse = () => {
                     type="file"
                     accept="video/*"
                     onChange={(e) => setDemoVideo(e.target.files[0])}
-                    className="bg-blue-500 text-white py-2 px-4 rounded w-full"
+                    className="bg-black text-white py-2 px-4 rounded w-full"
                   />
                   <ErrorMessage
                     name="demoVideo"

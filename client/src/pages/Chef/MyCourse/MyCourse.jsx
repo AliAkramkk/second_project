@@ -25,6 +25,7 @@ const MyCourse = () => {
       const changedResponse = await axiosPrivate.put("/chef/handleShowCourse", {
         id,
       });
+      console.log(changedResponse);
       toast.success(changedResponse.data.message);
 
       const response = await axiosPrivate.get("/chef/myCourse", {
@@ -32,17 +33,22 @@ const MyCourse = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      const filteredCourses = response.data.courses.filter((course) =>
-        listAllClicked ? course.isShow : !course.isShow
-      );
-
-      setList(filteredCourses);
+      if (listAllClicked) {
+        const trueCourses = response.data.courses.filter(
+          (course) => course.isShow === true
+        );
+        setList(trueCourses);
+      } else {
+        const trueCourses = response.data.courses.filter(
+          (course) => course.isShow === false
+        );
+        setList(trueCourses);
+      }
       setVideos(response.data.courses);
     } catch (error) {
       console.log(error.message);
     }
   };
-
   useEffect(() => {
     async function fetchData() {
       try {
@@ -51,11 +57,23 @@ const MyCourse = () => {
           headers: { "Content-Type": "application/json" },
         });
 
-        const filteredCourses = response.data.courses.filter((course) =>
-          listAllClicked ? course.isShow : !course.isShow
-        );
+        //       const filteredCourses = response.data.courses.filter((course) =>
+        //         listAllClicked ? course.isShow : !course.isShow
+        //       );
 
-        setList(filteredCourses);
+        //       setList(filteredCourses);
+        //       setVideos(response.data.courses);
+        //     } catch (error) {
+        //       console.error("Error ", error);
+        //     }
+        //   }
+
+        //   fetchData();
+        // }, [listAllClicked, user]);
+        const trueCourses = response.data.courses.filter(
+          (course) => course.isShow === true
+        );
+        setList(trueCourses);
         setVideos(response.data.courses);
       } catch (error) {
         console.error("Error ", error);
@@ -63,16 +81,20 @@ const MyCourse = () => {
     }
 
     fetchData();
-  }, [listAllClicked, user]);
+  }, []);
 
   const handleListAll = () => {
     setListAllClicked(true);
     setUnlistAllClicked(false);
+    const trueCourses = videos.filter((course) => course.isShow === true);
+    setList(trueCourses);
   };
 
   const handleUnlistAll = () => {
     setUnlistAllClicked(true);
     setListAllClicked(false);
+    const falseCourses = videos.filter((course) => course.isShow === false);
+    setList(falseCourses);
   };
 
   const standardButtonStyle =

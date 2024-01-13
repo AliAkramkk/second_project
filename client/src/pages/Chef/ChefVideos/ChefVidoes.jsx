@@ -36,7 +36,9 @@ const ChefVidoes = () => {
 
   const handleshowcourses = async (id) => {
     try {
-      const newResponse = await axiosPrivate.put("/chef/changeCourse", { id });
+      const newResponse = await axiosPrivate.put("/chef/handleShowCourse", {
+        id,
+      });
       toast.success(newResponse.data.message);
       const response = await axiosPrivate.get(`/chef/getcourse/${course_id}`);
       setVideo(response.data.course);
@@ -67,7 +69,7 @@ const ChefVidoes = () => {
       });
       toast.success(changedResponse.data.message);
 
-      const response = await getcourse(course_id);
+      const response = await axiosPrivate.get(`/chef/getcourse/${course_id}`);
       setVideo(response.data.course);
       // usenavigate("/chef/videos");
     } catch (error) {
@@ -261,9 +263,25 @@ const ChefVidoes = () => {
                   </button>
 
                   {/* Hide Button */}
-                  <button className="text-yellow-500 hover:text-yellow-700">
-                    <FontAwesomeIcon icon={faEyeSlash} className="mr-2" />
-                    Hide
+                  <button
+                    onClick={() => handleshowcourses(video._id)}
+                    className={`${
+                      video.isShow
+                        ? "text-yellow-500 hover:text-yellow-700"
+                        : "text-green-500 hover:text-green-700"
+                    }`}
+                  >
+                    {video.isShow ? (
+                      <>
+                        <FontAwesomeIcon icon={faEyeSlash} className="mr-2" />
+                        Hide
+                      </>
+                    ) : (
+                      <>
+                        <FontAwesomeIcon icon={faEye} className="mr-2" />
+                        Show
+                      </>
+                    )}
                   </button>
 
                   {/* More Button (Ellipsis) */}

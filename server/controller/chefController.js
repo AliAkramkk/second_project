@@ -151,22 +151,28 @@ const deleteChapter = async (req, res) => {
 
 const addChapter = async (req, res) => {
   try {
-    const { chapterNo, title, description } = JSON.parse(req.body.formdata);
+    console.log("Request body:", req.body);
+
+    const { chapterNo, title, description } = req.body;
     const { id } = req.body;
+    const { coverImage, demoVideo } = req.files;
+    console.log(id);
+    // console.log(coverImage, demoVideo);
 
     const duplicate = await course_schema.findOne({
       chapters: { $elemMatch: { id: chapterNo } },
     });
+    console.log("duplicate", duplicate);
     if (duplicate) {
-      res.status(500).json({ message: "Chapter is allredy existed !" });
+      res.status(500).json({ message: "Chapter already exists!" });
     } else {
-
       const uploadVideoResult = await public_controller.uploadVideo(
-        req.files.demoVideo
+        demoVideo
       );
       const uploadImageResult = await public_controller.uploadimage(
-        req.files.coverImage
+        coverImage
       );
+
       const newChapter = {
         id: chapterNo,
         title,
@@ -175,19 +181,19 @@ const addChapter = async (req, res) => {
         demoVideo: uploadVideoResult,
       };
 
-      // console.log(newCourse);
       const savedChapter = await course_schema.updateOne(
         { _id: id },
         { $push: { chapters: newChapter } }
       );
-
-      res.status(201).json({ message: "Chapter uploaded successfully !" });
+      console.log("newChapter", savedChapter);
+      res.status(201).json({ message: "Chapter uploaded successfully!" });
     }
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Internal server error" })
+    res.status(500).json({ message: "Internal server error" });
   }
-}
+};
+
 
 module.exports = {
   getStudent,
