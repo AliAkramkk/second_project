@@ -7,6 +7,7 @@ router.get('/courses', authController.allListCourse)
 
 router.post('/signup', authController.signUp_post)
 router.post('/signin', authController.signIn_post)
+router.post('/signin/google', authController.signIn_google)
 router.post('/verifyotp', authController.userVerifyOTP)
 router.get('/resend-otp', authController.resendOTP)
 router.post('/forgotPassword', authController.forgotPassword)

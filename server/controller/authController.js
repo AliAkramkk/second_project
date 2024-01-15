@@ -107,6 +107,10 @@ const signIn_post = async (req, res) => {
   }
 };
 
+const signIn_google = async (req, res) => {
+
+}
+
 const userVerifyOTP = async (req, res) => {
   try {
     const { OTP } = req.body;
@@ -241,5 +245,6 @@ module.exports = {
   forgotPassword,
   forgotOtp,
   resetPassword,
-  allListCourse
+  allListCourse,
+  signIn_google
 };
