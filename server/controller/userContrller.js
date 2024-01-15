@@ -1,4 +1,5 @@
 const User = require('../models/userSchema')
+const course_schema = require('../models/courseSchema')
 const cloudinary = require('../config/cloudinary')
 
 const getStudent = async (req, res) => {
@@ -58,8 +59,10 @@ const editProfile = async (req, res) => {
     res.status(500).json({ message: 'Something went wrong' });
   }
 };
+// .............................User......................................... // 
 
 module.exports = {
   getStudent,
-  editProfile
+  editProfile,
+
 }

@@ -7,6 +7,7 @@ import { signinValidation } from "../signinValidation";
 import { useLocation, useNavigate } from "react-router-dom";
 import { setCredentials } from "../../context/authReducer";
 import { useDispatch } from "react-redux";
+import backgroundImage from "../../../public/signin.jpg";
 
 function Signin() {
   const navigate = useNavigate();
@@ -70,77 +71,86 @@ function Signin() {
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Sign in
-        </h2>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="text"
-                autoComplete="email"
-                value={values.email}
-                onChange={handleChange}
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email"
-              />
-              {errors.email && (
-                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-              )}
-            </div>
-            <br />
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                value={values.password}
-                onChange={handleChange}
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-              />
-              {errors.password && (
-                <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-              )}
-            </div>
-          </div>
+    <div
+      className="min-h-screen flex flex-col items-start justify-start bg-cover"
+      style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
+      <div className="flex-row justify-start p-6">
+        <div className="min-h-screen flex items-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 h-9 p-4">
+          <div className="max-w-md  space-y-8 w-96">
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+              Sign in
+            </h2>
+            <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+              <div className="rounded-md shadow-sm -space-y-px">
+                <div>
+                  <label htmlFor="email" className="sr-only">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="text"
+                    autoComplete="email"
+                    value={values.email}
+                    onChange={handleChange}
+                    required
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    placeholder="Email"
+                  />
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                  )}
+                </div>
+                <br />
+                <div>
+                  <label htmlFor="password" className="sr-only">
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    value={values.password}
+                    onChange={handleChange}
+                    required
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    placeholder="Password"
+                  />
+                  {errors.password && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.password}
+                    </p>
+                  )}
+                </div>
+              </div>
 
-          <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Sign In
-            </button>
+              <div>
+                <button
+                  type="submit"
+                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Sign In
+                </button>
+              </div>
+            </form>
+            <div className="mt-5 text-lg flex justify-between items-center text-[#002D74]">
+              <p>Don't have an account?</p>
+              <button
+                onClick={() => {
+                  navigate("/signup");
+                }}
+                className="py-2 px-3 dark-bg-gray-900  bg-white border rounded-xl hover:scale-110 duration-300"
+              >
+                Register
+              </button>
+              {/* <button onClick={() => loginWithRedirect()}>Log In</button> */}
+            </div>
+            <div className="mt-8 text-lg border-t border-[#002D74] py-5 text-[#002D74] text-center dark:text-blue-400">
+              <a href="/forgot-password">Forgot your password?</a>
+            </div>
           </div>
-        </form>
-        <div className="mt-5 text-lg flex justify-between items-center text-[#002D74]">
-          <p>Don't have an account?</p>
-          <button
-            onClick={() => {
-              navigate("/signup");
-            }}
-            className="py-2 px-3 dark-bg-gray-900 ms-3 bg-white border rounded-xl hover:scale-110 duration-300"
-          >
-            Register
-          </button>
-          {/* <button onClick={() => loginWithRedirect()}>Log In</button> */}
-        </div>
-        <div className="mt-8 text-lg border-t border-[#002D74] py-5 text-[#002D74] text-center dark:text-blue-400">
-          <a href="/forgot-password">Forgot your password?</a>
         </div>
       </div>
     </div>

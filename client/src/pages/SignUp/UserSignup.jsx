@@ -1,10 +1,10 @@
 import Signup from "../../component/Forms/SignUp";
-import UserNavbar from "../../component/Navbar/UserNavbar";
+// import UserNavbar from "../../component/Navbar/UserNavbar";
 
 function UserSignup() {
   return (
     <>
-      <UserNavbar />
+      {/* <UserNavbar /> */}
       <Signup />
     </>
   );

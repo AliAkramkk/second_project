@@ -3,7 +3,8 @@ const router = express.Router();
 const authController = require('../controller/authController')
 
 
-
+router.get('/courses', authController.allListCourse)
+router.get('/resend-otp', authController.resendOTP)
 
 router.post('/signup', authController.signUp_post)
 router.post('/signin', authController.signIn_post)

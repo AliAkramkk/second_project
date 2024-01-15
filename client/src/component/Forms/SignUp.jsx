@@ -78,13 +78,13 @@ function Signup() {
       className="min-h-screen flex flex-col items-center justify-center bg-cover"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="flex p-4">
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-md w-full bg-white bg-opacity-80 p-8 rounded-md shadow-md">
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+      <div className="flex p-4 ml-96 justify-end ">
+        <div className="min-h-screen flex items-center justify-end bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 ml-64">
+          <div className=" bg-white bg-opacity-80 p-8 rounded-md shadow-md w-96">
+            <h3 className="mt-0 p-1 text-center text-3xl font-extrabold text-gray-900">
               Sign up
-            </h2>
-            <form onSubmit={handleSubmit}>
+            </h3>
+            <form onSubmit={handleSubmit} className="ml-auto">
               <div className="rounded-md shadow-sm -space-y-px">
                 <div>
                   <label htmlFor="username" className="sr-only">
@@ -162,7 +162,7 @@ function Signup() {
                     value={values.confirmPassword}
                     onChange={handleChange}
                     required
-                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                     placeholder="Confirm Password"
                   />
                   {errors.confirmPassword && (
@@ -184,7 +184,7 @@ function Signup() {
                     value={values.phone}
                     onChange={handleChange}
                     required
-                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                     placeholder="Phone"
                   />
                   {errors.phone && (

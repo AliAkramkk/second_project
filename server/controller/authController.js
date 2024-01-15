@@ -1,12 +1,12 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const public_controller = require('../controller/publicController')
-
+const course_schema = require('../models/courseSchema')
 const User = require('../models/userSchema');
 
 const signUp_post = async (req, res) => {
   try {
-    console.log(req.body);
+
     const { username, email, password, phone, isChef } = req.body;
 
     // Validate password strength (add your own criteria)
@@ -135,6 +135,25 @@ const userVerifyOTP = async (req, res) => {
     console.log(error.message);
   }
 };
+// ....................RESEND OTP......................................
+
+const resendOTP = async (req, res) => {
+  try {
+    const user = req.body;
+    console.log(user);
+    if (user) {
+      const { otp, secret } = await public_controller.genarateOTP();
+      public_controller.sendemailotp(email, otp);
+      res.status(201).json({ message: "Enter Your New OTP" });
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: "Internal server error" })
+  }
+}
+
+
+// .....................FORGOT PASSWORD................................
 
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
@@ -192,11 +211,30 @@ const resetPassword = async (req, res) => {
   }
 
 }
+
+const allListCourse = async (req, res) => {
+  try {
+    const course = await course_schema.find({ isShow: true })
+    console.log("course", course);
+    if (course) {
+      res.status(201).json({ course })
+    } else {
+      res.status(201).json({ message: "Courses are updating it will come soon.." })
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: "Internal server error" })
+  }
+
+}
+
 module.exports = {
   signUp_post,
   signIn_post,
   userVerifyOTP,
+  resendOTP,
   forgotPassword,
   forgotOtp,
-  resetPassword
+  resetPassword,
+  allListCourse
 };
