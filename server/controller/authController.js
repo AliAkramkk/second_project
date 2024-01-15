@@ -139,11 +139,16 @@ const userVerifyOTP = async (req, res) => {
 
 const resendOTP = async (req, res) => {
   try {
-    const user = req.body;
-    console.log(user);
+    const id = req.cookies.id;
+
+
+    // console.log(id)
+    let user = await User.findOne({ _id: id });
     if (user) {
       const { otp, secret } = await public_controller.genarateOTP();
-      public_controller.sendemailotp(email, otp);
+      user.OTP = secret;
+      await user.save()
+      public_controller.sendemailotp(user.email, otp);
       res.status(201).json({ message: "Enter Your New OTP" });
     }
   } catch (error) {
@@ -162,7 +167,7 @@ const forgotPassword = async (req, res) => {
     const { otp, secret } = await public_controller.genarateOTP();
     res.cookie("id", newUser._id, { maxAge: 500000, httpOnly: true });
     newUser.OTP = secret
-    newUser.save()
+    await newUser.save()
     public_controller.sendemailotp(email, otp);
     res.status(201).json({ message: "enter your otp" });
   } else {

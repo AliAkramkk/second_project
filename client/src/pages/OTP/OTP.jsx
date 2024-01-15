@@ -6,16 +6,19 @@ import axios from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import backgroundImage from "../../../public/otp1.jpg";
+import UserNavbar from "../../component/Navbar/UserNavbar";
 
 const OTP = () => {
-  const user = useSelector(auth);
   const [otp, setOtp] = useState(["", "", "", ""]);
   const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
   const [timer, setTimer] = useState(30);
   const [resendDisabled, setResendDisabled] = useState(false);
   // const [loading, setLoading] = useState(false);
   const usenavigate = useNavigate();
-
+  const user = useSelector(auth);
+  console.log(user);
+  const userEmail = user ? user.email : null;
+  console.log(userEmail);
   //  useEffect(() => {
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -36,24 +39,29 @@ const OTP = () => {
 
   const handleResend = () => {
     setResendDisabled(true);
-    console.log(user);
     axios
       .get(
-        "/resend-otp",
-        { user },
+        "/resend-otp", // Send the email as the payload
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       )
       .then((response) => {
-        if (response.data === 201) {
+        if (response.data.message === "Enter Your New OTP") {
           toast.success(response.data.message);
         }
+      })
+      .catch((error) => {
+        console.error("Error in OTP resend:", error);
+        // Handle error if OTP resend fails
+      })
+      .finally(() => {
+        // Reset timer to 30 seconds
+        setTimer(30);
       });
-    // Reset timer to 30 seconds
-    setTimer(30);
   };
+
   const handleChange = (e, index) => {
     const value = e.target.value;
 
@@ -156,55 +164,58 @@ const OTP = () => {
   };
 
   return (
-    <div
-      className="min-h-screen flex flex-col items-center justify-center bg-cover"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
-    >
-      <div className="flex justify-center items-center h-screen">
-        <div className="bg-white rounded-lg shadow-md dark:bg-neutral-800 p-8 w-72 ">
-          <h1 className="flex justify-center text-2xl font-bold text-red-800">
-            {String(Math.floor(timer / 60)).padStart(2, "0")}:
-            {String(timer % 60).padStart(2, "0")}
-          </h1>
-          <p className="mb-4">An OTP is sent to your email.</p>
-          <h2 className="text-lg font-semibold mb-4">Enter OTP</h2>
-          <div className="flex space-x-2">
-            {otp.map((digit, index) => (
-              <input
-                key={index}
-                type="number"
-                maxLength="1"
-                value={digit}
-                onChange={(e) => handleChange(e, index)}
-                className="w-12 h-12 border border-gray-300 rounded text-center animation-fade-in p-4"
-                ref={inputRefs[index]}
-                disabled={timer > 0 ? false : true}
-              />
-            ))}
+    <>
+      <UserNavbar />
+      <div
+        className="min-h-screen flex flex-col items-center justify-center bg-cover"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      >
+        <div className="flex justify-center items-center h-screen">
+          <div className="bg-white rounded-lg shadow-md dark:bg-neutral-800 p-8 w-72 ">
+            <h1 className="flex justify-center text-2xl font-bold text-red-800">
+              {String(Math.floor(timer / 60)).padStart(2, "0")}:
+              {String(timer % 60).padStart(2, "0")}
+            </h1>
+            <p className="mb-4">An OTP is sent to your email.</p>
+            <h2 className="text-lg font-semibold mb-4">Enter OTP</h2>
+            <div className="flex space-x-2">
+              {otp.map((digit, index) => (
+                <input
+                  key={index}
+                  type="number"
+                  maxLength="1"
+                  value={digit}
+                  onChange={(e) => handleChange(e, index)}
+                  className="w-12 h-12 border border-gray-300 rounded text-center animation-fade-in p-4"
+                  ref={inputRefs[index]}
+                  disabled={timer > 0 ? false : true}
+                />
+              ))}
+            </div>
+            <div className="mt-4 space-x-4">
+              {timer === 0 ? (
+                <button
+                  onClick={handleResend}
+                  disabled={resendDisabled}
+                  className="w-full bg-gray-300 text-gray-700 py-2 rounded hover:bg-gray-400"
+                >
+                  {resendDisabled ? "Resending..." : "Resend OTP"}
+                </button>
+              ) : (
+                <button
+                  onClick={handleSubmit}
+                  className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 p-4 mt-3"
+                  disabled={timer > 0 ? false : true} // Disable submit button during countdown
+                >
+                  Submit
+                </button>
+              )}
+            </div>
+            <Toaster />
           </div>
-          <div className="mt-4 space-x-4">
-            {timer === 0 ? (
-              <button
-                onClick={handleResend}
-                disabled={resendDisabled}
-                className="w-full bg-gray-300 text-gray-700 py-2 rounded hover:bg-gray-400"
-              >
-                {resendDisabled ? "Resending..." : "Resend OTP"}
-              </button>
-            ) : (
-              <button
-                onClick={handleSubmit}
-                className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 p-4 mt-3"
-                disabled={timer > 0 ? false : true} // Disable submit button during countdown
-              >
-                Submit
-              </button>
-            )}
-          </div>
-          <Toaster />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 export default OTP;
