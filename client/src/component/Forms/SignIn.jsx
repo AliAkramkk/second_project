@@ -9,6 +9,7 @@ import { setCredentials } from "../../context/authReducer";
 import { useDispatch } from "react-redux";
 import backgroundImage from "../../../public/signin.jpg";
 import GoogleAuthComponent from "../../pages/SignIn/Auth";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Signin() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ function Signin() {
   const dispatch = useDispatch();
   const from = location.state?.from.pathname;
   const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   const { values, handleChange, handleSubmit, errors } = useFormik({
     initialValues: {
       email: "",
@@ -108,17 +110,29 @@ function Signin() {
                   <label htmlFor="password" className="sr-only">
                     Password
                   </label>
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    value={values.password}
-                    onChange={handleChange}
-                    required
-                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                    placeholder="Password"
-                  />
+                  <div className="relative">
+                    <input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="current-password"
+                      value={values.password}
+                      onChange={handleChange}
+                      required
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                      placeholder="Password"
+                    />
+                    <span
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <FaEyeSlash className="h-5 w-5 text-gray-400" />
+                      ) : (
+                        <FaEye className="h-5 w-5 text-gray-400" />
+                      )}
+                    </span>
+                  </div>
                   {errors.password && (
                     <p className="text-red-500 text-xs mt-1">
                       {errors.password}

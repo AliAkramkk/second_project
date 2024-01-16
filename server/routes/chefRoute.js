@@ -1,5 +1,8 @@
 const chef_route = require('express').Router();
 const chefController = require('../controller/chefController');
+// const checkAccessStatus = require('../middleware/checkAccessStatus');
+
+// chef_route.use(checkAccessStatus);
 
 chef_route.get('/profile/:id', chefController.getStudent)
 chef_route.post('/add-course', chefController.addCourse)
