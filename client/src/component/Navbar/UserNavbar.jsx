@@ -16,6 +16,7 @@ function UserNavbar() {
   const HandlelogOut = (e) => {
     e.preventDefault();
     dispatch(logOut());
+    usenavigate('/signin')
   };
 
   const handleLogin = () => {

@@ -120,11 +120,15 @@ const AddCourse = () => {
     console.log(postData);
 
     try {
+      const loadingToastId = toast.loading(
+        "Adding your course. Please wait..."
+      );
       const response = await axiosPrivate.post("/chef/add-course", postData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      toast.dismiss(loadingToastId);
       if (response.status === 201) {
-        toast.success(response.data.message);
+        // toast.success(response.data.message);
 
         // Update the navigate call here
         navigate("/chef/my-course");

@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { setCredentials } from "../../context/authReducer";
 import { useDispatch } from "react-redux";
 import backgroundImage from "../../../public/signin.jpg";
+import GoogleAuthComponent from "../../pages/SignIn/Auth";
 
 function Signin() {
   const navigate = useNavigate();
@@ -134,6 +135,14 @@ function Signin() {
                   Sign In
                 </button>
               </div>
+              <div className="w-full md:w-2/3 flex items-center justify-center  gap-2 ml-14">
+                <hr className="w-1/3 md:w-1/3 border-t-2 border-gray-500 " />
+                <span>Or</span>
+                <hr className="w-1/3 border-t-2 border-gray-500 " />
+              </div>
+              <div className="w-1/2 flex justify-center ml-20">
+                <GoogleAuthComponent />
+              </div>
             </form>
             <div className="mt-5 text-lg flex justify-between items-center text-[#002D74]">
               <p>Don't have an account?</p>
@@ -147,6 +156,7 @@ function Signin() {
               </button>
               {/* <button onClick={() => loginWithRedirect()}>Log In</button> */}
             </div>
+
             <div className="mt-8 text-lg border-t border-[#002D74] py-5 text-[#002D74] text-center dark:text-blue-400">
               <a href="/forgot-password">Forgot your password?</a>
             </div>

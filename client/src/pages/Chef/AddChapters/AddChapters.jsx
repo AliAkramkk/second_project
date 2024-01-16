@@ -65,11 +65,13 @@ function AddChapters() {
         demoVideo,
         coverImage,
       };
-      console.log(postData);
+      const loadingToastId = toast.loading(
+        "Adding your course. Please wait..."
+      );
       const response = await axiosPrivate.post("/chef/add-chapter", postData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log(response);
+      toast.dismiss(loadingToastId);
       if (response.status === 201) {
         toast.success(response.data.message);
         console.log("Chapter Added Response:", response.data);

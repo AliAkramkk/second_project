@@ -1,51 +1,49 @@
 import React from "react";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import { decodeJwt } from "jwt-decode";
+import { decodeJwt } from "jose";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { auth } from "../../context/authReducer";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "../../api/axios";
+import { setCredentials } from "../../context/authReducer";
 
 const GoogleAuthComponent = () => {
-  const responseGoogle = (response) => {
-    console.log(response);
-    // Handle the response, e.g., send it to your server for authentication
-  };
   const navigate = useNavigate();
-  const user = useSelector(auth);
+  const dispatch = useDispatch();
 
   const handleGoogleLogin = (credentialResponse) => {
     try {
       const { credential } = credentialResponse;
       const payload = credential ? decodeJwt(credential) : undefined;
-
+      console.log("hi", payload);
       if (payload) {
-        axios.post(
-          "/signin/google",
-          { payload },
-          {
-            withCredentials: true,
-            credentials: "include",
-          }
-        );
-        // .then((res) => {
-        //   console.log(res);
-        //   const userCredentials = {
-        //     user: res.data.fullname,
-        //     userId: res.data.userId,
-        //     accessToken: res.data.accessToken,
-        //     role: res.data.role,
-        //   };
-        //   dispatch(setCredentials(userCredentials));
-        //   res.data.role === 3000 ? navigate("/teacher") : navigate("/");
-        // })
-        // .catch((err) => {
-        //   toastHelper.showToast(err?.response?.data?.message);
-        // });
+        axios
+          .post(
+            "/signin/google",
+            { payload },
+            {
+              withCredentials: true,
+              credentials: "include",
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            const userCredentials = {
+              user: res.data.username,
+              userId: res.data.id,
+              accesstoken: res.data.token,
+              role: res.data.role,
+            };
+            dispatch(setCredentials(userCredentials));
+            res.data.role === 3000 ? navigate("/chef") : navigate("/");
+          })
+
+          .catch((err) => {
+            toast.error(err?.response?.data?.message);
+          });
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error in Google login:", error);
     }
   };
 
@@ -58,10 +56,8 @@ const GoogleAuthComponent = () => {
             console.log("Login Failed");
           }}
         />
-        {/* ; buttonText="Login with Google" onSuccess={responseGoogle}
-        onFailure={responseGoogle}
-        cookiePolicy={"single_host_origin"} */}
       </GoogleOAuthProvider>
+      <Toaster />
     </>
   );
 };

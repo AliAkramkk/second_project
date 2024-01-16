@@ -1,6 +1,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/User/Home/Home";
+// import Home from "./pages/User/Home/Home";
+const Home = React.lazy(() => import("./pages/User/Home/Home"));
+
 import UserSignup from "./pages/SignUp/UserSignup";
 import UserSignin from "./pages/SignIn/UserSignin";
 import OTP from "./pages/OTP/Otp";
@@ -12,6 +14,9 @@ import ForgetPassword from "./pages/ForgotPassword/ForgetPassword";
 import Otp from "./pages/ForgotPassword/Otp";
 import SetPassword from "./pages/ForgotPassword/SetPassword";
 import AllCourse from "./pages/User/AllCourses/AllCourse";
+import Unotherised from "./pages/Unotherised/Unotherised";
+import CourseDetails from "./pages/User/CourseDetails/CourseDetails";
+import Loading from "./component/Loading/Loading";
 
 function App() {
   return (
@@ -21,7 +26,15 @@ function App() {
         <Route path="/admin/*" element={<Admin />} />
         <Route path="/chef/*" element={<Chef />} />
 
-        <Route exact path="/" element={<Home />} />
+        <Route
+          exact
+          path="/"
+          element={
+            <React.Suspense fallback={<Loading />}>
+              <Home />
+            </React.Suspense>
+          }
+        />
         <Route exact path="/signin" element={<UserSignin />} />
         <Route path="/otp" element={<OTP />} />
         <Route exact path="/signup" element={<UserSignup />} />
@@ -29,6 +42,8 @@ function App() {
         <Route exact path="/forgot-otp" element={<Otp />} />
         <Route exact path="/reset-password" element={<SetPassword />} />
         <Route path="/all-courses" element={<AllCourse />} />
+        <Route path="/coursedetails" element={<CourseDetails />} />
+        <Route exact path="/uno" element={<Unotherised />} />
       </Route>
     </Routes>
   );

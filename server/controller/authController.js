@@ -108,7 +108,91 @@ const signIn_post = async (req, res) => {
 };
 
 const signIn_google = async (req, res) => {
+  try {
 
+    console.log("hiiiiii");
+    const { email, picture, name } = req.body.payload;
+    const existedUser = await User.findOne({ email });
+
+    if (!existedUser) {
+      console.log("lsdfa");
+
+      const hashPassword = await sendPassword({ username: name, email });
+
+      const newUser = User({
+        username: name,
+        email,
+        password: hashPassword,
+        isGoogle: true,
+      });
+
+      const newUserData = await newUser.save();
+
+      const accesstoken = jwt.sign(
+        { email: newUserData.email },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "1d" }
+      );
+
+      const refreshtoken = jwt.sign(
+        { email: newUserData.email },
+        process.env.REFRESH_TOKEN_SECRET,
+        { expiresIn: "2d" }
+      );
+
+      newUserData.refreshtoken = refreshtoken;
+      await newUserData.save();
+
+      res.cookie("jwt", refreshtoken, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+      res.status(200).json({
+        role: newUserData.role,
+        accesstoken,
+        username: newUserData.name,
+        userId: newUserData._id,
+        message: "your account is verified",
+      });
+      return;
+    }
+
+    if (!existedUser.isAccess) {
+      res.status(400).json({ message: "The account is banned" });
+      return;
+    }
+    const accesstoken = jwt.sign(
+      { email: newUserData.email },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    const refreshtoken = jwt.sign(
+      { email: newUserData.email },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: "2d" }
+    );
+
+
+    existedUser.refreshtoken = refreshtoken;
+    await existedUser.save();
+
+    res.cookie("jwt", refreshtoken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    res.status(200).json({
+      role: existedUser.role,
+      accesstoken,
+      username: existedUser.name,
+      userId: existedUser._id,
+      message: "your account is verified",
+    });
+    return;
+  }
+  catch (error) {
+    console.log(error.message);
+  }
 }
 
 const userVerifyOTP = async (req, res) => {

@@ -6,8 +6,8 @@ const public_controller = require('./publicController');
 const getStudent = async (req, res) => {
   try {
     const id = req.params.id
-
-    const student = await User.findOne({ _id: id });
+    console.log("chef id", id);
+    const student = await user_schema.findOne({ _id: id });
 
     res.status(201).json({ student })
   } catch (error) {
@@ -52,10 +52,10 @@ const addCourse = async (req, res) => {
     // Save the new course
     const savedCourse = await newCourse.save();
 
-    return res.status(201).json({ message: "Course uploaded successfully!" });
+    res.status(201).json({ message: "Course uploaded successfully!" });
   } catch (error) {
     console.error(error);
-    return res.status(500).send("Internal Server Error");
+    res.status(500).send("Internal Server Error");
   }
 };
 
@@ -164,7 +164,7 @@ const addChapter = async (req, res) => {
     });
     console.log("duplicate", duplicate);
     if (duplicate) {
-      res.status(500).json({ message: "Chapter already exists!" });
+      res.status(422).json({ message: "Chapter already exists!" });
     } else {
       const uploadVideoResult = await public_controller.uploadVideo(
         demoVideo
