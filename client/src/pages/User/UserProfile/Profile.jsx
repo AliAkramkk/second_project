@@ -9,6 +9,7 @@ import { auth } from "../../../context/authReducer";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../../context/authReducer";
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+import EditProfile from "../../../component/ProfilePage/EditProfile";
 
 const Profile = () => {
   const [data, setData] = useState([]);
