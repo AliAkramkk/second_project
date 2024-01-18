@@ -320,6 +320,15 @@ const allListCourse = async (req, res) => {
   }
 
 }
+const selectedCourse = async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log("id", id);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: "Internal server error" })
+  }
+}
 
 module.exports = {
   signUp_post,
@@ -330,5 +339,6 @@ module.exports = {
   forgotOtp,
   resetPassword,
   allListCourse,
-  signIn_google
+  signIn_google,
+  selectedCourse
 };
