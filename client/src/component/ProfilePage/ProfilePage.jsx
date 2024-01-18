@@ -4,6 +4,7 @@ import { axiosPrivate } from "../../api/axios";
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 
 import EditProfile from "./EditProfile";
+import Footer from "../../pages/User/Footer/Footer";
 
 function ProfilePage({ data, fetchData, setData }) {
   const dateTimeString = data.createdAt;
@@ -73,6 +74,7 @@ function ProfilePage({ data, fetchData, setData }) {
           setData={setData}
         />
       )}
+      <Footer />
     </>
   );
 }

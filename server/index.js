@@ -6,6 +6,7 @@ const fileUpload = require("express-fileupload");
 const admin_route = require('./routes/adminRoute')
 const authRouter = require('./routes/authRoute');
 const cookieParser = require('cookie-parser');
+// const verifyJWT = require('./middleware/jwtmiddleware')
 const user_router = require('./routes/userRoute');
 const chef_route = require('./routes/chefRoute');
 const bodyParser = require('body-parser');
@@ -41,7 +42,7 @@ app.use(cors({ credentials: true, origin: 'http://localhost:5173' }));
 app.use(cookieParser())
 // Handle preflight requests
 app.options('*', cors());
-
+// app.use(verifyJWT)
 // app.use(jwtMiddleware);
 app.use(authRouter);
 app.use("/admin", admin_route)

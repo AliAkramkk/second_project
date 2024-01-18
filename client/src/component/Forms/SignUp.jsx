@@ -30,8 +30,11 @@ function Signup() {
       onSubmit: async (values) => {
         try {
           // Axios request with proper headers and data
-          const response = await axiosPrivate.post("/signup", values);
-
+          const response = await axiosPrivate.post("/signup", values, {
+            headers: {
+              Authorization: `Bearer YOUR_ACCESS_TOKEN`,
+            },
+          });
           // Handle different scenarios based on the response
           if (
             response.data.errors &&

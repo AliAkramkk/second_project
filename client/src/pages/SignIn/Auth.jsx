@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "../../api/axios";
 import { setCredentials } from "../../context/authReducer";
-
+// import jwt_decode from "jwt-decode";
 const GoogleAuthComponent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -49,7 +49,7 @@ const GoogleAuthComponent = () => {
 
   return (
     <>
-      <GoogleOAuthProvider clientId="1094703240851-iq03cn22ka6vnfogs3n2bkug36j5ibsu.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId="366855946507-rs5dhs988nto28ftiqdhjrpug9inkc31.apps.googleusercontent.com">
         <GoogleLogin
           onSuccess={handleGoogleLogin}
           onError={() => {

@@ -162,13 +162,13 @@ const signIn_google = async (req, res) => {
       return;
     }
     const accesstoken = jwt.sign(
-      { email: newUserData.email },
+      { email: existedUser.email },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "1d" }
     );
 
     const refreshtoken = jwt.sign(
-      { email: newUserData.email },
+      { email: existedUser.email },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: "2d" }
     );

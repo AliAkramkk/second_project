@@ -67,7 +67,7 @@ const getCourse = async (req, res) => {
 
     const courses = await course_schema.find({ chef: chef._id });
     if (courses) {
-      res.status(201).json({ courses });
+      res.status(200).json({ courses });
     } else {
       res.status(400).json({ message: "Courses is empty 😥" });
     }
@@ -86,7 +86,7 @@ const getVideoCourse = async (req, res) => {
     const course = await course_schema.findOne({ _id: course_id })
 
     if (course) {
-      res.status(201).json({ course })
+      res.status(200).json({ course })
     } else {
       res.status(400).json({ message: "No course is there" })
     }

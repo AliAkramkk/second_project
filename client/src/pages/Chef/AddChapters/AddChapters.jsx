@@ -58,13 +58,37 @@ function AddChapters() {
   };
 
   const handleSubmit = async (values) => {
+    if (!demoVideo) {
+      // Using SweetAlert2 for a nice alert
+      // toast.error("Field Must Fill", {
+      //   position: "top-right",
+      //   duration: 3000,
+      //   hideProgressBar: true,
+      //   closeButton: true,
+      // });
+      // return;
+
+      alert("Field Must fill");
+      return;
+    }
     try {
+      // if (!demoVideo || !coverImage) {
+      //   // Using SweetAlert2 for a nice alert
+      //   toast.error("Field Must Fill", {
+      //     position: "top-right",
+      //     duration: 3000,
+      //     hideProgressBar: true,
+      //     closeButton: true,
+      //   });
+      //   return;
+      // }
       const postData = {
         ...values,
         id: course_id,
         demoVideo,
         coverImage,
       };
+      console.log("postData", postData);
       const loadingToastId = toast.loading(
         "Adding your course. Please wait..."
       );

@@ -106,8 +106,14 @@ const AddCourse = () => {
     // formData.append("category", values.category);
     // formData.append("coverImage", coverImage);
 
-    if (!demoVideo) {
-      alert("Demo video is required");
+    if (!demoVideo || !values || !coverImage) {
+      // Using SweetAlert2 for a nice alert
+      toast.error("Field Must Fill", {
+        position: "top-right",
+        duration: 3000,
+        hideProgressBar: true,
+        closeButton: true,
+      });
       return;
     }
 
@@ -120,20 +126,32 @@ const AddCourse = () => {
     console.log(postData);
 
     try {
-      const loadingToastId = toast.loading(
-        "Adding your course. Please wait..."
-      );
-      const response = await axiosPrivate.post("/chef/add-course", postData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      toast.dismiss(loadingToastId);
-      if (response.status === 201) {
-        // toast.success(response.data.message);
+      if (
+        postData.title &&
+        postData.blurb &&
+        postData.description &&
+        postData.aboutChef &&
+        postData.price &&
+        postData.category &&
+        postData.coverImage
+      ) {
+        const loadingToastId = toast.loading(
+          "Adding your course. Please wait..."
+        );
+        const response = await axiosPrivate.post("/chef/add-course", postData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        toast.dismiss(loadingToastId);
+        if (response.status === 201) {
+          toast.success(response.data.message);
 
-        // Update the navigate call here
-        navigate("/chef/my-course");
+          // Update the navigate call here
+          navigate("/chef/my-course");
+        } else {
+          toast.error(response.data.message);
+        }
       } else {
-        toast.error(response.data.message);
+        toast.error("Please fill in all required fields");
       }
     } catch (error) {
       console.log(error.message);
