@@ -26,9 +26,13 @@ function ChefNavbar() {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
+  const navbarStyle = {
+    background:
+      "linear-gradient(to right,  rgb(223, 224, 226), rgb(189, 193, 199))",
+  };
 
   return (
-    <nav className="bg-gray-800 p-4">
+    <nav className="bg-gray-800 p-4" style={navbarStyle}>
       <div className="container mx-auto flex justify-between items-center">
         <div>
           <Link to="/chef/" className="text-white text-2xl font-bold">
@@ -38,7 +42,7 @@ function ChefNavbar() {
         <div className="flex space-x-4">
           <Link
             to="/chef/courseList"
-            className="text-white hover:text-gray-300 transition"
+            className="text-white hover:text-orange-200 transition"
           >
             CLASSES
           </Link>

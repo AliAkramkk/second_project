@@ -1,6 +1,10 @@
 const User = require('../models/userSchema')
 const course_schema = require('../models/courseSchema')
 const cloudinary = require('../config/cloudinary')
+const public_controller = require('../controller/publicController')
+const payment_schema = require('../models/paymentSchema')
+const stripe = require('stripe')("sk_test_51OZw6sSGxmt4Us6ahn1zKNrTKCU2i4g1nywFMKhlL44a7eep7CLjSy91PbTGw1cCkDYkqjVc2UtMFUwcIHKSJneS00kcIDEzfR")
+const jwt = require('jsonwebtoken')
 
 const getStudent = async (req, res) => {
   try {
@@ -61,8 +65,69 @@ const editProfile = async (req, res) => {
 };
 // .............................User......................................... // 
 
+const paymentHandle = async (req, res) => {
+  try {
+
+    const { user, courseData } = req.body;
+    const course = await course_schema.findOne({ _id: courseData._id })
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "inr",
+            product_data: {
+              name: course.title,
+              images: [course.coverImage.url],
+            },
+            unit_amount: course.price * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      success_url: `http://localhost:3000/successpayment?session_id={CHECKOUT_SESSION_ID}&course_id=${courseData._id}&user_name=${user.user}`,
+      cancel_url: "http://localhost:5173/allcourses",
+    });
+    res.json({ id: session.id });
+
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
+
+const handleSuccessPayment = async (req, res) => {
+  try {
+    const { session_id, user_name, course_id } = req.query;
+    const userdata = await User.findOne({ username: user_name });
+    const course = await course_schema.findOne({ _id: course_id });
+    await course_schema.findByIdAndUpdate(course_id, {
+      $addToSet: { users: userdata._id },
+    });
+
+    const payment = new payment_schema({
+      strip_id: session_id,
+      course_id: course._id,
+      chef_id: course.chef,
+      amount: course.price,
+      user_id: userdata._id,
+    });
+
+    await payment.save();
+    res.redirect('http://localhost:5173/user/mylearnigs');
+
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 module.exports = {
   getStudent,
   editProfile,
+  paymentHandle,
+  handleSuccessPayment
 
 }

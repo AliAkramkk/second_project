@@ -4,6 +4,9 @@ import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { axiosPrivate } from "../../../api/axios";
 import Footer from "../Footer/Footer";
+import { loadStripe } from "@stripe/stripe-js";
+import { auth } from "../../../context/authReducer";
+import toast, { Toaster } from "react-hot-toast";
 import {
   Card,
   CardHeader,
@@ -23,25 +26,61 @@ const CourseDetails = () => {
       "linear-gradient(to right, hsl(210, 30%, 95%), hsl(0, 30%, 95%), hsl(60, 100%, 95%))",
   };
   const location = useLocation();
-  const [video, setVideo] = useState([]);
+  const [videoVisible, setVideoVisible] = useState(false);
+  const [courseData, setCourseData] = useState([]);
   const course_id = location.state?.id;
-
-  useEffect;
-  () => {
+  const user = useSelector(auth);
+  console.log("user1", user);
+  useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const response = await axiosPrivate.get(`/selectedCourse${course_id}`);
-        console.log("response", response);
-      } catch (error) {}
+        const response = await axiosPrivate.get(`/selectedCourse/${course_id}`);
+        console.log("response", response.data.course);
+        setCourseData(response.data.course);
+      } catch (error) {
+        console.error("Error fetching course data:", error);
+      }
     };
+    fetchCourse();
+  }, [course_id]);
+
+  const makePayment = async () => {
+    try {
+      const stripe = await loadStripe(
+        "pk_test_51OZw6sSGxmt4Us6apcNYL0jdvjNGYQUqHhVFK0VyeipDurDyigTnBa9YDNFwGRtmqOnV3SCunxPrtsBaYXxkgLab00gujjtH0w"
+      );
+      const response = await axiosPrivate.post("/user/makePayment", {
+        courseData,
+        user,
+      });
+      console.log(response);
+
+      const result = stripe.redirectToCheckout({
+        sessionId: response.data.id,
+      });
+
+      if (result.error) {
+        console.error(result.error);
+        // Handle the error, e.g., show an error message to the user
+      } else {
+        // The redirection was successful
+        console.log("Redirection successful");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  const handleImageClick = () => {
+    setVideoVisible(true);
   };
 
+  const handleVideoClose = () => {
+    setVideoVisible(false);
+  };
   return (
     <>
       <UserNavbar />
-      <h2>Current Pathname: {location.pathname}</h2>
-      <p>Search: {course_id}</p>
-      <p>Hash: {location.hash}</p>
+      <Toaster />
       {/* <p>Hash: {location.state}</p> */}
       <div className="flex bg-gray-100">
         <div className="flex-1 text-left p-6">
@@ -87,19 +126,29 @@ const CourseDetails = () => {
         <div className="flex-1 p-4 ml-24">
           <Card className="w-96 h-96 mt-28 " style={cardStyle4}>
             <CardHeader shadow={false} floated={false} className="h-96">
-              <img
-                src="https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80"
-                alt="card-image"
-                className="h-full w-full object-cover"
-              />
+              {videoVisible ? (
+                <video
+                  controls
+                  src={courseData?.demoVideo?.url}
+                  className="h-full w-full object-cover"
+                  onClick={handleVideoClose}
+                />
+              ) : (
+                <img
+                  src={courseData?.coverImage?.url}
+                  alt="card-image"
+                  className="h-full w-full object-cover cursor-pointer"
+                  onClick={handleImageClick}
+                />
+              )}
             </CardHeader>
             <CardBody>
               <div className="mb-2 flex items-center justify-between">
                 <Typography color="blue-gray" className="font-medium">
-                  Apple AirPods
+                  {courseData.title}
                 </Typography>
                 <Typography color="blue-gray" className="font-medium">
-                  $95.00
+                  {courseData.price ? `$${courseData.price.toFixed(2)}` : ""}
                 </Typography>
               </div>
               <Typography
@@ -107,12 +156,12 @@ const CourseDetails = () => {
                 color="gray"
                 className="font-normal opacity-75"
               >
-                With plenty of talk and listen time, voice-activated Siri
-                access, and an available wireless charging case.
+                {courseData.description}
               </Typography>
             </CardBody>
             <CardFooter className="pt-0">
               <Button
+                onClick={makePayment}
                 ripple={false}
                 fullWidth={true}
                 className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"

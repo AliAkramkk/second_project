@@ -308,7 +308,7 @@ const resetPassword = async (req, res) => {
 const allListCourse = async (req, res) => {
   try {
     const course = await course_schema.find({ isShow: true })
-    console.log("course", course);
+
     if (course) {
       res.status(201).json({ course })
     } else {
@@ -323,7 +323,11 @@ const allListCourse = async (req, res) => {
 const selectedCourse = async (req, res) => {
   try {
     const id = req.params.id;
-    console.log("id", id);
+
+    const course = await course_schema.findById({ _id: id });
+    if (course) {
+      res.status(200).json({ course })
+    }
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: "Internal server error" })

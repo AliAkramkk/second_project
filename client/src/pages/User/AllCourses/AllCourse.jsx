@@ -146,7 +146,7 @@ const AllCourse = () => {
                           state: { id: course._id },
                         })
                       }
-                      className="btn hvr-shutter-in-horizontal justify-center border-y rounded-md border-black text-black  px-4 py-2 hover:bg-indigo-800 transition duration-300 ease-in-out"
+                      className="btn hvr-shutter-in-horizontal justify-center border-y rounded-md border-black text-black  px-4 py-2 hover:bg-slate-200 transition duration-300 ease-in-out"
                     >
                       Enroll now
                       <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
