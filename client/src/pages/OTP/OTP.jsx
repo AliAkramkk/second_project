@@ -13,6 +13,7 @@ const OTP = () => {
   const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
   const [timer, setTimer] = useState(30);
   const [resendDisabled, setResendDisabled] = useState(false);
+  const [timerIntervalId, setTimerIntervalId] = useState(null);
   // const [loading, setLoading] = useState(false);
   const usenavigate = useNavigate();
   const user = useSelector(auth);
@@ -32,7 +33,7 @@ const OTP = () => {
         }
       });
     }, 1000);
-
+    setTimerIntervalId(intervalId);
     // Cleanup the interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
@@ -40,13 +41,10 @@ const OTP = () => {
   const handleResend = () => {
     setResendDisabled(true);
     axios
-      .get(
-        "/resend-otp", // Send the email as the payload
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      )
+      .get("/resend-otp", {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      })
       .then((response) => {
         if (response.data.message === "Enter Your New OTP") {
           toast.success(response.data.message);
@@ -57,8 +55,21 @@ const OTP = () => {
         // Handle error if OTP resend fails
       })
       .finally(() => {
-        // Reset timer to 30 seconds
         setTimer(30);
+        const newIntervalId = setInterval(() => {
+          setTimer((prevTimer) => {
+            if (prevTimer > 0) {
+              return prevTimer - 1;
+            } else {
+              clearInterval(newIntervalId);
+              setResendDisabled(false); // Enable the resend button after the timer reaches zero
+              return 0;
+            }
+          });
+        }, 1000);
+
+        // Update the reference to the new interval ID
+        setTimerIntervalId(newIntervalId);
       });
   };
 
@@ -83,50 +94,6 @@ const OTP = () => {
       setOtp(updatedOtp);
     }
   };
-
-  // const handleResend = () => {
-  //   setResendDisabled(true);
-  //   setLoading(true);
-  //   // Simulate OTP resend logic with a delay (replace this with your actual resend logic)
-  //   simulateOtpResend()
-  //     .then(() => {
-  //       // Disable the resend button and reset the timer
-
-  //       setTimer(60); // Reset timer to one minute
-
-  //       // Start the countdown timer
-  //       const intervalId = setInterval(() => {
-  //         setTimer((prevTimer) => {
-  //           console.log(prevTimer);
-  //           if (prevTimer > 0) {
-  //             return prevTimer - 1;
-  //           } else {
-  //             clearInterval(intervalId);
-  //             setResendDisabled(false); // Enable the resend button after the timer reaches zero
-  //             setLoading(false);
-  //             return 0;
-  //           }
-  //         });
-  //       }, 1000);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error in OTP resend:", error);
-  //       // Handle error if OTP resend fails
-  //       setResendDisabled(false);
-  //       setLoading(false);
-  //     });
-  // };
-
-  // Simulate OTP resend logic (replace this with your actual resend logic)
-  // const simulateOtpResend = () => {
-  //   return new Promise((resolve, reject) => {
-  //     // Simulate a delay of 2 seconds (replace this with your actual delay)
-  //     setTimeout(() => {
-  //       // Resolve the promise to indicate successful OTP resend
-  //       resolve();
-  //     }, 2000);
-  //   });
-  // };
 
   const handleSubmit = (e) => {
     let OTP = otp.join("");

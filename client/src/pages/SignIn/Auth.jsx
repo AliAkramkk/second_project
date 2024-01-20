@@ -10,7 +10,8 @@ import { setCredentials } from "../../context/authReducer";
 const GoogleAuthComponent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const clientId =
+    "366855946507-rs5dhs988nto28ftiqdhjrpug9inkc31.apps.googleusercontent.com";
   const handleGoogleLogin = (credentialResponse) => {
     try {
       const { credential } = credentialResponse;
@@ -49,7 +50,7 @@ const GoogleAuthComponent = () => {
 
   return (
     <>
-      <GoogleOAuthProvider clientId="366855946507-rs5dhs988nto28ftiqdhjrpug9inkc31.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId={clientId}>
         <GoogleLogin
           onSuccess={handleGoogleLogin}
           onError={() => {

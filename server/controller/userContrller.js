@@ -90,7 +90,7 @@ const paymentHandle = async (req, res) => {
       success_url: `http://localhost:3000/successpayment?session_id={CHECKOUT_SESSION_ID}&course_id=${courseData._id}&user_name=${user.user}`,
       cancel_url: "http://localhost:5173/allcourses",
     });
-    res.json({ id: session.id });
+    res.status(200).json({ id: session.id });
 
   } catch (error) {
     console.log(error.message);
@@ -102,6 +102,7 @@ const paymentHandle = async (req, res) => {
 const handleSuccessPayment = async (req, res) => {
   try {
     const { session_id, user_name, course_id } = req.query;
+    console.log(req.query)
     const userdata = await User.findOne({ username: user_name });
     const course = await course_schema.findOne({ _id: course_id });
     await course_schema.findByIdAndUpdate(course_id, {

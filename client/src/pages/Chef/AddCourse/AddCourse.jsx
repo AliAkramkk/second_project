@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
 import * as Yup from "yup";
+import Footer from "../../User/Footer/Footer";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Course Name is required"),
@@ -162,219 +163,229 @@ const AddCourse = () => {
   const handleValuesChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
-
+  const cardStyle4 = {
+    background:
+      "linear-gradient(to right, hsl(210, 40%, 95%), hsl(0, 40%, 95%), hsl(60, 100%, 95%))",
+  };
   return (
     <>
-      <ChefNavbar />
-      <Formik
-        initialValues={values}
-        validationSchema={validationSchema}
-        // onSubmit={handleSubmit}
-      >
-        {(formik) => (
-          <Form encType="multipart/form-data">
-            <div className="flex p-4">
-              {/* Left side: Add Thumbnail Card */}
-              <div className="w-1/2 p-4 bg-white rounded-lg shadow-md dark:bg-neutral-800">
-                <h2 className="text-xl font-medium mb-4 text-neutral-800 dark:text-neutral-50">
-                  Add Thumbnail and Demo Video
-                </h2>
-                <div className="mb-4">
-                  {/* Thumbnail Section */}
-                  <h3 className="text-lg font-medium mb-2 text-neutral-800 dark:text-neutral-50">
-                    Thumbnail
-                  </h3>
-                  <img
-                    src={coverImage}
-                    alt="coverImage"
-                    className="w-full max-w-xs h-32 object-cover rounded-lg mb-2"
-                  />
-                  <input
-                    id="coverImage"
-                    name="coverImage"
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setCoverImage(e.target.files[0])}
-                    className="bg-black text-white py-2 px-4 rounded w-full mb-4"
-                  />
-
-                  {/* Demo Video Section */}
-                  <h3 className="text-lg font-medium mb-2 text-neutral-800 dark:text-neutral-50">
-                    Demo Video
-                  </h3>
-                  <video
-                    controls
-                    src={demoVideo}
-                    className="w-full max-w-xs h-32 object-cover rounded-lg mb-2"
-                  ></video>
-                  <input
-                    id="demoVideo"
-                    name="demoVideo"
-                    type="file"
-                    accept="video/*"
-                    onChange={(e) => setDemoVideo(e.target.files[0])}
-                    className="bg-black text-white py-2 px-4 rounded w-full"
-                  />
-                  <ErrorMessage
-                    name="demoVideo"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-              </div>
-
-              {/* Right side: Input Fields */}
-              <div className="w-1/2 p-4">
-                <div className="mb-6">
-                  <label
-                    htmlFor="large-input"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Course Name
-                  </label>
-                  <input
-                    type="text"
-                    id="title"
-                    name="title"
-                    onChange={handleValuesChange}
-                    autoComplete="coursename"
-                    className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
-                  <ErrorMessage
-                    name="title"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-
-                <div className="mb-6">
-                  <label
-                    htmlFor="large-input"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Blurb
-                  </label>
-                  <input
-                    type="text"
-                    id="blurb"
-                    name="blurb"
-                    onChange={handleValuesChange}
-                    autoComplete="blurb"
-                    className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
-                  <ErrorMessage
-                    name="blurb"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-
-                <div className="mb-6">
-                  <label
-                    htmlFor="default-input"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Description
-                  </label>
-                  <input
-                    as="textarea"
-                    id="description"
-                    rows="4"
-                    onChange={handleValuesChange}
-                    autoComplete="description"
-                    name="description"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 resize-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
-                  <ErrorMessage
-                    name="description"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-
-                <div className="mb-6">
-                  <label
-                    htmlFor="aboutChef"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    About Chef
-                  </label>
-                  <input
-                    type="text"
-                    id="aboutChef"
-                    name="aboutChef"
-                    onChange={handleValuesChange}
-                    className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
-                  <ErrorMessage
-                    name="aboutChef"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-
-                <div className="mb-6">
-                  <label
-                    htmlFor="price"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Price
-                  </label>
-                  <input
-                    type="number"
-                    id="price"
-                    name="price"
-                    onChange={handleValuesChange}
-                    className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
-                  <ErrorMessage
-                    name="price"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-
-                <div className="mb-6">
-                  <label
-                    htmlFor="category"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Category
-                  </label>
-                  <input
-                    type="text"
-                    id="category"
-                    name="category"
-                    onChange={handleValuesChange}
-                    // value={values.category}
-                    // onChange={(e) =>
-                    //   setValues({ ...values, category: e.target.value })
-                    // }
-                    className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
-                  <ErrorMessage
-                    name="category"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white py-2 px-4 rounded mt-4"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleSubmit(e);
-                  }}
+      <div className=" bg-gray-200 ">
+        <ChefNavbar />
+        <Formik
+          initialValues={values}
+          validationSchema={validationSchema}
+          // onSubmit={handleSubmit}
+        >
+          {(formik) => (
+            <Form encType="multipart/form-data">
+              <div className="flex p-4">
+                {/* Left side: Add Thumbnail Card */}
+                <div
+                  className="w-1/2 p-4 bg-white rounded-lg shadow-md dark:bg-neutral-800"
+                  style={cardStyle4}
                 >
-                  ADD Course
-                </button>
+                  <h2 className="text-xl font-medium mb-4 text-neutral-800 dark:text-neutral-50">
+                    Add Thumbnail and Demo Video
+                  </h2>
+                  <div className="mb-4">
+                    {/* Thumbnail Section */}
+                    <h3 className="text-lg font-medium mb-2 text-neutral-800 dark:text-neutral-50">
+                      Thumbnail
+                    </h3>
+                    <img
+                      src={coverImage}
+                      alt="coverImage"
+                      className="w-full max-w-xs h-32 object-cover rounded-lg mb-2"
+                      style={cardStyle4}
+                    />
+                    <input
+                      id="coverImage"
+                      name="coverImage"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setCoverImage(e.target.files[0])}
+                      className="bg-black text-white py-2 px-4 rounded w-full mb-4"
+                    />
+
+                    {/* Demo Video Section */}
+                    <h3 className="text-lg font-medium mb-2 text-neutral-800 dark:text-neutral-50">
+                      Demo Video
+                    </h3>
+                    <video
+                      controls
+                      src={demoVideo}
+                      className="w-full max-w-xs h-32 object-cover rounded-lg mb-2"
+                    ></video>
+                    <input
+                      id="demoVideo"
+                      name="demoVideo"
+                      type="file"
+                      accept="video/*"
+                      onChange={(e) => setDemoVideo(e.target.files[0])}
+                      className="bg-black text-white py-2 px-4 rounded w-full"
+                    />
+                    <ErrorMessage
+                      name="demoVideo"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
+                </div>
+
+                {/* Right side: Input Fields */}
+                <div className="w-1/2 p-4">
+                  <div className="mb-6">
+                    <label
+                      htmlFor="large-input"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      Course Name
+                    </label>
+                    <input
+                      type="text"
+                      id="title"
+                      name="title"
+                      onChange={handleValuesChange}
+                      autoComplete="coursename"
+                      className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
+                    <ErrorMessage
+                      name="title"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
+
+                  <div className="mb-6">
+                    <label
+                      htmlFor="large-input"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      Blurb
+                    </label>
+                    <input
+                      type="text"
+                      id="blurb"
+                      name="blurb"
+                      onChange={handleValuesChange}
+                      autoComplete="blurb"
+                      className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
+                    <ErrorMessage
+                      name="blurb"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
+
+                  <div className="mb-6">
+                    <label
+                      htmlFor="default-input"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      Description
+                    </label>
+                    <input
+                      as="textarea"
+                      id="description"
+                      rows="4"
+                      onChange={handleValuesChange}
+                      autoComplete="description"
+                      name="description"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 resize-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
+                    <ErrorMessage
+                      name="description"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
+
+                  <div className="mb-6">
+                    <label
+                      htmlFor="aboutChef"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      About Chef
+                    </label>
+                    <input
+                      type="text"
+                      id="aboutChef"
+                      name="aboutChef"
+                      onChange={handleValuesChange}
+                      className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
+                    <ErrorMessage
+                      name="aboutChef"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
+
+                  <div className="mb-6">
+                    <label
+                      htmlFor="price"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      Price
+                    </label>
+                    <input
+                      type="number"
+                      id="price"
+                      name="price"
+                      onChange={handleValuesChange}
+                      className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
+                    <ErrorMessage
+                      name="price"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
+
+                  <div className="mb-6">
+                    <label
+                      htmlFor="category"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      Category
+                    </label>
+                    <input
+                      type="text"
+                      id="category"
+                      name="category"
+                      onChange={handleValuesChange}
+                      // value={values.category}
+                      // onChange={(e) =>
+                      //   setValues({ ...values, category: e.target.value })
+                      // }
+                      className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
+                    <ErrorMessage
+                      name="category"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="bg-blue-500 text-white py-2 px-4 rounded mt-4"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSubmit(e);
+                    }}
+                  >
+                    ADD Course
+                  </button>
+                </div>
+                <Toaster />
               </div>
-              <Toaster />
-            </div>
-          </Form>
-        )}
-      </Formik>
+            </Form>
+          )}
+        </Formik>
+        <Footer />
+      </div>
     </>
   );
 };

@@ -101,6 +101,11 @@ function UserNavbar() {
           </div>
         ) : (
           <>
+            {/* <img
+              src="assets/img/avatars/avatar4.png"
+              className="h-12 w-12 rounded-full"
+              alt="avatar"
+            /> */}
             <div
               className="flex items-end cursor-pointer"
               onClick={() => {

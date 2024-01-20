@@ -7,6 +7,7 @@ import { auth } from "../../../context/authReducer";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import Footer from "../../User/Footer/Footer";
 
 function AddChapters() {
   const usenavigate = useNavigate();
@@ -119,147 +120,156 @@ function AddChapters() {
       }
     }
   };
-
+  const cardStyle4 = {
+    background:
+      "linear-gradient(to right, hsl(210, 40%, 95%), hsl(0, 40%, 95%), hsl(60, 100%, 95%))",
+  };
   return (
     <>
-      <ChefNavbar />
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        {(formik) => (
-          <Form encType="multipart/form-data">
-            <div className="flex p-4">
-              <div className="w-1/2 p-4 bg-white rounded-lg shadow-md dark:bg-neutral-800">
-                <h2 className="text-xl font-medium mb-4 text-neutral-800 dark:text-neutral-50">
-                  Add Thumbnail and Demo Video
-                </h2>
-                <div className="mb-4">
-                  <h3 className="text-lg font-medium mb-2 text-neutral-800 dark:text-neutral-50">
-                    Thumbnail
-                  </h3>
-                  <img
-                    src={coverImage}
-                    alt="coverImage"
-                    className="w-full max-w-xs h-32 object-cover rounded-lg mb-2"
-                  />
-                  <input
-                    id="coverImage"
-                    name="coverImage"
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      setCoverImage(e.target.files[0]);
-                      formik.setFieldValue("coverImage", e.target.files[0]);
-                    }}
-                    className="bg-black text-white py-2 px-4 rounded w-full mb-4"
-                  />
-
-                  <h3 className="text-lg font-medium mb-2 text-neutral-800 dark:text-neutral-50">
-                    Demo Video
-                  </h3>
-                  <video
-                    controls
-                    src={demoVideo}
-                    className="w-full max-w-xs h-32 object-cover rounded-lg mb-2"
-                  ></video>
-                  <input
-                    id="demoVideo"
-                    name="demoVideo"
-                    type="file"
-                    accept="video/*"
-                    onChange={(e) => {
-                      setDemoVideo(e.target.files[0]);
-                      formik.setFieldValue("demoVideo", e.target.files[0]);
-                    }}
-                    className="bg-black text-white py-2 px-4 rounded w-full"
-                  />
-                  <ErrorMessage
-                    name="demoVideo"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-              </div>
-
-              <div className="w-1/2 p-4">
-                <div className="mb-4">
-                  <label
-                    htmlFor="title"
-                    className="block text-sm font-medium text-gray-600"
-                  >
-                    Title
-                  </label>
-                  <Field
-                    type="text"
-                    id="title"
-                    name="title"
-                    autoComplete="coursename"
-                    className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
-                  <ErrorMessage
-                    name="title"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-
-                <div className="mb-6">
-                  <label
-                    htmlFor="description"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Description
-                  </label>
-                  <Field
-                    as="textarea"
-                    id="description"
-                    rows="4"
-                    autoComplete="description"
-                    name="description"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 resize-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
-                  <ErrorMessage
-                    name="description"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-
-                <div className="mb-6">
-                  <label
-                    htmlFor="chapterNo"
-                    className="block text-sm font-medium text-gray-600"
-                  >
-                    ChapterNo
-                  </label>
-                  <Field
-                    type="number"
-                    id="chapterNo"
-                    name="chapterNo"
-                    autoComplete="chapterNo"
-                    className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
-                  <ErrorMessage
-                    name="chapterNo"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white py-2 px-4 rounded mt-4"
+      <div className=" bg-gray-200 ">
+        <ChefNavbar />
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {(formik) => (
+            <Form encType="multipart/form-data">
+              <div className="flex p-4">
+                <div
+                  className="w-1/2 p-4 bg-white rounded-lg shadow-md dark:bg-neutral-800"
+                  style={cardStyle4}
                 >
-                  ADD Course
-                </button>
+                  <h2 className="text-xl font-medium mb-4 text-neutral-800 dark:text-neutral-50">
+                    Add Thumbnail and Demo Video
+                  </h2>
+                  <div className="mb-4">
+                    <h3 className="text-lg font-medium mb-2 text-neutral-800 dark:text-neutral-50">
+                      Thumbnail
+                    </h3>
+                    <img
+                      src={coverImage}
+                      alt="coverImage"
+                      className="w-full max-w-xs h-32 object-cover rounded-lg mb-2"
+                    />
+                    <input
+                      id="coverImage"
+                      name="coverImage"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        setCoverImage(e.target.files[0]);
+                        formik.setFieldValue("coverImage", e.target.files[0]);
+                      }}
+                      className="bg-black text-white py-2 px-4 rounded w-full mb-4"
+                    />
+
+                    <h3 className="text-lg font-medium mb-2 text-neutral-800 dark:text-neutral-50">
+                      Demo Video
+                    </h3>
+                    <video
+                      controls
+                      src={demoVideo}
+                      className="w-full max-w-xs h-32 object-cover rounded-lg mb-2"
+                    ></video>
+                    <input
+                      id="demoVideo"
+                      name="demoVideo"
+                      type="file"
+                      accept="video/*"
+                      onChange={(e) => {
+                        setDemoVideo(e.target.files[0]);
+                        formik.setFieldValue("demoVideo", e.target.files[0]);
+                      }}
+                      className="bg-black text-white py-2 px-4 rounded w-full"
+                    />
+                    <ErrorMessage
+                      name="demoVideo"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
+                </div>
+
+                <div className="w-1/2 p-4">
+                  <div className="mb-4">
+                    <label
+                      htmlFor="title"
+                      className="block text-sm font-medium text-gray-600"
+                    >
+                      Title
+                    </label>
+                    <Field
+                      type="text"
+                      id="title"
+                      name="title"
+                      autoComplete="coursename"
+                      className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
+                    <ErrorMessage
+                      name="title"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
+
+                  <div className="mb-6">
+                    <label
+                      htmlFor="description"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      Description
+                    </label>
+                    <Field
+                      as="textarea"
+                      id="description"
+                      rows="4"
+                      autoComplete="description"
+                      name="description"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 resize-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
+                    <ErrorMessage
+                      name="description"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
+
+                  <div className="mb-6">
+                    <label
+                      htmlFor="chapterNo"
+                      className="block text-sm font-medium text-gray-600"
+                    >
+                      ChapterNo
+                    </label>
+                    <Field
+                      type="number"
+                      id="chapterNo"
+                      name="chapterNo"
+                      autoComplete="chapterNo"
+                      className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
+                    <ErrorMessage
+                      name="chapterNo"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="bg-blue-500 text-white py-2 px-4 rounded mt-4"
+                  >
+                    ADD Course
+                  </button>
+                </div>
               </div>
-            </div>
-          </Form>
-        )}
-      </Formik>
-      <Toaster />
+            </Form>
+          )}
+        </Formik>
+        <Toaster />
+        <Footer />
+      </div>
     </>
   );
 }
