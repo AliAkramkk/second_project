@@ -7,6 +7,7 @@ const chefController = require('../controller/chefController');
 chef_route.get('/profile/:id', chefController.getStudent)
 chef_route.post('/add-course', chefController.addCourse)
 chef_route.get('/myCourse', chefController.getCourse)
+chef_route.get('/currentChefCourse', chefController.currentChefCourse)
 chef_route.get('/getcourse/:course_id', chefController.getVideoCourse)
 chef_route.put('/handleShowCourse', chefController.handleChangeCourse)
 chef_route.delete('/deleteCourse/:id', chefController.deleteCourse)

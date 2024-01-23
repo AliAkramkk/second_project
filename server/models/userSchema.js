@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    default: "",
   },
   role: {
     type: Number,
@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema({
   },
   pic: {
     type: Object,
+    default: { url: 'default-profile-picture-url' },
   },
   isVerify: {
     type: Boolean,

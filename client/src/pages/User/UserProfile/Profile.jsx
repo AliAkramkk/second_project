@@ -4,19 +4,26 @@ import UserNavbar from "../../../component/Navbar/UserNavbar";
 import ProfilePage from "../../../component/ProfilePage/ProfilePage";
 import { useSelector } from "react-redux";
 import { selectCurrentId } from "../../../context/authReducer";
-import { selectCurrentUser } from "../../../context/authReducer";
+import {
+  selectCurrentUser,
+  selectCurrentToken,
+} from "../../../context/authReducer";
 import { auth } from "../../../context/authReducer";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../../context/authReducer";
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import EditProfile from "../../../component/ProfilePage/EditProfile";
 import Footer from "../Footer/Footer";
+import { config } from "@fortawesome/fontawesome-svg-core";
 
 const Profile = () => {
   const [data, setData] = useState([]);
   const id = useSelector(selectCurrentId);
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
+  const token = useSelector(selectCurrentToken);
+  console.log("==============================");
+  console.log(user);
 
   console.log(id);
   useEffect(() => {
@@ -25,7 +32,12 @@ const Profile = () => {
 
   async function fetchData() {
     try {
-      const response = await axiosPrivate.get(`/user/profile/${id}`);
+      const response = await axiosPrivate.get(`/user/profile/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // Add any other headers if needed
+        },
+      });
       console.log(response.data);
       dispatch(setCredentials(response.data.student));
       setData(response.data.student);

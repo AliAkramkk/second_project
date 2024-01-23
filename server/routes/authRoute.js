@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controller/authController')
-
+const usercontroller = require('../controller/userContrller')
+const checkAccess = require('../middleware/checkAccessStatus')
 
 router.get('/courses', authController.allListCourse)
 router.get('/selectedCourse/:id', authController.selectedCourse)
+router.get('/successpayment', usercontroller.handleSuccessPayment);
+router.get('/checkAccess', checkAccess)
 
 router.post('/signup', authController.signUp_post)
 router.post('/signin', authController.signIn_post)

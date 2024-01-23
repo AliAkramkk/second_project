@@ -10,6 +10,7 @@ import MyCourse from "../pages/Chef/MyCourse/MyCourse";
 // import ChefVidoes from "../pages/Chef/ChefVideos/ChefVidoes";
 import AddChapters from "../pages/Chef/AddChapters/AddChapters";
 import VideoDetatils from "../pages/videoDetails/VideoDetatils";
+import LiveRoom from "../pages/Chef/LiveRoom/LiveRoom";
 // import ChefProfile from "../pages/Chef/ChefProfile/ChefProfile";
 const ChefHome = React.lazy(() => import("../pages/Chef/ChefHome"));
 const ChefVidoes = React.lazy(() =>
@@ -43,6 +44,7 @@ function Chef() {
       <Route path="/courseList" element={<Classes />} />
       <Route path="/add-course" element={<AddCourse />} />
       <Route path="/my-course" element={<MyCourse />} />
+      <Route path="/room/:roomId" element={<LiveRoom />} />
       <Route
         path="/videos"
         element={

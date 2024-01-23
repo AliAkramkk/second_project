@@ -3,10 +3,9 @@ import ChefNavbar from "../../../component/Navbar/ChefNavbar";
 import toast, { Toaster } from "react-hot-toast";
 import { axiosPrivate } from "../../../api/axios";
 import { useSelector } from "react-redux";
-import { auth } from "../../../context/authReducer";
+import { auth, selectCurrentToken } from "../../../context/authReducer";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-
 import * as Yup from "yup";
 import Footer from "../../User/Footer/Footer";
 
@@ -40,6 +39,7 @@ const AddCourse = () => {
   const [demoVideo, setDemoVideo] = useState();
   const navigate = useNavigate();
   const user = useSelector(auth);
+  const token = useSelector(selectCurrentToken);
   console.log(user);
   const [values, setValues] = useState({
     title: "",
@@ -141,6 +141,7 @@ const AddCourse = () => {
         );
         const response = await axiosPrivate.post("/chef/add-course", postData, {
           headers: { "Content-Type": "multipart/form-data" },
+          Authorization: `Bearer ${token}`,
         });
         toast.dismiss(loadingToastId);
         if (response.status === 201) {

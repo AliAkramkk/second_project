@@ -2,13 +2,21 @@ import React, { useState, useEffect } from "react";
 import { axiosPrivate } from "../../../api/axios";
 import AdminNavbar from "../../../component/Navbar/AdminNavbar";
 import toast, { Toaster } from "react-hot-toast";
+import { selectCurrentToken } from "../../../context/authReducer";
+import { useSelector } from "react-redux";
+
 function Userlist() {
   const [list, setList] = useState([]);
-
+  const token = useSelector(selectCurrentToken);
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axiosPrivate.get("/admin/students?role=2000");
+        const response = await axiosPrivate.get("/admin/students?role=2000", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // Add any other headers if needed
+          },
+        });
         console.log(response.data);
         setList(response.data.students);
         console.log(list);
@@ -26,11 +34,23 @@ function Userlist() {
         // Update the local state optimistically
 
         // Make a request to the server to update the user's access status
-        const message = await axiosPrivate.put("/admin/updateUserStatus", {
-          email: email,
-        });
+        const message = await axiosPrivate.put(
+          "/admin/updateUserStatus",
+          { email: email },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              // Add any other headers if needed
+            },
+          }
+        );
         toast.success(message.data.message);
-        const response = await axiosPrivate.get("/admin/students?role=2000");
+        const response = await axiosPrivate.get("/admin/students?role=2000", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // Add any other headers if needed
+          },
+        });
         setList(response.data.students);
         // Note: The server should handle the logic to toggle the isAccess and clear JWT
       } catch (error) {

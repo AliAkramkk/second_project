@@ -111,6 +111,7 @@ const signIn_google = async (req, res) => {
   try {
 
     console.log("hiiiiii");
+    console.log("Request Body:", req.body);
     const { email, picture, name } = req.body.payload;
     const existedUser = await User.findOne({ email });
 
@@ -118,12 +119,12 @@ const signIn_google = async (req, res) => {
       console.log("lsdfa");
 
       const hashPassword = await sendPassword({ username: name, email });
-
+      console.log(hashPassword);
       const newUser = User({
         username: name,
         email,
-        password: hashPassword,
         isGoogle: true,
+        pic: { url: picture || 'default-google-profile-picture-url' },
       });
 
       const newUserData = await newUser.save();
@@ -150,7 +151,7 @@ const signIn_google = async (req, res) => {
       res.status(200).json({
         role: newUserData.role,
         accesstoken,
-        username: newUserData.name,
+        username: newUserData.username,
         userId: newUserData._id,
         message: "your account is verified",
       });

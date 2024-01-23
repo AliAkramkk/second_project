@@ -194,6 +194,27 @@ const addChapter = async (req, res) => {
   }
 };
 
+const currentChefCourse = async (req, res) => {
+  try {
+    const user = req.query;
+    console.log("user1", user);
+    const chef = await user_schema.findOne({ _id: user.id });
+    console.log("chef",);
+    const courses = await course_schema.find({ chef: chef._id, isShow: true });
+
+    console.log(courses.length);
+    if (courses) {
+      res.status(200).json({ courses });
+    } else {
+      res.status(400).json({ message: "Courses is empty 😥" });
+    }
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" })
+  }
+
+}
 
 module.exports = {
   getStudent,
@@ -203,5 +224,6 @@ module.exports = {
   handleChangeCourse,
   deleteCourse,
   deleteChapter,
-  addChapter
+  addChapter,
+  currentChefCourse
 };

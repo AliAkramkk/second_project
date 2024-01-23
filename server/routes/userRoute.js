@@ -1,6 +1,8 @@
 const express = require('express');
 const user_router = express.Router();
 const userController = require('../controller/userContrller')
+// const checkAccess = require('../middleware/checkAccessStatus')
+
 
 user_router.get('/profile/:id', userController.getStudent)
 

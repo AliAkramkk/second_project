@@ -15,8 +15,10 @@ const GoogleAuthComponent = () => {
   const handleGoogleLogin = (credentialResponse) => {
     try {
       const { credential } = credentialResponse;
+
       const payload = credential ? decodeJwt(credential) : undefined;
       console.log("hi", payload);
+      console.log("Credential Response:", credentialResponse);
       if (payload) {
         axios
           .post(
@@ -28,7 +30,7 @@ const GoogleAuthComponent = () => {
             }
           )
           .then((res) => {
-            console.log(res);
+            console.log(res.data);
             const userCredentials = {
               user: res.data.username,
               userId: res.data.id,

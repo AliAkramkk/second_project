@@ -12,6 +12,7 @@ const getStudent = async (req, res) => {
 
     const student = await User.findOne({ _id: id });
 
+
     res.status(201).json({ student })
   } catch (error) {
     console.log(error.message);

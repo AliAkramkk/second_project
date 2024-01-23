@@ -3,7 +3,7 @@ import ChefNavbar from "../../../component/Navbar/ChefNavbar";
 import toast, { Toaster } from "react-hot-toast";
 import { axiosPrivate } from "../../../api/axios";
 import { useSelector } from "react-redux";
-import { auth } from "../../../context/authReducer";
+import { auth, selectCurrentToken } from "../../../context/authReducer";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -13,7 +13,7 @@ function AddChapters() {
   const usenavigate = useNavigate();
   const [prevToastId, setPrevToastId] = useState(null);
   const user = useSelector(auth);
-
+  const token = useSelector(selectCurrentToken);
   const location = useLocation();
   const course_id = location.state?.id;
 
@@ -95,6 +95,7 @@ function AddChapters() {
       );
       const response = await axiosPrivate.post("/chef/add-chapter", postData, {
         headers: { "Content-Type": "multipart/form-data" },
+        Authorization: `Bearer ${token}`,
       });
       toast.dismiss(loadingToastId);
       if (response.status === 201) {
