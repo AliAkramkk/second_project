@@ -75,7 +75,7 @@ function UserNavbar() {
             <Link to="/all-courses" className="nav-link">
               Courses
             </Link>
-            <Link to="" className="nav-link">
+            <Link to="/user/my-learning" className="nav-link">
               My Learning
             </Link>
             {!user?.user ? (

@@ -23,7 +23,9 @@ const verifyJWT = async (req, res, next) => {
 
     console.log(userData);
     if (!userData) {
-      return res.sendStatus(403); // Forbidden if user not found or access is denied
+      return res.status(403).json({
+        message: "user block or unAutherised"
+      }) // Forbidden if user not found or access is denied
     }
 
     next(); // Move to the next middleware or route handler

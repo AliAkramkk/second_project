@@ -9,12 +9,13 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import { axiosPrivate } from "../../api/axios";
-import { auth } from "../../context/authReducer";
+import { auth, selectCurrentToken } from "../../context/authReducer";
 import { useSelector } from "react-redux";
 
 function ChefHome() {
   const navigate = useNavigate();
   const user = useSelector(auth);
+  const token = useSelector(selectCurrentToken);
   const [courses, setCourses] = useState([]);
   // console.log(user);
   const cardStyle3 = {
@@ -37,6 +38,10 @@ function ChefHome() {
         console.log(user);
         const response = await axiosPrivate.get("/chef/currentChefCourse", {
           params: user,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // Add any other headers if needed
+          },
         });
         setCourses(response.data.courses);
         // Handle the response data here if needed

@@ -4,6 +4,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { axiosPrivate } from "../../api/axios";
 import toast, { Toaster } from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { selectCurrentToken } from "../../context/authReducer";
 
 const editProfileValidation = Yup.object({
   username: Yup.string().min(3).required("Please enter a valid username"),
@@ -20,7 +22,7 @@ const EditProfile = ({
 }) => {
   const [profilePicture, setProfilePicture] = useState(null);
   const [finalImage, setFinalImage] = useState(null);
-
+  const token = useSelector(selectCurrentToken);
   const toggleModal = () => {
     setIsEditModalOpen(false);
   };
@@ -56,12 +58,21 @@ const EditProfile = ({
     validationSchema: editProfileValidation,
     onSubmit: async (values) => {
       try {
-        const response = await axiosPrivate.patch("/user/editprofile", {
-          username: values.username,
-          phone: values.phone,
-          email: userData.email,
-          pic: finalImage,
-        });
+        const response = await axiosPrivate.patch(
+          "/user/editprofile",
+          {
+            username: values.username,
+            phone: values.phone,
+            email: userData.email,
+            pic: finalImage,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              // Add any other headers if needed
+            },
+          }
+        );
 
         console.log("success edit profile");
         console.log("abcd", response.data.updatedUser.username);

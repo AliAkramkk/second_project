@@ -10,6 +10,7 @@ const verifyJWT = require('./middleware/jwtmiddleware')
 const user_router = require('./routes/userRoute');
 const chef_route = require('./routes/chefRoute');
 const bodyParser = require('body-parser');
+
 const path = require('path')
 // const http = require('http');
 const app = express();
@@ -45,6 +46,7 @@ app.use(cookieParser());
 app.options('*', cors());
 // app.use(jwtMiddleware);
 app.use(authRouter);
+
 app.use(verifyJWT);
 app.use("/admin", admin_route)
 app.use("/user", user_router);
