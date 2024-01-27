@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { axiosPrivate } from "../../../api/axios";
 import Footer from "../Footer/Footer";
 import { loadStripe } from "@stripe/stripe-js";
-import { auth } from "../../../context/authReducer";
+import { auth, selectCurrentToken } from "../../../context/authReducer";
 import toast, { Toaster } from "react-hot-toast";
 import {
   Card,
@@ -30,11 +30,20 @@ const CourseDetails = () => {
   const [courseData, setCourseData] = useState([]);
   const course_id = location.state?.id;
   const user = useSelector(auth);
+  const token = useSelector(selectCurrentToken);
   console.log("user1", user);
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const response = await axiosPrivate.get(`/selectedCourse/${course_id}`);
+        const response = await axiosPrivate.get(
+          `/selectedCourse/${course_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              // Add any other headers if needed
+            },
+          }
+        );
         console.log("response", response.data.course);
         setCourseData(response.data.course);
       } catch (error) {
@@ -47,12 +56,21 @@ const CourseDetails = () => {
   const makePayment = async () => {
     try {
       const stripe = await loadStripe(
-        "pk_test_51OZw6sSGxmt4Us6apcNYL0jdvjNGYQUqHhVFK0VyeipDurDyigTnBa9YDNFwGRtmqOnV3SCunxPrtsBaYXxkgLab00gujjtH0w"
+        "pk_test_51OISQWSBQLVhDmRfAhLKSBBKcyKeeIUvfUe1urrofu6ZeWJqqY5N6pVwJ7ItTIVpPSm1kAAWuuR5WJmQMfFUCn6800Wi7hSBjG"
       );
-      const response = await axiosPrivate.post("/user/makePayment", {
-        courseData,
-        user,
-      });
+      const response = await axiosPrivate.post(
+        "/user/makePayment",
+        {
+          courseData,
+          user,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // Add any other headers if needed
+          },
+        }
+      );
       console.log(response);
 
       const result = stripe.redirectToCheckout({

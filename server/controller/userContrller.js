@@ -3,7 +3,7 @@ const course_schema = require('../models/courseSchema')
 const cloudinary = require('../config/cloudinary')
 const public_controller = require('../controller/publicController')
 const payment_schema = require('../models/paymentSchema')
-const stripe = require('stripe')("sk_test_51OZw6sSGxmt4Us6ahn1zKNrTKCU2i4g1nywFMKhlL44a7eep7CLjSy91PbTGw1cCkDYkqjVc2UtMFUwcIHKSJneS00kcIDEzfR")
+const stripe = require('stripe')("sk_test_51OISQWSBQLVhDmRfvicXDGw4m7LT3mOeF3DvnEufBcDN6v0z1STvNhlj4IkBgPHE8lDyByVzsPsv6Y8LAjVub57C00d6Xd8CEy")
 const jwt = require('jsonwebtoken')
 
 const getStudent = async (req, res) => {
@@ -69,7 +69,7 @@ const editProfile = async (req, res) => {
 const paymentHandle = async (req, res) => {
   try {
 
-    const { user, courseData } = req.body;
+    const { user, courseData } = req.body
     const course = await course_schema.findOne({ _id: courseData._id })
 
     const session = await stripe.checkout.sessions.create({
@@ -92,7 +92,7 @@ const paymentHandle = async (req, res) => {
       cancel_url: "http://localhost:5173/allcourses",
     });
     res.status(200).json({ id: session.id });
-
+    console.log("hai", session);
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ error: "Internal Server Error" });
@@ -103,7 +103,7 @@ const paymentHandle = async (req, res) => {
 const handleSuccessPayment = async (req, res) => {
   try {
     const { session_id, user_name, course_id } = req.query;
-    console.log(req.query)
+
     const userdata = await User.findOne({ username: user_name });
     const course = await course_schema.findOne({ _id: course_id });
     await course_schema.findByIdAndUpdate(course_id, {
@@ -119,7 +119,27 @@ const handleSuccessPayment = async (req, res) => {
     });
 
     await payment.save();
-    res.redirect('http://localhost:5173/user/mylearnigs');
+    res.redirect('http://localhost:5173/user/my-learning');
+
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const myLernings = async (req, res) => {
+  try {
+    const { username } = req.query;
+
+    const user = await User.findOne({ username: username });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    const user_id = user._id;
+    const courses = await course_schema.find({ users: { $in: [user_id] } });
+    // console.log(courses);
+
+    return res.json({ courses: courses });
 
   } catch (error) {
     console.log(error.message);
@@ -130,6 +150,7 @@ module.exports = {
   getStudent,
   editProfile,
   paymentHandle,
-  handleSuccessPayment
+  handleSuccessPayment,
+  myLernings
 
 }

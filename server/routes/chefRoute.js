@@ -13,6 +13,8 @@ chef_route.put('/handleShowCourse', chefController.handleChangeCourse)
 chef_route.delete('/deleteCourse/:id', chefController.deleteCourse)
 chef_route.put('/delete-chapter', chefController.deleteChapter)
 chef_route.post('/add-chapter', chefController.addChapter)
+chef_route.patch('/edit-course/:id', chefController.editCourse)
+
 
 
 module.exports = chef_route;

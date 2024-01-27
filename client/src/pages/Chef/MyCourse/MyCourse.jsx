@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ChefNavbar from "../../../component/Navbar/ChefNavbar";
 import { axiosPrivate } from "../../../api/axios";
 import toast, { Toaster } from "react-hot-toast";
-import { auth } from "../../../context/authReducer";
+import { auth, selectCurrentToken } from "../../../context/authReducer";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -17,6 +17,7 @@ const MyCourse = () => {
   const user = useSelector(auth);
   const [listAllClicked, setListAllClicked] = useState(true);
   const [unlistAllClicked, setUnlistAllClicked] = useState(false);
+  const token = useSelector(selectCurrentToken);
   const [videos, setVideos] = useState([]);
   const [list, setList] = useState([]);
   const navigate = useNavigate();
@@ -25,13 +26,20 @@ const MyCourse = () => {
     try {
       const changedResponse = await axiosPrivate.put("/chef/handleShowCourse", {
         id,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // Add any other headers if needed
+        },
       });
       console.log(changedResponse);
       toast.success(changedResponse.data.message);
 
       const response = await axiosPrivate.get("/chef/myCourse", {
         params: { user: user },
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (listAllClicked) {
@@ -55,7 +63,10 @@ const MyCourse = () => {
       try {
         const response = await axiosPrivate.get("/chef/myCourse", {
           params: { user: user },
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         //       const filteredCourses = response.data.courses.filter((course) =>

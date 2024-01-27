@@ -49,16 +49,22 @@ function UserNavbar() {
           </Link>
         </div>
         <div className="hidden md:flex space-x-4">
-          <Link to="/" className="text-white hover:text-orange-300 transition">
+          <Link
+            to="/"
+            className="text-gray-500 lg:mb-0 font-semibold dark:text-gray-400 hover:underline me-4 md:me-6"
+          >
             <FontAwesomeIcon icon={faHome} className="me-1" /> HOME
           </Link>
           <Link
             to="/all-courses"
-            className="text-white hover:text-pink-300 transition"
+            className="text-gray-500 lg:mb-0 font-semibold dark:text-gray-400 hover:underline me-4 md:me-6"
           >
             <FontAwesomeIcon icon={faBook} className="me-1" /> COURSES
           </Link>
-          <Link to="" className="text-white hover:text-red-600 transition">
+          <Link
+            to=""
+            className="text-gray-500 lg:mb-0 font-semibold dark:text-gray-400 hover:underline me-4 md:me-6"
+          >
             MY LEARNING
           </Link>
           {/* Add more links as needed */}
@@ -106,25 +112,27 @@ function UserNavbar() {
               className="h-12 w-12 rounded-full"
               alt="avatar"
             /> */}
-            <div
-              className="flex items-end cursor-pointer"
-              onClick={() => {
-                usenavigate("/user/profile");
-              }}
-            >
-              {user?.pro ? (
-                user.pro
-              ) : (
-                <FontAwesomeIcon className="me-1" icon={faUser} size="lg" />
-              )}
-              <span className="text-white">{user?.user}</span>
+            <div className="flex items-center space-x-4">
+              <div
+                className="flex items-end cursor-pointer"
+                onClick={() => {
+                  usenavigate("/user/profile");
+                }}
+              >
+                {user?.pro ? (
+                  user.pro
+                ) : (
+                  <FontAwesomeIcon className="me-1" icon={faUser} size="lg" />
+                )}
+                <span className="text-white">{user?.user}</span>
+              </div>
+              <button
+                className="border rounded px-2 py-1 text-white"
+                onClick={HandlelogOut}
+              >
+                Logout
+              </button>
             </div>
-            <button
-              className="border rounded px-2 py-1 text-white"
-              onClick={HandlelogOut}
-            >
-              Logout
-            </button>
           </>
         )}
       </div>

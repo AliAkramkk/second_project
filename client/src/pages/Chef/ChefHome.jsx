@@ -203,14 +203,14 @@ function ChefHome() {
           className="flex bg-white rounded-lg shadow dark:bg-gray-900 m-4"
           style={cardStyle4}
         >
-          <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
+          <div className="w-full max-w-screen-xl mx-auto p-2 md:py-8">
             <div className="sm:flex sm:items-center sm:justify-between">
-              <h1 className="text-4xl font-bold text-gray-800 mb-4 mt-4">
-                <br />
-                <span className="text-lg text-gray-700 ml-4 p-3">
-                  Ready to share your expertise with the world?
-                </span>
-              </h1>
+              {/* <h1 className="text-4xl font-bold text-gray-800 mb-4 mt-4">
+                <br /> */}
+              <span className="text-lg font-bold text-gray-700 ml-4 p-1">
+                Ready to share your expertise with the world?
+              </span>
+              {/* </h1> */}
             </div>
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md ml-7 mt-6"

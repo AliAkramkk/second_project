@@ -42,7 +42,7 @@ function ChefNavbar() {
         <div className="flex space-x-4">
           <Link
             to="/chef/courseList"
-            className="text-white hover:text-orange-200 transition"
+            className="text-gray-500 lg:mb-0 font-semibold dark:text-gray-400 hover:underline me-4 md:me-6"
           >
             CLASSES
           </Link>

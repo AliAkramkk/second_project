@@ -3,6 +3,9 @@ import ChefNavbar from "../../../component/Navbar/ChefNavbar";
 import { axiosPrivate } from "../../../api/axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
+import { selectCurrentToken } from "../../../context/authReducer";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 import {
   faEdit,
   faEye,
@@ -17,16 +20,40 @@ import Footer from "../../User/Footer/Footer";
 
 const ChefVidoes = () => {
   const usenavigate = useNavigate();
+  const token = useSelector(selectCurrentToken);
   const location = useLocation();
   const course_id = location.state?.id;
   console.log("course_id", course_id);
   const [video, setVideo] = useState([]);
+  const showDeleteAlert = async (onDelete) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      onDelete();
+    }
+  };
 
   useEffect(() => {
     const fetchChefCourse = async () => {
       try {
-        const response = await axiosPrivate.get(`/chef/getcourse/${course_id}`);
-        setVideo(response.data.course);
+        const response = await axiosPrivate.get(
+          `/chef/getcourse/${course_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              // Add any other headers if needed
+            },
+          }
+        );
+        setVideo([response.data.course]);
       } catch (error) {
         console.error("Error ", error);
       }
@@ -39,44 +66,97 @@ const ChefVidoes = () => {
     try {
       const newResponse = await axiosPrivate.put("/chef/handleShowCourse", {
         id,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // Add any other headers if needed
+        },
       });
       toast.success(newResponse.data.message);
-      const response = await axiosPrivate.get(`/chef/getcourse/${course_id}`);
+      const response = await axiosPrivate.get(`/chef/getcourse/${course_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // Add any other headers if needed
+        },
+      });
       setVideo(response.data.course);
     } catch (error) {
       console.log(error.message);
     }
   };
+  const editCourses = async (id) => {
+    // Redirect to the "Add Course" page with the course ID
+    const courseToEdit = video.find((course) => course.id === id);
+    console.log("courseToEdit", courseToEdit);
+    usenavigate("/chef/add-course", {
+      state: { isEditing: true, courseData: courseToEdit },
+    });
+  };
   const deleteCourses = async (id) => {
-    try {
-      const changedResponse = await axiosPrivate.delete(
-        `/chef/deleteCourse/${id}`
-      );
-      toast.success(changedResponse.data.message);
-      usenavigate("/chef/my-course");
+    showDeleteAlert(async () => {
+      try {
+        const changedResponse = await axiosPrivate.delete(
+          `/chef/deleteCourse/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              // Add any other headers if needed
+            },
+          }
+        );
+        toast.success(changedResponse.data.message);
+        usenavigate("/chef/my-course");
 
-      const response = await axiosPrivate.get(`/chef/getcourse/${course_id}`);
-      setVideo(response.data.course);
-    } catch (error) {
-      console.log(error.message);
-    }
+        const response = await axiosPrivate.get(
+          `/chef/getcourse/${course_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              // Add any other headers if needed
+            },
+          }
+        );
+        setVideo(response.data.course);
+      } catch (error) {
+        console.log(error.message);
+      }
+    });
   };
 
   const deleteChapter = async (id, index) => {
-    try {
-      const changedResponse = await axiosPrivate.put("/chef/delete-chapter", {
-        id,
-        index,
-      });
-      toast.success(changedResponse.data.message);
+    showDeleteAlert(async () => {
+      try {
+        const changedResponse = await axiosPrivate.put(
+          "/chef/delete-chapter",
+          {
+            id,
+            index,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              // Add any other headers if needed
+            },
+          }
+        );
 
-      const response = await axiosPrivate.get(`/chef/getcourse/${course_id}`);
-      setVideo(response.data.course);
-      // usenavigate("/chef/videos");
-    } catch (error) {
-      console.log(error.message);
-    }
+        toast.success(changedResponse.data.message);
+
+        const response = await axiosPrivate.get(
+          `/chef/getcourse/${course_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              // Add any other headers if needed
+            },
+          }
+        );
+        setVideo(response.data.course);
+      } catch (error) {
+        console.log(error.message);
+      }
+    });
   };
+
   const cardStyle4 = {
     background:
       "linear-gradient(to right, hsl(210, 40%, 95%), hsl(0, 40%, 95%), hsl(60, 100%, 95%))",
@@ -111,9 +191,9 @@ const ChefVidoes = () => {
                   </div>
                   <div className="aspect-w-16 aspect-h-9 mb-4">
                     <video
-                      src={video.demoVideo?.url}
+                      src={video[0]?.demoVideo?.url}
                       className="w-5/6 h-96 object-cover rounded-md"
-                      poster={video.coverImage?.url}
+                      poster={video[0]?.coverImage?.url}
                       controls
                     />
                   </div>
@@ -213,7 +293,10 @@ const ChefVidoes = () => {
                     </button>
 
                     {/* More Button (Ellipsis) */}
-                    <button className="text-blue-500 hover:text-blue-700">
+                    <button
+                      onClick={() => editCourses(video._id)}
+                      className="text-blue-500 hover:text-blue-700"
+                    >
                       <FontAwesomeIcon icon={faEdit} className="mr-2" />
                       Edit
                     </button>

@@ -127,6 +127,59 @@ const deleteCourse = async (req, res) => {
   }
 }
 
+const editCourse = async (req, res) => {
+  const { id } = req.params;
+  const updatedCourseData = req.body;
+  console.log("id", id);
+  console.log(updatedCourseData);
+  // Backend
+
+  // const editCourse = async (req, res) => {
+  //   try {
+  //     const { id } = req.params;
+  // Fetch the course details from the database based on id
+  // Update the course details with the new data
+  // Save the updated course details
+  // const updatedCourse = await course_schema.findByIdAndUpdate(
+  //   id,
+  //   req.body, // Assuming req.body contains the updated course data
+  //   { new: true } // To return the updated document
+  // );
+
+  // if (updatedCourse) {
+  //   res.status(200).json({ message: "Course updated successfully", course: updatedCourse });
+  // } else {
+  //   res.status(404).json({ message: "Course not found" });
+  // }
+  //   } catch (error) {
+  //     console.error(error.message);
+  //     res.status(500).json({ message: "Internal server error" });
+  //   }
+  // };
+
+  // const editChapter = async (req, res) => {
+  //   try {
+  //     const { id } = req.params;
+  //     // Fetch the course details from the database
+  //     const course = await course_schema.findOne({ "chapters._id": id });
+
+  //     // Find the chapter within the course
+  //     const chapter = course.chapters.find((ch) => ch._id.toString() === id);
+
+  //     // Update the chapter details with the new data
+  //     Object.assign(chapter, req.body); // Assuming req.body contains the updated chapter data
+
+  //     // Save the updated course details
+  //     await course.save();
+
+  //     res.status(200).json({ message: "Chapter updated successfully", chapter });
+  //   } catch (error) {
+  //     console.error(error.message);
+  //     res.status(500).json({ message: "Internal server error" });
+  //   }
+  // };
+
+}
 const deleteChapter = async (req, res) => {
   try {
     const { id, index } = req.body;
@@ -216,6 +269,8 @@ const currentChefCourse = async (req, res) => {
 
 }
 
+
+
 module.exports = {
   getStudent,
   addCourse,
@@ -225,5 +280,6 @@ module.exports = {
   deleteCourse,
   deleteChapter,
   addChapter,
-  currentChefCourse
+  currentChefCourse,
+  editCourse
 };
