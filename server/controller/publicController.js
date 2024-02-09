@@ -4,6 +4,8 @@ const util = require('util');
 const execPromise = util.promisify(require('child_process').exec);
 const cloudinary = require('cloudinary').v2;
 const fs = require("fs");
+const user_schema = require('../models/userSchema');
+const payment_schema = require('../models/paymentSchema')
 // const course_schema = require("..");
 
 
@@ -151,6 +153,18 @@ const sendemailotp = async (email, otp) => {
   }
 };
 
+
+// Example usage:
+// const students = [
+//   { name: 'Student1', email: 'student1@example.com' },
+//   { name: 'Student2', email: 'student2@example.com' },
+//   // Add more students as needed
+// ];
+
+
+// const liveStreamLink = 'https://example.com/live-stream'; // Replace with your live stream link
+// sendLiveStreamLink(students, liveStreamLink);
+
 module.exports = {
   uploadimage,
   genarateOTP,
@@ -158,4 +172,5 @@ module.exports = {
   sendemailotp,
   deleteFromCloud,
   uploadVideo,
+
 }

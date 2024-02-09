@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { axiosPrivate } from "../../api/axios";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
@@ -26,9 +27,18 @@ function Signin() {
     validationSchema: signinValidation, // You'll need to create this validation schema
     onSubmit: async (values) => {
       try {
-        const response = await axiosPrivate.post("/signin", values);
-        console.log(response);
-        if (response.data.error) {
+        const response = await axios.post(
+          "http://localhost:3000/signin",
+          values,
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          }
+        );
+
+        console.log("server response", response.data);
+
+        if (response.data && response.data.error) {
           // Use SweetAlert for error notification
           Swal.fire({
             icon: "error",
@@ -41,7 +51,7 @@ function Signin() {
             setCredentials({
               user: response.data.user,
               role: response.data.role,
-              token: response.data.accesstoken,
+              token: response.data.accessToken,
               id: response.data.id,
             })
           );

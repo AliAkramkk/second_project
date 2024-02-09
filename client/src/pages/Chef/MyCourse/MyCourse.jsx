@@ -24,13 +24,15 @@ const MyCourse = () => {
 
   const handleshowcourses = async (id) => {
     try {
-      const changedResponse = await axiosPrivate.put("/chef/handleShowCourse", {
-        id,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          // Add any other headers if needed
-        },
-      });
+      const changedResponse = await axiosPrivate.put( "/chef/handleShowCourse",
+       {id},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log(changedResponse);
       toast.success(changedResponse.data.message);
 
@@ -69,19 +71,6 @@ const MyCourse = () => {
           },
         });
 
-        //       const filteredCourses = response.data.courses.filter((course) =>
-        //         listAllClicked ? course.isShow : !course.isShow
-        //       );
-
-        //       setList(filteredCourses);
-        //       setVideos(response.data.courses);
-        //     } catch (error) {
-        //       console.error("Error ", error);
-        //     }
-        //   }
-
-        //   fetchData();
-        // }, [listAllClicked, user]);
         const trueCourses = response.data.courses.filter(
           (course) => course.isShow === true
         );

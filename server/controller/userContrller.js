@@ -1,5 +1,6 @@
 const User = require('../models/userSchema')
-const course_schema = require('../models/courseSchema')
+const course_schema = require('../models/courseSchema');
+const nodemailer = require('nodemailer');
 const cloudinary = require('../config/cloudinary')
 const public_controller = require('../controller/publicController')
 const payment_schema = require('../models/paymentSchema')
@@ -119,7 +120,7 @@ const handleSuccessPayment = async (req, res) => {
     });
 
     await payment.save();
-    res.redirect('http://localhost:5173/user/my-learning');
+    res.redirect(`http://localhost:5173/user/my-learning`);
 
   } catch (error) {
     console.log(error.message);
@@ -146,11 +147,56 @@ const myLernings = async (req, res) => {
   }
 }
 
+const sendLiveStreamLink = async (req, res) => {
+  const { liveStreamLink } = req.body;
+  console.log("link", liveStreamLink);
+
+  try {
+    const students = await payment_schema.find().populate("user_id");
+
+    console.log("students", students);
+
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: 'akramkorakkottil@gmail.com',
+        pass: 'zuvlydretngxazpl',
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+
+    for (const student of students) {
+      console.log("Sending email to:", student.user_id.email);
+
+      const mailOptions = {
+        from: 'akramkorakkottil@gmail.com',
+        to: student.user_id.email,
+        subject: 'Live Stream Link',
+        html: `<p>Hello ${student.user_id.username},</p>
+               <p>Here is the link to join the live stream: <a href="${liveStreamLink}">${liveStreamLink}</a></p>`,
+      };
+
+      const data = await transporter.sendMail(mailOptions);
+      console.log(`Email has been sent to ${student.user_id.username} (${student.user_id.email})`, data.response);
+    }
+
+    res.status(200).json({ message: 'Emails sent successfully.' });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+};
+
 module.exports = {
   getStudent,
   editProfile,
   paymentHandle,
   handleSuccessPayment,
-  myLernings
+  myLernings,
+  sendLiveStreamLink
 
 }

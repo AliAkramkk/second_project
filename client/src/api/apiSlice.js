@@ -24,7 +24,7 @@ const baseQueryWithReath = async (args, api, extraOption) => {
         setCredentials({
           user: refreshResult.data.user,
           role: refreshResult.data.role,
-          token: refreshResult.data.accesstoken,
+          token: refreshResult.data.accessToken,
         })
       );
       result = await baseQuery(args, api, extraOption);

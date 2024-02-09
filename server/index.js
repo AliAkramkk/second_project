@@ -2,7 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const cors = require('cors');
+const corsOptions = require('./config/corsOptions');
+const credentials = require('./middleware/credentions')
 const fileUpload = require("express-fileupload");
+const accessControl = require('./middleware/accessControl')
 const admin_route = require('./routes/adminRoute')
 const authRouter = require('./routes/authRoute');
 const cookieParser = require('cookie-parser');
@@ -14,11 +17,14 @@ const bodyParser = require('body-parser');
 const path = require('path')
 // const http = require('http');
 const app = express();
-app.use(express.json({ limit: '50mb' }))
 
+app.use(cors({ credentials: true, origin: 'http://localhost:5173' }));
+app.use(cookieParser());
+app.use(credentials);
+app.options('*', cors());
+app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.resolve() + "/public"))
-
 app.use(
   fileUpload({
     useTempFiles: true,
@@ -38,15 +44,15 @@ mongoose.connect(DB_URL)
   })
   .catch((error) => {
     console.error('Error connecting to MongoDB:', error.message);
+    // app.use(cors(corsOptions));
   });
 
-app.use(cors({ credentials: true, origin: 'http://localhost:5173' }));
-app.use(cookieParser());
-// Handle preflight requests
-app.options('*', cors());
-// app.use(jwtMiddleware);
-app.use(authRouter);
 
+// Handle preflight requests
+
+// app.use(jwtMiddleware);
+app.use("/", authRouter);
+app.use("/refresh", require('./routes/refreshRouter'));
 app.use(verifyJWT);
 app.use("/admin", admin_route)
 app.use("/user", user_router);

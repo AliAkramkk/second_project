@@ -47,65 +47,68 @@ const signUp_post = async (req, res) => {
   }
 };
 
-
 const signIn_post = async (req, res) => {
   try {
+
     const { email, password } = req.body;
     const user = await User.findOne({ email });
 
     if (user) {
-
       const isPasswordValid = await bcrypt.compare(password, user.password);
-      // console.log(isPasswordValid);
+
       if (isPasswordValid) {
-        // console.log(2);
-        if (user.isVerify == true) {
-          // console.log(3);
-          if (user.isAccess == true) {
-            // console.log(4);
-            const accesstoken = jwt.sign(
+        if (user.isVerify) {
+          if (user.isAccess) {
+            const accessToken = jwt.sign(
               { email: user.email },
               process.env.ACCESS_TOKEN_SECRET,
               { expiresIn: "1d" }
             );
-            const refreshtoken = jwt.sign(
+            const refreshToken = jwt.sign(
               { email: user.email },
               process.env.REFRESH_TOKEN_SECRET,
               { expiresIn: "2d" }
             );
+
             await User.updateOne(
               { _id: user._id },
-              { $set: { JWT: refreshtoken } }
+              { $set: { JWT: refreshToken } }
             );
-            res.cookie("jwt", refreshtoken, {
+
+            res.cookie("jwt", refreshToken, {
               httpOnly: true,
               maxAge: 48 * 60 * 60 * 1000,
             });
-            // console.log(req.cookies);
-            res.status(201).json({
+
+            return res.status(201).json({
               message: "success",
-              accesstoken,
+              accessToken,
               role: user.role,
               user: user.username,
               id: user._id
             });
+
           } else {
             console.log(5)
-            res.status(400).json({ message: "You are Blocked 🙄" });
+            // Inside the block where user is blocked
+            return res.status(400).json({ error: true, message: "You are Blocked 🙄" });
+
           }
         } else {
-          res.status(400).json({ message: "You are not verifyed" });
+          return res.status(400).json({ message: "You are not verified" });
         }
       } else {
-        res.status(400).json({ message: "Wrong password" });
+        return res.status(400).json({ message: "Wrong credentials" });
       }
     } else {
-      res.status(400).json({ message: "User not exist...!" });
+      return res.status(400).json({ message: "User not found" });
     }
   } catch (error) {
     console.log(error.message);
+    return res.status(500).json({ message: "An error occurred during signin." });
   }
 };
+
 
 const signIn_google = async (req, res) => {
   try {
@@ -185,7 +188,7 @@ const signIn_google = async (req, res) => {
     res.status(200).json({
       role: existedUser.role,
       accesstoken,
-      username: existedUser.name,
+      username: existedUser.username,
       userId: existedUser._id,
       message: "your account is verified",
     });

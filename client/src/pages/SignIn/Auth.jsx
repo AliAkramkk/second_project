@@ -32,15 +32,16 @@ const GoogleAuthComponent = () => {
           .then((res) => {
             console.log(res.data);
             const userCredentials = {
-              user: res.data.username,
-              userId: res.data.id,
-              accesstoken: res.data.token,
-              role: res.data.role,
+              user: res.data.username || res.data.name,
+              userId: res.data.userId || res.data._id,
+              accesstoken: res.data.accesstoken || res.data.token,
+              role: res.data.role || 2000,
             };
+
             dispatch(setCredentials(userCredentials));
             res.data.role === 3000 ? navigate("/chef") : navigate("/");
+            console.log(userCredentials);
           })
-
           .catch((err) => {
             toast.error(err?.response?.data?.message);
           });

@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import RequerAuth from "../features/RequerAuth";
 import Profile from "../pages/User/UserProfile/Profile";
 import MyLearning from "../pages/User/MyLearnings/MyLearning";
-import MyRoom from "../pages/User/Myroom/MyRoom";
+import UserRoom from "../pages/User/UserRoom/UserRoom";
 
 const Role = 2000;
 function User() {
@@ -12,7 +12,7 @@ function User() {
       <Route element={<RequerAuth allows={[Role]} />}>
         <Route exact path="/profile" element={<Profile />} />
         <Route path="/my-learning" element={<MyLearning />} />
-        <Route path="/my-room" element={<MyRoom />} />
+        <Route path="/live-room/:roomCode" element={<UserRoom />} />
       </Route>
     </Routes>
   );

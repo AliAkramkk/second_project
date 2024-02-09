@@ -10,7 +10,9 @@ const authSlice = createSlice({
       state.token = token !== undefined ? token : state.token;
       state.id = id !== undefined ? id : state.id;
       state.role = role !== undefined ? [role] : state.role;
+      console.log("state", state.token);
     },
+
     logOut: (state, action) => {
       state.token = null
       state.user = null
@@ -19,7 +21,6 @@ const authSlice = createSlice({
     }
   }
 })
-
 export const { setCredentials, logOut } = authSlice.actions
 export default authSlice.reducer
 

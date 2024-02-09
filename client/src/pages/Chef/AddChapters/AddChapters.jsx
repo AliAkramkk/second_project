@@ -94,15 +94,22 @@ function AddChapters() {
         "Adding your course. Please wait..."
       );
       const response = await axiosPrivate.post("/chef/add-chapter", postData, {
-        headers: { "Content-Type": "multipart/form-data" },
-        Authorization: `Bearer ${token}`,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
       });
       toast.dismiss(loadingToastId);
       if (response.status === 201) {
         toast.success(response.data.message);
         console.log("Chapter Added Response:", response.data);
         const updatedResponse = await axiosPrivate.get(
-          `/chef/getcourse/${course_id}`
+          `/chef/getcourse/${course_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         console.log(updatedResponse.data.course);
 

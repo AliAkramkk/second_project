@@ -30,18 +30,19 @@ function ChefHome() {
     navigate("/chef/add-course");
   };
   const handleRoom = () => {
-    navigate("/chef/room");
+    navigate("/chef/my-room");
   };
   useEffect(() => {
     const fetchChefCourse = async () => {
       try {
-        console.log(user);
+        console.log({ token });
         const response = await axiosPrivate.get("/chef/currentChefCourse", {
           params: user,
           headers: {
             Authorization: `Bearer ${token}`,
             // Add any other headers if needed
           },
+          withCredentials: true,
         });
         setCourses(response.data.courses);
         // Handle the response data here if needed

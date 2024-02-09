@@ -9,7 +9,7 @@ const RequireHome = () => {
   return authis?.role === 2000 || authis?.role == "" ? (
     <Outlet />
   ) : (
-    <Navigate to="/login" state={{ from: location }} replace />
+    <Navigate to="/signin" state={{ from: location }} replace />
   );
 };
 

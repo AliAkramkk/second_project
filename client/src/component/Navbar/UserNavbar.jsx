@@ -62,7 +62,7 @@ function UserNavbar() {
             <FontAwesomeIcon icon={faBook} className="me-1" /> COURSES
           </Link>
           <Link
-            to=""
+            to="/user/my-learning"
             className="text-gray-500 lg:mb-0 font-semibold dark:text-gray-400 hover:underline me-4 md:me-6"
           >
             MY LEARNING

@@ -25,9 +25,13 @@ function AdminNavbar() {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
+  const navbarStyle = {
+    background:
+      "linear-gradient(to right,  rgb(223, 224, 226), rgb(189, 193, 199))",
+  };
 
   return (
-    <nav className="bg-gray-800 p-4">
+    <nav className="bg-gray-800 p-4" style={navbarStyle}>
       <div className="container mx-auto flex justify-between items-center">
         <div>
           <Link to="/" className="text-white text-2xl font-bold">

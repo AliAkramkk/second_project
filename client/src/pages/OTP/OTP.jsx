@@ -122,6 +122,9 @@ const OTP = () => {
         if (error.response) {
           // Handle errors and display notifications to the user
           console.error("Error in OTP verification:", error);
+          if (error.response.status === 400) {
+            toast.error("Invalid OTP. Please Check Your mail."); // Display toast for invalid OTP
+          }
         } else if (error.request) {
           console.error("Request error:", error.request);
         } else {

@@ -11,6 +11,8 @@ import MyCourse from "../pages/Chef/MyCourse/MyCourse";
 import AddChapters from "../pages/Chef/AddChapters/AddChapters";
 import VideoDetatils from "../pages/videoDetails/VideoDetatils";
 import LiveRoom from "../pages/Chef/LiveRoom/LiveRoom";
+import MyRoom from "../pages/Chef/Myroom/MyRoom";
+import EditCourse from "../pages/Chef/EditCourse/EditCourse";
 // import ChefProfile from "../pages/Chef/ChefProfile/ChefProfile";
 const ChefHome = React.lazy(() => import("../pages/Chef/ChefHome"));
 const ChefVidoes = React.lazy(() =>
@@ -23,38 +25,41 @@ const Role = 3000;
 function Chef() {
   return (
     <Routes>
-      <Route element={<RequerAuth allows={[Role]} />}></Route>
-      <Route
-        exact
-        path="/"
-        element={
-          <React.Suspense fallback={<Loading />}>
-            <ChefHome />
-          </React.Suspense>
-        }
-      />
-      <Route
-        path="/profile"
-        element={
-          <React.Suspense fallback={<Loading />}>
-            <ChefProfile />
-          </React.Suspense>
-        }
-      />
-      <Route path="/courseList" element={<Classes />} />
-      <Route path="/add-course" element={<AddCourse />} />
-      <Route path="/my-course" element={<MyCourse />} />
-      <Route path="/room/:roomId" element={<LiveRoom />} />
-      <Route
-        path="/videos"
-        element={
-          <React.Suspense fallback={<Loading />}>
-            <ChefVidoes />
-          </React.Suspense>
-        }
-      />
-      <Route path="/add-chapter" element={<AddChapters />} />
-      <Route path="/video-details" element={<VideoDetatils />} />
+      <Route element={<RequerAuth allows={[Role]} />}>
+        <Route
+          exact
+          path="/"
+          element={
+            <React.Suspense fallback={<Loading />}>
+              <ChefHome />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <React.Suspense fallback={<Loading />}>
+              <ChefProfile />
+            </React.Suspense>
+          }
+        />
+        <Route path="/courseList" element={<Classes />} />
+        <Route path="/add-course" element={<AddCourse />} />
+        <Route path="/my-course" element={<MyCourse />} />
+        <Route path="/my-room" element={<MyRoom />} />
+        <Route path="/room/:roomCode" element={<LiveRoom />} />
+        <Route
+          path="/videos"
+          element={
+            <React.Suspense fallback={<Loading />}>
+              <ChefVidoes />
+            </React.Suspense>
+          }
+        />
+        <Route path="/add-chapter" element={<AddChapters />} />
+        <Route path="/video-details" element={<VideoDetatils />} />
+        <Route path="/edit-course" element={<EditCourse />} />
+      </Route>
     </Routes>
   );
 }

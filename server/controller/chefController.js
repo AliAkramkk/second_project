@@ -1,7 +1,7 @@
 const user_schema = require('../models/userSchema');
 const course_schema = require('../models/courseSchema');
 const public_controller = require('./publicController');
-
+const category_schema = require('../models/categorySchema')
 
 const getStudent = async (req, res) => {
   try {
@@ -16,31 +16,21 @@ const getStudent = async (req, res) => {
   }
 }
 
+// ................addCourse section....................................
 const addCourse = async (req, res) => {
   try {
     const { title, category, description, price, aboutChef, blurb, user } = req.body;
 
-
-    // console.log(req.files);
-
-
-    // console.log(user)
-
     const chef = await user_schema.findOne({ _id: user });
-    // console.log(chef);
 
-    const uploadImageResult = await public_controller.uploadimage(
-      req.files.coverImage
-    );
-    const uploadVideoResult = await public_controller.uploadVideo(
-      req.files.demoVideo
-    );
+    const uploadImageResult = await public_controller.uploadimage(req.files.coverImage);
+    const uploadVideoResult = await public_controller.uploadVideo(req.files.demoVideo);
 
     const newCourse = new course_schema({
       title,
       category,
       description,
-      coverImage: uploadImageResult,
+      coverImage: uploadImageResult,  // Set coverImage to the uploaded file result
       demoVideo: uploadVideoResult,
       price,
       blurb,
@@ -51,14 +41,150 @@ const addCourse = async (req, res) => {
 
     // Save the new course
     const savedCourse = await newCourse.save();
-
+    console.log("Add course", savedCourse);
     res.status(201).json({ message: "Course uploaded successfully!" });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
+// // ...............edit course......................................
+const editCourse = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, category, description, price, aboutChef, blurb, user } = req.body;
+
+    const updatedCourseData = req.body;
+    console.log(updatedCourseData);
+
+    // Check if new coverImage is provided
+    if (req.files && req.files.coverImage) {
+      const uploadImageResult = await public_controller.uploadimage(req.files.coverImage);
+      updatedCourseData.coverImage = uploadImageResult;
+      console.log("image", uploadImageResult);
+    }
+    // Check if new demoVideo is provided
+    if (req.files && req.files.demoVideo) {
+      const uploadVideoResult = await public_controller.uploadVideo(req.files.demoVideo);
+      updatedCourseData.demoVideo = uploadVideoResult;
+    }
+
+    console.log("Updated Course Data:", updatedCourseData);
+
+    const updatedCourse = await course_schema.findByIdAndUpdate(
+      id,
+      updatedCourseData,
+      { new: true }
+    );
+
+    if (updatedCourse) {
+      res.status(200).json({ message: "Course updated successfully", data: updatedCourse });
+    } else {
+      res.status(404).json({ message: "Course not found" });
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+// const editCourse = async (req, res) => {
+//   try {
+//     console.log("hii from edit course");
+//     const { id } = req.params;
+//     const updatedCourseData = req.body
+
+//     console.log("hiii from editcourse", updatedCourseData);
+//     const { title, category, description, price, aboutChef, blurb, user } = req.body;
+//     // const uploadImageResult = await public_controller.uploadimage(req.files.coverImage);
+//     // const uploadVideoResult = await public_controller.uploadVideo(req.files.demoVideo);
+//     console.log("id", id);
+//     // console.log("1", uploadImageResult);
+//     const updatedCourse = await course_schema.findByIdAndUpdate(
+//       { _id: id },
+//       {
+//         title: updatedCourseData.title,
+//         category: updatedCourseData.category,
+//         description: updatedCourseData.description,
+//         price: updatedCourseData.price,
+//         aboutChef: updatedCourseData.aboutChef,
+//         blurb: updatedCourseData.blurb,
+//         coverImage: updatedCourseData.coverImage, // Use existing cover image if upload fails
+//         demoVideo: updatedCourseData.demoVideo, // Use existing demo video if upload fails
+//       },
+//       { new: true, runValidators: true }
+//     );
+
+//     console.log(updatedCourse);
+//     if (updatedCourse) {
+//       res.status(200).json({ message: "Course updated successfully", data: updatedCourse });
+//     } else {
+//       res.status(404).json({ message: "Course not found" });
+//     }
+//   } catch (error) {
+//     console.error(error.message);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+
+
+// const editCourse = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { title, category, description, price, aboutChef, blurb, user } = req.body;
+
+//     const updatedCourseData = {
+//       title,
+//       category,
+//       description,
+//       price,
+//       aboutChef,
+//       blurb,
+//     };
+
+
+
+//     console.log("hii 1", updatedCourseData);
+//     const updatedCourse = await course_schema.findByIdAndUpdate(
+//       { _id: id },
+//       updatedCourseData,
+//       { new: true, runValidators: true }
+//     );
+
+//     if (updatedCourse) {
+//       res.status(200).json({ message: "Course updated successfully", data: updatedCourse });
+//     } else {
+//       res.status(404).json({ message: "Course not found" });
+//     }
+//   } catch (error) {
+//     console.error(error.message);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+
+// ...........................get Categories.................................
+const getCategories = async (req, res) => {
+  try {
+    console.log("hii from add course");
+    const user = req.query;
+    const chef = await user_schema.findOne({ username: user.user })
+    if (chef) {
+      const categoryNames = await course_schema.distinct('category');
+      const categories = categoryNames.map(name => ({ name }));
+
+      res.status(200).json({ categories });
+    }
+
+
+    console.log(user);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+// ......................get Course.......................
 const getCourse = async (req, res) => {
   try {
     const user = req.query.user;
@@ -98,8 +224,10 @@ const getVideoCourse = async (req, res) => {
 };
 const handleChangeCourse = async (req, res) => {
   try {
-    const { id } = req.body
+    const { id } = req.body;
+    console.log("id" + id);
     const course = await course_schema.findOne({ _id: id })
+    console.log("coure", course);
     await course_schema.updateOne(
       { _id: course._id },
       { $set: { isShow: !course.isShow } }
@@ -127,59 +255,6 @@ const deleteCourse = async (req, res) => {
   }
 }
 
-const editCourse = async (req, res) => {
-  const { id } = req.params;
-  const updatedCourseData = req.body;
-  console.log("id", id);
-  console.log(updatedCourseData);
-  // Backend
-
-  // const editCourse = async (req, res) => {
-  //   try {
-  //     const { id } = req.params;
-  // Fetch the course details from the database based on id
-  // Update the course details with the new data
-  // Save the updated course details
-  // const updatedCourse = await course_schema.findByIdAndUpdate(
-  //   id,
-  //   req.body, // Assuming req.body contains the updated course data
-  //   { new: true } // To return the updated document
-  // );
-
-  // if (updatedCourse) {
-  //   res.status(200).json({ message: "Course updated successfully", course: updatedCourse });
-  // } else {
-  //   res.status(404).json({ message: "Course not found" });
-  // }
-  //   } catch (error) {
-  //     console.error(error.message);
-  //     res.status(500).json({ message: "Internal server error" });
-  //   }
-  // };
-
-  // const editChapter = async (req, res) => {
-  //   try {
-  //     const { id } = req.params;
-  //     // Fetch the course details from the database
-  //     const course = await course_schema.findOne({ "chapters._id": id });
-
-  //     // Find the chapter within the course
-  //     const chapter = course.chapters.find((ch) => ch._id.toString() === id);
-
-  //     // Update the chapter details with the new data
-  //     Object.assign(chapter, req.body); // Assuming req.body contains the updated chapter data
-
-  //     // Save the updated course details
-  //     await course.save();
-
-  //     res.status(200).json({ message: "Chapter updated successfully", chapter });
-  //   } catch (error) {
-  //     console.error(error.message);
-  //     res.status(500).json({ message: "Internal server error" });
-  //   }
-  // };
-
-}
 const deleteChapter = async (req, res) => {
   try {
     const { id, index } = req.body;
@@ -250,30 +325,25 @@ const addChapter = async (req, res) => {
 const currentChefCourse = async (req, res) => {
   try {
     const user = req.query;
-    console.log("user1", user);
     const chef = await user_schema.findOne({ _id: user.id });
-    console.log("chef",);
     const courses = await course_schema.find({ chef: chef._id, isShow: true });
 
-    console.log(courses.length);
     if (courses) {
       res.status(200).json({ courses });
     } else {
       res.status(400).json({ message: "Courses is empty 😥" });
     }
-
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" })
   }
-
 }
-
 
 
 module.exports = {
   getStudent,
   addCourse,
+  getCategories,
   getCourse,
   getVideoCourse,
   handleChangeCourse,
@@ -281,5 +351,5 @@ module.exports = {
   deleteChapter,
   addChapter,
   currentChefCourse,
-  editCourse
+  editCourse,
 };

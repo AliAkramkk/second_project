@@ -53,7 +53,8 @@ const ChefVidoes = () => {
             },
           }
         );
-        setVideo([response.data.course]);
+        setVideo(response.data.course);
+        console.log("response", response.data.course);
       } catch (error) {
         console.error("Error ", error);
       }
@@ -64,13 +65,15 @@ const ChefVidoes = () => {
 
   const handleshowcourses = async (id) => {
     try {
-      const newResponse = await axiosPrivate.put("/chef/handleShowCourse", {
-        id,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          // Add any other headers if needed
-        },
-      });
+      const newResponse = await axiosPrivate.put(
+        "/chef/handleShowCourse",
+        { id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       toast.success(newResponse.data.message);
       const response = await axiosPrivate.get(`/chef/getcourse/${course_id}`, {
         headers: {
@@ -84,11 +87,8 @@ const ChefVidoes = () => {
     }
   };
   const editCourses = async (id) => {
-    // Redirect to the "Add Course" page with the course ID
-    const courseToEdit = video.find((course) => course.id === id);
-    console.log("courseToEdit", courseToEdit);
-    usenavigate("/chef/add-course", {
-      state: { isEditing: true, courseData: courseToEdit },
+    usenavigate("/chef/edit-course", {
+      state: { courseID: id },
     });
   };
   const deleteCourses = async (id) => {
@@ -151,6 +151,7 @@ const ChefVidoes = () => {
           }
         );
         setVideo(response.data.course);
+        console.log("response data", response.data.course);
       } catch (error) {
         console.log(error.message);
       }
@@ -191,22 +192,22 @@ const ChefVidoes = () => {
                   </div>
                   <div className="aspect-w-16 aspect-h-9 mb-4">
                     <video
-                      src={video[0]?.demoVideo?.url}
+                      src={video.demoVideo?.url}
                       className="w-5/6 h-96 object-cover rounded-md"
                       poster={video[0]?.coverImage?.url}
                       controls
                     />
                   </div>
                   {/* Cover Image */}
-                  {/* <div className="flex">
-              <FontAwesomeIcon icon={faStar} className="mt-1 text-xs" />
-              <h1 className="font-roboto mb-3 ms-3">COVER IMAGE</h1>
-            </div> */}
-                  {/* <img
-              src={video.coverImage?.url}
-              alt="Video Cover"
-              className="w-96 h-72 object-cover rounded-md mb-4"
-            /> */}
+                  <div className="flex">
+                    <FontAwesomeIcon icon={faStar} className="mt-1 text-xs" />
+                    <h1 className="font-roboto mb-3 ms-3">COVER IMAGE</h1>
+                  </div>
+                  <img
+                    src={video.coverImage?.url}
+                    alt="Video Cover"
+                    className="w-96 h-72 object-cover rounded-md mb-4"
+                  />
 
                   {/* Title */}
                   <div className="flex">

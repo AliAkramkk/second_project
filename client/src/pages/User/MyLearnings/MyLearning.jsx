@@ -90,11 +90,11 @@ const MyLearning = () => {
                 </p>
                 <div className="flex justify-between items-center">
                   <button
-                    onClick={() =>
-                      usenavigate("/user/coursefullvideos", {
-                        state: { course_id: course._id },
-                      })
-                    }
+                    // onClick={() =>
+                    //   usenavigate("/user/coursefullvideos", {
+                    //     state: { course_id: course._id },
+                    //   })
+                    // }
                     className="btn hvr-shutter-in-horizontal justify-center  rounded-md border-black text-black  px-4 py-2 hover:bg-slate-200 transition duration-300 ease-in-out"
                   >
                     Watch now

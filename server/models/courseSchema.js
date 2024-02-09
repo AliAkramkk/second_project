@@ -35,28 +35,28 @@ const course_schema = new mongoose.Schema({
   },
   chef: {
     type: mongoose.Schema.Types.ObjectId,
-    ref:'users',
+    ref: 'users',
     required: true,
   },
-  chapters:{
-    type:Array,
-    default:[]
+  chapters: {
+    type: Array,
+    default: []
   },
-  isShow:{
-    type:Boolean,
-    default:false
+  isShow: {
+    type: Boolean,
+    default: false
   },
-createdAt:{
-type:Date,
-default:Date.now()
-},
-rivew:{
-type:Array,
+  createdAt: {
+    type: Date,
+    default: Date.now()
+  },
+  rivew: {
+    type: Array,
 
-},
-users:{
-type:Array
-}
+  },
+  users: {
+    type: Array
+  }
 });
 
 module.exports = mongoose.model("course", course_schema);  

@@ -9,6 +9,7 @@ user_router.get('/my-learning', userController.myLernings)
 
 user_router.patch('/editprofile', userController.editProfile)
 user_router.post('/makePayment', userController.paymentHandle)
+user_router.post('/sendmail', userController.sendLiveStreamLink);
 
 
 module.exports = user_router;
