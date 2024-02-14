@@ -1,7 +1,8 @@
 const user_schema = require('../models/userSchema');
 const course_schema = require('../models/courseSchema');
 const public_controller = require('./publicController');
-const category_schema = require('../models/categorySchema')
+const category_schema = require('../models/categorySchema');
+const payment_schema = require('../models/paymentSchema')
 
 const getStudent = async (req, res) => {
   try {
@@ -242,6 +243,12 @@ const handleChangeCourse = async (req, res) => {
 const deleteCourse = async (req, res) => {
   try {
     const id = req.params.id;
+    // const paymentRecord = await payment_schema.findOne({ course_id: id });
+    // console.log("paymentRecord", paymentRecord);
+    // if (paymentRecord) {
+    //   // If there are payment records, the course has been purchased
+    //   return res.status(400).json({ message: "Cannot delete purchased course." });
+    // }
     const result = await course_schema.deleteOne({ _id: id });
     if (result.deletedCount === 1) {
       res.status(200).json({ message: "Course deleted succefully" })
@@ -339,6 +346,25 @@ const currentChefCourse = async (req, res) => {
   }
 }
 
+const checkPayment = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+    const paymentRecord = await payment_schema.findOne({ course_id: courseId });
+    console.log("paymentRecord", paymentRecord);
+
+    if (paymentRecord) {
+      // If there's a payment record, the course has been purchased
+      return res.status(200).json({ purchased: true });
+    }
+
+    // If no payment record, the course has not been purchased
+    return res.status(200).json({ purchased: false });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 
 module.exports = {
   getStudent,
@@ -352,4 +378,5 @@ module.exports = {
   addChapter,
   currentChefCourse,
   editCourse,
+  checkPayment
 };

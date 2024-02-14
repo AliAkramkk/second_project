@@ -79,14 +79,20 @@ function Signup() {
   const handleCheckboxChange = () => {
     setFieldValue("isChef", !values.isChef);
   };
-
+  const cardStyle4 = {
+    background:
+      "linear-gradient(to right, hsl(210, 40%, 95%), hsl(0, 40%, 95%), hsl(60, 100%, 95%))",
+  };
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-center bg-cover"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="flex p-4 ml-96 justify-end ">
-        <div className="min-h-screen flex items-center justify-end bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 ml-64">
+      <div className="flex p-4 ml-96 justify-end">
+        <div
+          className="min-h-screen flex items-center justify-end bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 ml-64 rounded-lg"
+          style={cardStyle4}
+        >
           <div className=" bg-white bg-opacity-80 p-8 rounded-md shadow-md w-96">
             <h3 className="mt-0 p-1 text-center text-3xl font-extrabold text-gray-900">
               Sign up
@@ -243,7 +249,9 @@ function Signup() {
                         }`}
                       ></div>
                     </div>
-                    <p className="ml-2">Are you a chef?</p>
+                    <p className="ml-2  font-medium text-base">
+                      Are you a chef?
+                    </p>
                   </label>
                 </div>
               </div>

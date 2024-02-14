@@ -4,6 +4,7 @@ import RequerAuth from "../features/RequerAuth";
 import AdminHome from "../pages/Admin/Home/AdminHome";
 import Userlist from "../pages/Admin/Userlist/Userlist";
 import Cheflist from "../pages/Admin/Cheflist/Cheflist";
+import Category from "../pages/Admin/CategoryManagment/Category";
 const Role = 1000;
 function Admin() {
   return (
@@ -12,6 +13,7 @@ function Admin() {
         <Route exact path="/" element={<AdminHome />} />
         <Route path="/userlist" element={<Userlist />} />
         <Route path="/cheflist" element={<Cheflist />} />
+        <Route path="/category" element={<Category />} />
       </Route>
     </Routes>
   );

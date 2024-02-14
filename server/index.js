@@ -54,6 +54,6 @@ mongoose.connect(DB_URL)
 app.use("/", authRouter);
 app.use("/refresh", require('./routes/refreshRouter'));
 app.use(verifyJWT);
-app.use("/admin", admin_route)
-app.use("/user", user_router);
-app.use('/chef', chef_route)
+app.use("/admin", accessControl.adminAccess, admin_route)
+app.use("/user", accessControl.userAccess, user_router);
+app.use('/chef', accessControl.chefAccess, chef_route)

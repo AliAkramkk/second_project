@@ -1,10 +1,20 @@
 import React from "react";
 import AdminNavbar from "../../../component/Navbar/AdminNavbar";
-import { auth } from "../../../context/authReducer";
+import { auth, selectCurrentToken } from "../../../context/authReducer";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Footer from "../../User/Footer/Footer";
+import AdminTable from "../../../component/AdminHomeCard/AdminTable";
 function AdminHome() {
   const user = useSelector(auth);
+  const token = useSelector(selectCurrentToken);
+  const navigate = useNavigate();
+
+  const handleCategory = async () => {
+    navigate("/admin/category");
+  };
+  console.log("user:", user);
+  console.log("token:", token);
   return (
     <>
       <div className=" bg-gray-100 ">
@@ -22,6 +32,10 @@ function AdminHome() {
             Congratulation, You Have Some Good News
           </span>
         </h1>
+        <div>
+          <button onClick={handleCategory}>Category</button>
+        </div>
+        <AdminTable />
         <Footer />
       </div>
     </>

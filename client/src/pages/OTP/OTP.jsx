@@ -4,6 +4,8 @@ import { auth } from "../../context/authReducer";
 import { useSelector } from "react-redux";
 import axios from "../../api/axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../context/authReducer";
 import toast, { Toaster } from "react-hot-toast";
 import backgroundImage from "../../../public/otp1.jpg";
 import UserNavbar from "../../component/Navbar/UserNavbar";
@@ -16,10 +18,10 @@ const OTP = () => {
   const [timerIntervalId, setTimerIntervalId] = useState(null);
   // const [loading, setLoading] = useState(false);
   const usenavigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector(auth);
   console.log(user);
-  const userEmail = user ? user.email : null;
-  console.log(userEmail);
+
   //  useEffect(() => {
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -109,14 +111,30 @@ const OTP = () => {
         }
       )
       .then((response) => {
+        console.log(response.data.role);
         console.log(response.data.message);
         console.log(response.status);
-        if (response.data.message == 2000) {
-          usenavigate("/signin");
-        } else if (response.data.message == 3000) {
-          console.log("in if");
-          usenavigate("/signin");
+        dispatch(
+          setCredentials({
+            user: response.data.user,
+            role: response.data.role,
+            token: response.data.accessToken,
+            id: response.data.id,
+          })
+        );
+        if (response.data.role === 2000) {
+          usenavigate("/");
+        } else if (response.data.role === 1000) {
+          usenavigate("/admin");
+        } else if (response.data.role === 3000) {
+          usenavigate("/chef");
         }
+        // if (response.data.message == 2000) {
+        //   usenavigate("/signin");
+        // } else if (response.data.message == 3000) {
+        //   console.log("in if");
+        //   usenavigate("/signin");
+        // }
       })
       .catch((error) => {
         if (error.response) {

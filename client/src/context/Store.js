@@ -30,6 +30,9 @@ const store = configureStore({
     }).concat(apiSlice.middleware),
   devTools: true,
 });
+// Example in your store configuration
+console.log('Redux Store State:', store.getState());
+
 // const store = configureStore({
 //   reducer: reducer,
 //   middleware: (getDefaultMiddleware) =>

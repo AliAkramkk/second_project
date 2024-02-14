@@ -3,6 +3,7 @@ import myImage from "../../assets/Lets cook/malecook3.png";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../context/authReducer";
 import { useSelector } from "react-redux";
+import Homelottie from "../Lottie/Homelottie";
 
 const HomeCard = () => {
   const navigate = useNavigate();
@@ -24,10 +25,7 @@ const HomeCard = () => {
   };
 
   return (
-    <div
-      className="bg-gray-100 rounded-lg shadow dark:bg-gray-900 m-4"
-      // style={cardStyle}
-    >
+    <div className="bg-gray-100 rounded-lg shadow dark:bg-gray-900 m-4">
       <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8 flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-4xl font-bold text-gray-800 mb-4 mt-4">
@@ -44,17 +42,9 @@ const HomeCard = () => {
             EXPLORE COURSE
           </button>
         </div>
-        <h1 className="text-4xl font-bold text-gray-800 mb-4 p-3 text-end">
-          Hello {user.user}
-          <br />
-          <span className="text-2xl text-lime-600  ">
-            Welcome To Let's Cook!
-          </span>
-          <br />
-          <span className="text-2xl text-black">
-            Congratulation, You Have Some Good News
-          </span>
-        </h1>
+        <Homelottie
+          style={{ width: "300px", height: "200px" }} // Set a fixed height
+        />
       </div>
     </div>
   );

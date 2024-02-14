@@ -91,9 +91,24 @@ const ChefVidoes = () => {
       state: { courseID: id },
     });
   };
+
   const deleteCourses = async (id) => {
     showDeleteAlert(async () => {
       try {
+        // Check if the course has been purchased
+        const paymentRecord = await axiosPrivate.get(`/checkPayment/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (paymentRecord.data.purchased) {
+          // If purchased, show an error message
+          toast.error("Cannot delete purchased course.");
+          return;
+        }
+
+        // If not purchased, proceed with deletion
         const changedResponse = await axiosPrivate.delete(
           `/chef/deleteCourse/${id}`,
           {
@@ -103,6 +118,7 @@ const ChefVidoes = () => {
             },
           }
         );
+
         toast.success(changedResponse.data.message);
         usenavigate("/chef/my-course");
 

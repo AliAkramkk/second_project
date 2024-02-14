@@ -9,6 +9,10 @@ import { persistStore } from "redux-persist";
 import "./index.css";
 
 let persistor = persistStore(store);
+persistor.persist();
+persistor.subscribe(() => {
+  console.log("Redux Store State:", store.getState());
+});
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

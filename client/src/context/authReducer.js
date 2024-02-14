@@ -11,6 +11,8 @@ const authSlice = createSlice({
       state.id = id !== undefined ? id : state.id;
       state.role = role !== undefined ? [role] : state.role;
       console.log("state", state.token);
+      console.log('Action Payload:', action.payload);
+      console.log('Current State:', state);
     },
 
     logOut: (state, action) => {

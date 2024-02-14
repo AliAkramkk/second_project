@@ -25,8 +25,8 @@ const uploadimage = async (onefile) => {
       folder: "Let'sCook",
       transformation: [
         {
-          width: 300,
-          height: 420,
+          width: 1280,
+          height: 720,
           crop: "fill_pad",
           gravity: "auto",
           quality: 100,

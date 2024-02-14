@@ -64,11 +64,13 @@ const signIn_post = async (req, res) => {
               process.env.ACCESS_TOKEN_SECRET,
               { expiresIn: "1d" }
             );
+            console.log("access signin", accessToken);
             const refreshToken = jwt.sign(
               { email: user.email },
               process.env.REFRESH_TOKEN_SECRET,
               { expiresIn: "2d" }
             );
+            console.log("refresh signin", refreshToken);
 
             await User.updateOne(
               { _id: user._id },
@@ -79,7 +81,10 @@ const signIn_post = async (req, res) => {
               httpOnly: true,
               maxAge: 48 * 60 * 60 * 1000,
             });
-
+            console.log('Cookie Configuration:', {
+              httpOnly: true,
+              maxAge: 48 * 60 * 60 * 1000,
+            });
             return res.status(201).json({
               message: "success",
               accessToken,
@@ -208,17 +213,47 @@ const userVerifyOTP = async (req, res) => {
 
     // console.log(id)
     let user = await User.findOne({ _id: id });
+    console.log(user);
     const secret = user.OTP;
     const isValid = public_controller.verifyOTP(secret, OTP);
     if (isValid == true) {
       // console.log(isValid);
       const role = user.role;
 
-      await User.updateOne({ _id: id }, { $set: { isVerify: true } });
+      const newUser = await User.updateOne({ _id: id }, { $set: { isVerify: true } });
+      console.log("newUser", newUser);
+      const accessToken = jwt.sign(
+        { email: user.email },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "1d" }
+      );
+      const refreshToken = jwt.sign(
+        { email: user.email },
+        process.env.REFRESH_TOKEN_SECRET,
+        { expiresIn: "2d" }
+      );
+
+      await User.updateOne(
+        { _id: user._id },
+        { $set: { JWT: refreshToken } }
+      );
+
+      res.cookie("jwt", refreshToken, {
+        httpOnly: true,
+        maxAge: 48 * 60 * 60 * 1000,
+      });
+
+      return res.status(201).json({
+        message: "success",
+        accessToken,
+        role: user.role,
+        user: user.username,
+        id: user._id
+      });
 
       res.clearCookie("id");
 
-      res.status(200).json({ message: role });
+      // res.status(200).json({ message: role });
     } else {
       // console.log("not valid");
       res.status(400).json({ message: "OTP not valid." });
