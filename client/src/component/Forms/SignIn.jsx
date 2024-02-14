@@ -12,6 +12,7 @@ import backgroundImage from "../../../public/signin.jpg";
 import GoogleAuthComponent from "../../pages/SignIn/Auth";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import UserNavbar from "../Navbar/UserNavbar";
+import SignInNavbar from "../Navbar/SignInNavbar";
 
 function Signin() {
   const navigate = useNavigate();
@@ -89,7 +90,7 @@ function Signin() {
   };
   return (
     <>
-      <UserNavbar />
+      <SignInNavbar />
       <div
         className="min-h-screen flex flex-col items-start justify-start bg-cover"
         style={{ backgroundImage: `url(${backgroundImage})` }}

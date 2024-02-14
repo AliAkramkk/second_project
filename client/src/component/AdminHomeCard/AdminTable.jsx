@@ -6,20 +6,16 @@ import {
 } from "@heroicons/react/24/outline";
 import {
   Card,
-  CardHeader,
   Typography,
   Button,
   CardBody,
-  Chip,
   CardFooter,
-  Avatar,
   IconButton,
-  Tooltip,
-  Input,
 } from "@material-tailwind/react";
 import { selectCurrentToken } from "../../context/authReducer";
 import { useSelector } from "react-redux";
 import { axiosPrivate } from "../../api/axios";
+import toast, { Toaster } from "react-hot-toast";
 
 const AdminTable = () => {
   const TABLE_HEAD = [
@@ -33,8 +29,10 @@ const AdminTable = () => {
     "Payment Status",
   ];
   const [payments, setPayments] = useState([]);
-  const [loading, setLoading] = useState(true); // Added loading state
+  const [loading, setLoading] = useState(true);
   const token = useSelector(selectCurrentToken);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage] = useState(5);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,50 +42,108 @@ const AdminTable = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("response adminTable", response);
         setPayments(response.data.payment);
-        setLoading(false); // Set loading to false once data is received
+        setLoading(false);
       } catch (error) {
         console.log(error.message);
-        setLoading(false); // Set loading to false in case of an error
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, [token]); // Added token as a dependency
+  }, [token]);
+
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = payments.slice(indexOfFirstRow, indexOfLastRow);
+
+  const handlePayment = async (paymentId, isDivided) => {
+    try {
+      if (!isDivided) {
+        const response = await axiosPrivate.put(
+          `/admin/updatePayment/${paymentId}`,
+          { isDivided: true },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setPayments((prevPayments) =>
+          prevPayments.map((payment) =>
+            payment._id === paymentId
+              ? { ...payment, isDivided: true }
+              : payment
+          )
+        );
+
+        // Display success toast
+        toast.success("Payment status updated successfully");
+      } else {
+        console.log("Payment already completed");
+        // Display info toast
+        toast.info("Payment has already been completed");
+      }
+    } catch (error) {
+      console.error("Error updating payment:", error.message);
+
+      // Display error toast
+      toast.error("Failed to update payment status");
+    }
+  };
+
   const cardStyle4 = {
     background:
       "linear-gradient(to right, hsl(210, 40%, 95%), hsl(0, 40%, 95%), hsl(60, 100%, 95%))",
   };
+
+  const renderTableRows = () => {
+    return currentRows.map(
+      (
+        { _id, user_id, chef_id, course_id, amount, date, isDivided },
+        index
+      ) => {
+        const isLast = index === currentRows.length - 1;
+        const classes = isLast
+          ? "p-4 font-semibold"
+          : "p-4 font-semibold border-b border-blue-gray-50";
+
+        return (
+          <tr key={_id}>
+            <td className={classes}>{index + 1}</td>
+            <td className={classes}>{new Date(date).toLocaleDateString()}</td>
+            <td className={classes}>{_id}</td>
+            <td className={classes}>{user_id?.username || "N/A"}</td>
+            <td className={classes}>{course_id && course_id.title}</td>
+            <td className={classes}>{chef_id.username}</td>
+            <td className={classes}>{amount}</td>
+            <td className={classes}>
+              <Button
+                size="sm"
+                variant="outlined"
+                color={isDivided ? "green" : "amber"}
+                onClick={() => handlePayment(_id, isDivided)}
+              >
+                {isDivided ? "Paid" : "Pay"}
+              </Button>
+            </td>
+          </tr>
+        );
+      }
+    );
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
   return (
     <Card className="h-full w-full" style={cardStyle4}>
-      <CardHeader floated={false} shadow={false} className="rounded-none">
-        <div className="mb-4 flex flex-col justify-between gap-8 md:flex-row md:items-center">
-          <div>
-            <Typography variant="h5" color="blue-gray">
-              Recent Transactions
-            </Typography>
-            <Typography color="gray" className="mt-1 font-normal">
-              These are details about the last transactions
-            </Typography>
-          </div>
-          <div className="flex w-full shrink-0 gap-2 md:w-max">
-            <div className="w-full md:w-72">
-              <Input
-                label="Search"
-                icon={<MagnifyingGlassIcon className="h-5 w-5" />}
-              />
-            </div>
-            <Button className="flex items-center gap-3" size="sm">
-              <ArrowDownTrayIcon strokeWidth={2} className="h-4 w-4" /> Download
-            </Button>
-          </div>
-        </div>
-      </CardHeader>
       <CardBody className="overflow-scroll px-0">
         {loading ? (
           <p>Loading...</p>
-        ) : payments.length === 0 ? (
+        ) : currentRows.length === 0 ? (
           <p>No transactions found.</p>
         ) : (
           <table className="w-full min-w-max table-auto text-left">
@@ -101,7 +157,7 @@ const AdminTable = () => {
                     <Typography
                       variant="small"
                       color="blue-gray"
-                      className="font-normal leading-none opacity-70"
+                      className="font-semibold leading-none opacity-80"
                     >
                       {head}
                     </Typography>
@@ -109,73 +165,45 @@ const AdminTable = () => {
                 ))}
               </tr>
             </thead>
-            <tbody>
-              {payments.map(
-                (
-                  { _id, user_id, chef_id, course_id, amount, date, isDivided },
-                  index
-                ) => {
-                  const isLast = index === payments.length - 1;
-                  const classes = isLast
-                    ? "p-4"
-                    : "p-4 border-b border-blue-gray-50";
-
-                  return (
-                    <tr key={_id}>
-                      <td className={classes}>{index + 1}</td>
-                      <td className={classes}>
-                        {new Date(date).toLocaleDateString()}
-                      </td>
-                      <td className={classes}>{_id}</td>
-                      <td className={classes}>{user_id?.username || "N/A"}</td>
-
-                      <td className={classes}>
-                        {course_id && course_id.title}
-                      </td>
-                      <td className={classes}>{chef_id.username}</td>
-                      <td className={classes}>{amount}</td>
-                      <td className={classes}>
-                        <Chip
-                          size="sm"
-                          variant="ghost"
-                          value={isDivided ? "paid" : "pending"}
-                          color={isDivided ? "green" : "amber"}
-                        />
-                      </td>
-                      <td className={classes}>
-                        <Tooltip content="Edit User">
-                          <IconButton variant="text">
-                            <PencilIcon className="h-4 w-4" />
-                          </IconButton>
-                        </Tooltip>
-                      </td>
-                    </tr>
-                  );
-                }
-              )}
-            </tbody>
+            <tbody>{renderTableRows()}</tbody>
           </table>
         )}
       </CardBody>
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-        <Button variant="outlined" size="sm">
+        <Button
+          variant="outlined"
+          size="sm"
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
           Previous
         </Button>
         <div className="flex items-center gap-2">
-          <IconButton variant="outlined" size="sm">
-            1
-          </IconButton>
-          <IconButton variant="text" size="sm" color="blue">
-            2
-          </IconButton>
-          <IconButton variant="outlined" size="sm">
-            3
-          </IconButton>
+          {Array.from(
+            { length: Math.ceil(payments.length / rowsPerPage) },
+            (_, i) => (
+              <IconButton
+                key={i + 1}
+                variant="outlined"
+                size="sm"
+                color={currentPage === i + 1 ? "blue" : "gray"}
+                onClick={() => handlePageChange(i + 1)}
+              >
+                {i + 1}
+              </IconButton>
+            )
+          )}
         </div>
-        <Button variant="outlined" size="sm">
+        <Button
+          variant="outlined"
+          size="sm"
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === Math.ceil(payments.length / rowsPerPage)}
+        >
           Next
         </Button>
       </CardFooter>
+      <Toaster position="bottom-right" />
     </Card>
   );
 };

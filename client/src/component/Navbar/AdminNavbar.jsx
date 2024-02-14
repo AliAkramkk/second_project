@@ -57,6 +57,18 @@ function AdminNavbar() {
           >
             CHEFS
           </Link>
+          <Link
+            to="/admin/category"
+            className="text-white hover:text-gray-300 transition"
+          >
+            CATEGORY
+          </Link>
+          <Link
+            to="/admin/allCourse"
+            className="text-white hover:text-gray-300 transition"
+          >
+            COURSE
+          </Link>
         </div>
         <div className="md:hidden" onClick={toggleMobileMenu}>
           <Hamburger />
@@ -71,6 +83,12 @@ function AdminNavbar() {
             </Link>
             <Link to="/admin/cheflist" className="nav-link">
               CHEFS
+            </Link>
+            <Link
+              to="/admin/category"
+              className="text-white hover:text-gray-300 transition"
+            >
+              CATEGORY
             </Link>
           </div>
         )}

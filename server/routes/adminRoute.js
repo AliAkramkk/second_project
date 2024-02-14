@@ -9,6 +9,7 @@ admin_route.get('/adminTable', adminController.adminTable)
 
 admin_route.put('/updateUserStatus', adminController.updateAccessStatus)
 admin_route.put('/changeName/:id', adminController.editCategoryName)
+admin_route.put('/updatePayment/:paymentId', adminController.updatePayment)
 
 admin_route.patch('/updateChefStatus', adminController.updateChefStatus)
 

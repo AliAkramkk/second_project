@@ -1,4 +1,5 @@
 const User = require('../models/userSchema');
+const mongoose = require('mongoose');
 const categoryModel = require('../models/categorySchema');
 const public_controller = require('./publicController');
 const payment_schema = require('../models/paymentSchema');
@@ -190,6 +191,36 @@ const adminTable = async (req, res) => {
   }
 };
 
+const updatePayment = async (req, res) => {
+  try {
+    const { paymentId } = req.params;
+
+    // Check if paymentId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(paymentId)) {
+      return res.status(400).json({ message: "Invalid paymentId" });
+    }
+
+
+    const payment = await payment_schema.findByIdAndUpdate(
+      { _id: paymentId },
+      { $set: { isDivided: true } },
+      { new: true }
+    );
+
+
+    if (!payment) {
+      return res.status(404).json({ message: "Payment not found" });
+    }
+
+
+    res.status(200).json({ message: "Payment updated successfully", payment });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
 module.exports = {
   getStudents,
   updateAccessStatus,
@@ -199,5 +230,6 @@ module.exports = {
   changeCategoryImage,
   editCategoryName,
   getAllCategory,
-  adminTable
+  adminTable,
+  updatePayment
 }
