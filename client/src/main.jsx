@@ -3,16 +3,15 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import store from "./context/Store.js";
 import { PersistGate } from "redux-persist/integration/react";
-import { persistStore } from "redux-persist";
 import "./index.css";
+import { persistor, store } from "./context/Store.js";
 
-let persistor = persistStore(store);
-persistor.persist();
-persistor.subscribe(() => {
-  console.log("Redux Store State:", store.getState());
-});
+// let persistor = persistStore(store);
+// persistor.persist();
+// persistor.subscribe(() => {
+//   console.log("Redux Store State:", store.getState());
+// });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

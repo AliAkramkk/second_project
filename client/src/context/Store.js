@@ -1,49 +1,22 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { apiSlice } from "../api/apiSlice";
-import authReducer from "./authReducer";
-import { persistReducer } from "redux-persist";
-import storageSession from 'redux-persist/lib/storage/session';
-import { combineReducers } from "@reduxjs/toolkit";
-
-const tabId = window.location.href
-
-const persistConfig = {
-  key: `auth-${tabId}`,
-  storage: storageSession, // Use sessionStorage instead of localStorage
-  whitelist: ['auth'], // Only persist the 'auth' slice of the state
-};
-
-const reducer = combineReducers({
-  [apiSlice.reducerPath]: apiSlice.reducer,
-  auth: authReducer,
-});
-
-const persistedReducerAuth = persistReducer(persistConfig, reducer);
-
-const store = configureStore({
-  reducer: persistedReducerAuth,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: ['persist/PERSIST'],
-      },
-    }).concat(apiSlice.middleware),
-  devTools: true,
-});
-// Example in your store configuration
-console.log('Redux Store State:', store.getState());
-
-// const store = configureStore({
-//   reducer: reducer,
-//   middleware: (getDefaultMiddleware) =>
-//     getDefaultMiddleware({
-//       serializableCheck: {
-//         ignoredActions: ['persist/PERSIST'],
-//       },
-//     }).concat(apiSlice.middleware),
-//   devTools: true,
-// });
+import { configureStore, combineReducers } from "@reduxjs/toolkit"
+import authSlice from "./authReducer";
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from "redux-persist/lib/storage";
 
 
+const authPersitConfig = {
+  key: 'auth',
+  storage
+}
 
-export default store;
+const persistedAuthReducer = persistReducer(authPersitConfig, authSlice)
+
+const rootReducer = combineReducers({
+  auth: persistedAuthReducer
+})
+
+export const store = configureStore({
+  reducer: rootReducer
+})
+
+export const persistor = persistStore(store)

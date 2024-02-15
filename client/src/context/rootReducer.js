@@ -5,7 +5,7 @@ import authReducer from '../context/authReducer';
 
 const rootReducer = combineReducers({
   api: apiSlice,
-  auth: authReducer,
+  auth: authReducer
   // ... other reducers
 });
 

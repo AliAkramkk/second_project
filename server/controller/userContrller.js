@@ -191,12 +191,50 @@ const sendLiveStreamLink = async (req, res) => {
   }
 };
 
+const getCurrentCourse = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const course = await course_schema.findOne({ _id: id }).populate('chef')
+    console.log(course);
+    if (course) {
+      res.status(201).json({ course });
+    } else {
+      res.status(400).json({ message: "Courses is empty 😥" });
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: "Internal server error" })
+  }
+}
+const addReview = async (req, res) => {
+  try {
+    const { rating, review, user, course_id } = req.body
+    const savedChapter = await course_schema.updateOne(
+      { _id: course_id },
+      {
+        $push: {
+          reviews: {
+            rating,
+            review,
+            user,
+            date: new Date()
+          }
+        }
+      }
+    );
+    // console.log(req.body);
+    res.status(200).json({ message: 'review added successfully' })
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 module.exports = {
   getStudent,
   editProfile,
   paymentHandle,
   handleSuccessPayment,
   myLernings,
-  sendLiveStreamLink
-
+  sendLiveStreamLink,
+  getCurrentCourse,
+  addReview
 }

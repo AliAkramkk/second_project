@@ -6,10 +6,12 @@ const userController = require('../controller/userContrller')
 
 user_router.get('/profile/:id', userController.getStudent)
 user_router.get('/my-learning', userController.myLernings)
+user_router.get('/getCurrentCourse/:id', userController.getCurrentCourse)
 
 user_router.patch('/editprofile', userController.editProfile)
 user_router.post('/makePayment', userController.paymentHandle)
 user_router.post('/sendmail', userController.sendLiveStreamLink);
+user_router.post('/addReview', userController.addReview)
 
 
 module.exports = user_router;
