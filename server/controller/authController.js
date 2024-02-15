@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const public_controller = require('../controller/publicController')
 const course_schema = require('../models/courseSchema')
 const User = require('../models/userSchema');
-
+const category_schema = require('../models/categorySchema')
 const signUp_post = async (req, res) => {
   try {
 
@@ -373,6 +373,17 @@ const selectedCourse = async (req, res) => {
   }
 }
 
+
+const homeCategory = async (req, res) => {
+  try {
+    const category = await category_schema.find({});
+    console.log("home cat", category);
+    res.status(200).json({ category })
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: "Internal server error" })
+  }
+}
 module.exports = {
   signUp_post,
   signIn_post,
@@ -383,5 +394,6 @@ module.exports = {
   resetPassword,
   allListCourse,
   signIn_google,
-  selectedCourse
+  selectedCourse,
+  homeCategory
 };

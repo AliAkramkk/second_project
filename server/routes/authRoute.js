@@ -5,7 +5,8 @@ const usercontroller = require('../controller/userContrller')
 
 
 router.get('/courses', authController.allListCourse)
-router.get('/selectedCourse/:id', authController.selectedCourse)
+router.get('/selectedCourse/:id', authController.selectedCourse);
+router.get('/categories', authController.homeCategory)
 router.get('/successpayment', usercontroller.handleSuccessPayment);
 
 

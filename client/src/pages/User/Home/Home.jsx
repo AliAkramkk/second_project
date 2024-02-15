@@ -1,10 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import UserNavbar from "../../../component/Navbar/UserNavbar";
 import Footer from "../Footer/Footer";
 import HomeCard from "../../../component/Card/HomeCard";
 import myImage from "../../../assets/Lets cook/network.png";
-
+import { auth, selectCurrentToken } from "../../../context/authReducer";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import axios from "../../../api/axios";
+import { motion } from "framer-motion";
 const Home = () => {
+  const [categories, setCategories] = useState([]);
+  const token = useSelector(selectCurrentToken);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/categories", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log(response.data);
+        setCategories(response?.data?.category.slice(0, 4));
+        console.log("categories", response?.data?.category.slice(0, 4));
+      } catch (error) {
+        console.log();
+      }
+    };
+    fetchData();
+  }, []);
+
   const cardStyle = {
     background:
       "linear-gradient(to right, rgb(220, 230, 255), rgb(255, 220, 220), rgb(255, 250, 210))",
@@ -30,60 +56,26 @@ const Home = () => {
         <h4 className="text-xl font-bold text-gray-800 mb-4 mt-4 text-center">
           Verity of Category to Excel
         </h4>
-        <div className="flex">
-          <a
-            href="#"
-            className="block max-w-sm p-6 rounded-lg shadow hover:bg-gray-100 dark:bg-gradient-to-r from-grad1 via-grad2 to-grad3 dark:border-gray-700 dark:hover:bg-gray-700 m-4 h-52"
-            style={cardStyle}
-          >
-            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              Noteworthy
-            </h5>
-            <p className="font-normal text-gray-700 dark:text-gray-400">
-              Here are the biggest enterprise technology acquisitions of 2021 so
-              far, in reverse chronological order.
-            </p>
-          </a>
-          <a
-            href="#"
-            className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 m-4"
-            style={cardStyle1}
-          >
-            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              Noteworthy
-            </h5>
-            <p className="font-normal text-gray-700 dark:text-gray-400">
-              Here are the biggest enterprise technology acquisitions of 2021 so
-              far, in reverse chronological order.
-            </p>
-          </a>
-          <a
-            href="#"
-            className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 m-4"
-            style={cardStyle1}
-          >
-            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              Noteworthy
-            </h5>
-            <p className="font-normal text-gray-700 dark:text-gray-400">
-              Here are the biggest enterprise technology acquisitions of 2021 so
-              far, in reverse chronological order.
-            </p>
-          </a>
-          <a
-            href="#"
-            className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 m-4"
-            style={cardStyle2}
-          >
-            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              Noteworthy
-            </h5>
-            <p className="font-normal text-gray-700 dark:text-gray-400">
-              Here are the biggest enterprise technology acquisitions of 2021 so
-              far, in reverse chronological order.
-            </p>
-          </a>
+        <div className="grid p-4 grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-6 z-10 relative">
+          {categories.map((category, index) => (
+            <motion.div
+              key={index}
+              whileHover={{ scale: 1.05 }}
+              className="feature text-center p-b-6 bg-gray-200 rounded-lg border-b"
+              onClick={() =>
+                navigate("/all-courses", { state: { category: category.name } })
+              }
+            >
+              <img
+                src={category.image.url}
+                className="w-full h-60  object-cover mb-4"
+                style={{ objectPosition: "bottom" }}
+              />
+              <h3 className="text-xl font-semibold mb-2">{category.name}</h3>
+            </motion.div>
+          ))}
         </div>
+
         {/* <div className="max-w-screen-xl mx-auto p-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-blue-600 mb-8">
