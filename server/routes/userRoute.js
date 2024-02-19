@@ -10,7 +10,8 @@ user_router.get('/getCurrentCourse/:id', userController.getCurrentCourse)
 
 user_router.patch('/editprofile', userController.editProfile)
 user_router.post('/makePayment', userController.paymentHandle)
-user_router.post('/sendmail', userController.sendLiveStreamLink);
+
+
 user_router.post('/addReview', userController.addReview)
 
 

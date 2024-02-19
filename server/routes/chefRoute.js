@@ -1,5 +1,6 @@
 const chef_route = require('express').Router();
 const chefController = require('../controller/chefController');
+const userController = require('../controller/userContrller')
 // const checkAccessStatus = require('../middleware/checkAccessStatus');
 
 // chef_route.use(checkAccessStatus);
@@ -15,6 +16,7 @@ chef_route.put('/handleShowCourse', chefController.handleChangeCourse)
 chef_route.delete('/deleteCourse/:id', chefController.deleteCourse)
 chef_route.put('/delete-chapter', chefController.deleteChapter)
 chef_route.post('/add-chapter', chefController.addChapter)
+chef_route.post('/sendmail', chefController.sendLiveStreamLink);
 chef_route.patch('/edit-course/:id', chefController.editCourse)
 
 

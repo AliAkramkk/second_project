@@ -101,7 +101,7 @@ const ChefVidoes = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-
+        console.log("payment", paymentRecord);
         if (paymentRecord.data.purchased) {
           // If purchased, show an error message
           toast.error("Cannot delete purchased course.");

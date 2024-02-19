@@ -74,7 +74,7 @@ const createCategory = async (req, res) => {
       name,
       image: uploadedImage,
     });
-    log
+
     await newCategory.save();
     res.status(200).json({ message: `${name} category created` });
   } catch (error) {
@@ -100,9 +100,10 @@ const changeCategoryImage = async (req, res) => {
 }
 const editCategoryName = async (req, res) => {
   try {
+    console.log("hiii");
     const { id } = req.params;
     const { name } = req.body;
-
+    console.log("edit category", name);
     const existedCategory = await categoryModel.findOne({
       name: { $regex: new RegExp(`^${name}$`, "i") },
     });
@@ -183,7 +184,7 @@ const adminTable = async (req, res) => {
         model: course,
         select: 'title'
       });
-    console.log("aminTable", payment);
+    // console.log("aminTable", payment);
     res.status(200).json({ payment });
   } catch (error) {
     console.error(error.message);
@@ -221,6 +222,84 @@ const updatePayment = async (req, res) => {
 };
 
 
+const getDashboardData = async (req, res) => {
+  try {
+    console.log("hiii");
+    const studentsData = await user_schema.find({ role: 2000 });
+    const teachersData = await user_schema.find({ role: 3000 });
+    const allCourses = await course.find({ isShow: true });
+    const paymentData = await payment_schema.aggregate([
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$amount" },
+        },
+      },
+    ]);
+
+    const data = {
+      students: studentsData.length,
+      teachers: teachersData.length,
+      allCourses: allCourses.length,
+      totalAmount: paymentData[0].total,
+    };
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getGraphData = async (req, res, next) => {
+  try {
+    const student = await user_schema.aggregate([
+      { $match: { role: 2000 } },
+      {
+        $group: {
+          _id: {
+            month: { $month: "$createdAt" },
+          },
+          date: { $first: "$createdAt" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          month: "$_id",
+          date: 1,
+          count: 1,
+        },
+      },
+    ]);
+
+    const teacher = await user_schema.aggregate([
+      { $match: { role: 3000 } },
+      {
+        $group: {
+          _id: {
+            month: { $month: "$createdAt" },
+          },
+          date: { $first: "$createdAt" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          month: "$_id.month",
+          date: 1,
+          count: 1,
+        },
+      },
+    ]);
+
+    res.status(200).json({ student, teacher });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getStudents,
   updateAccessStatus,
@@ -231,5 +310,7 @@ module.exports = {
   editCategoryName,
   getAllCategory,
   adminTable,
-  updatePayment
+  updatePayment,
+  getDashboardData,
+  getGraphData
 }

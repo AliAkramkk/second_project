@@ -1,13 +1,15 @@
 const user_schema = require('../models/userSchema');
+const nodemailer = require('nodemailer');
 const course_schema = require('../models/courseSchema');
 const public_controller = require('./publicController');
 const category_schema = require('../models/categorySchema');
 const payment_schema = require('../models/paymentSchema')
+// const public_controller = require('../controller/publicController')
 
 const getStudent = async (req, res) => {
   try {
     const id = req.params.id
-    console.log("chef id", id);
+    // console.log("chef id", id);
     const student = await user_schema.findOne({ _id: id });
 
     res.status(201).json({ student })
@@ -42,7 +44,7 @@ const addCourse = async (req, res) => {
 
     // Save the new course
     const savedCourse = await newCourse.save();
-    console.log("Add course", savedCourse);
+    // console.log("Add course", savedCourse);
     res.status(201).json({ message: "Course uploaded successfully!" });
   } catch (error) {
     console.error(error);
@@ -57,13 +59,13 @@ const editCourse = async (req, res) => {
     const { title, category, description, price, aboutChef, blurb, user } = req.body;
 
     const updatedCourseData = req.body;
-    console.log(updatedCourseData);
+    // console.log(updatedCourseData);
 
     // Check if new coverImage is provided
     if (req.files && req.files.coverImage) {
       const uploadImageResult = await public_controller.uploadimage(req.files.coverImage);
       updatedCourseData.coverImage = uploadImageResult;
-      console.log("image", uploadImageResult);
+      // console.log("image", uploadImageResult);
     }
     // Check if new demoVideo is provided
     if (req.files && req.files.demoVideo) {
@@ -71,7 +73,7 @@ const editCourse = async (req, res) => {
       updatedCourseData.demoVideo = uploadVideoResult;
     }
 
-    console.log("Updated Course Data:", updatedCourseData);
+    // console.log("Updated Course Data:", updatedCourseData);
 
     const updatedCourse = await course_schema.findByIdAndUpdate(
       id,
@@ -228,7 +230,7 @@ const handleChangeCourse = async (req, res) => {
     const { id } = req.body;
     console.log("id" + id);
     const course = await course_schema.findOne({ _id: id })
-    console.log("coure", course);
+    // console.log("coure", course);
     await course_schema.updateOne(
       { _id: course._id },
       { $set: { isShow: !course.isShow } }
@@ -242,6 +244,7 @@ const handleChangeCourse = async (req, res) => {
 
 const deleteCourse = async (req, res) => {
   try {
+    console.log("hiii");
     const id = req.params.id;
     // const paymentRecord = await payment_schema.findOne({ course_id: id });
     // console.log("paymentRecord", paymentRecord);
@@ -291,13 +294,13 @@ const addChapter = async (req, res) => {
     const { chapterNo, title, description } = req.body;
     const { id } = req.body;
     const { coverImage, demoVideo } = req.files;
-    console.log(id);
+    // console.log(id);
     // console.log(coverImage, demoVideo);
 
     const duplicate = await course_schema.findOne({
       chapters: { $elemMatch: { id: chapterNo } },
     });
-    console.log("duplicate", duplicate);
+    // console.log("duplicate", duplicate);
     if (duplicate) {
       res.status(422).json({ message: "Chapter already exists!" });
     } else {
@@ -348,6 +351,7 @@ const currentChefCourse = async (req, res) => {
 
 const checkPayment = async (req, res) => {
   try {
+    console.log('hiii');
     const courseId = req.params.id;
     const paymentRecord = await payment_schema.findOne({ course_id: courseId });
     console.log("paymentRecord", paymentRecord);
@@ -366,6 +370,52 @@ const checkPayment = async (req, res) => {
 };
 
 
+
+const sendLiveStreamLink = async (req, res) => {
+  console.log("hiiii");
+  const { liveStreamLink } = req.body;
+  console.log("link", liveStreamLink);
+
+  try {
+    const students = await payment_schema.find().populate("user_id");
+
+    console.log("students", students);
+
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: 'akramkorakkottil@gmail.com',
+        pass: 'zuvlydretngxazpl',
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+
+    for (const student of students) {
+      console.log("Sending email to:", student.user_id ? student.user_id.email : 'N/A');
+
+
+      const mailOptions = {
+        from: 'akramkorakkottil@gmail.com',
+        to: student.user_id.email,
+        subject: 'Live Stream Link',
+        html: `<p>Hello ${student.user_id.username},</p>
+               <p>Here is the link to join the live stream: <a href="${liveStreamLink}">${liveStreamLink}</a></p>`,
+      };
+
+      const data = await transporter.sendMail(mailOptions);
+      console.log(`Email has been sent to ${student.user_id.username} (${student.user_id.email})`, data.response);
+    }
+
+    res.status(200).json({ message: 'Emails sent successfully.' });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+};
 module.exports = {
   getStudent,
   addCourse,
@@ -378,5 +428,6 @@ module.exports = {
   addChapter,
   currentChefCourse,
   editCourse,
-  checkPayment
+  checkPayment,
+  sendLiveStreamLink
 };

@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import AdminNavbar from "../../../component/Navbar/AdminNavbar";
 import { auth, selectCurrentToken } from "../../../context/authReducer";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../User/Footer/Footer";
 import totalstd from "../../../assets/Lets cook/stud.png";
+import { axiosPrivate } from "../../../api/axios";
 import course from "../../../assets/Lets cook/course.png";
-// import course from "../../assets/Lets cook/course.png";
-import certificate from "../../../assets/Lets cook/cer.png";
 import revenue from "../../../assets/Lets cook/revenue.png";
 import AdminTable from "../../../component/AdminHomeCard/AdminTable";
+import AdminDashboardGraph from "../../../component/Admin/AdminDashboardGraph";
+
 function AdminHome() {
   const user = useSelector(auth);
   const token = useSelector(selectCurrentToken);
@@ -17,6 +18,38 @@ function AdminHome() {
 
   console.log("user:", user);
   console.log("token:", token);
+  const [data, setData] = useState({
+    students: 0,
+    teachers: 0,
+    allCourses: 0,
+    totalAmount: 0,
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosPrivate.get("/admin/dashboard", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // Add any other headers if needed
+          },
+        });
+        const responseData = response.data;
+
+        setData({
+          students: responseData.students,
+          teachers: responseData.teachers,
+          allCourses: responseData.allCourses,
+          totalAmount: responseData.totalAmount,
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <div className=" bg-gray-100 ">
@@ -40,7 +73,8 @@ function AdminHome() {
           >
             <img src={totalstd} alt="Your Image" className="w-28 h-28 ml-10" />
             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center">
-              Total Students
+              {/* value={data?.students} */}
+              Total Students: {data.students}
             </h5>
             <p className="font-normal text-gray-700 dark:text-gray-400"></p>
           </a>
@@ -51,7 +85,7 @@ function AdminHome() {
           >
             <img src={course} alt="Your Image" className="w-28 h-28 ml-10" />
             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center">
-              Total Course
+              Total Courses: {data.allCourses}
             </h5>
             <p className="font-normal text-gray-700 dark:text-gray-400"></p>
           </a>
@@ -62,7 +96,7 @@ function AdminHome() {
           >
             <img src={totalstd} alt="Your Image" className="w-28 h-28 ml-10" />
             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center">
-              Total Chef
+              Total Teachers: {data.teachers}
             </h5>
             <p className="font-normal text-gray-700 dark:text-gray-400"></p>
           </a>
@@ -73,12 +107,15 @@ function AdminHome() {
           >
             <img src={revenue} alt="Your Image" className="w-28 h-28 ml-10" />
             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center">
-              Total Revenue
+              Total Revenue: {data.totalAmount}
             </h5>
             <p className="font-normal text-gray-700 dark:text-gray-400"></p>
           </a>
         </div>
-        <AdminTable />
+        {/* <AdminHome /> */}
+        {/* <AdminDashbordCard /> */}
+        <AdminDashboardGraph />
+        {/* <AdminTable /> */}
         <Footer />
       </div>
     </>

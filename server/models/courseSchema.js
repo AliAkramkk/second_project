@@ -50,9 +50,9 @@ const course_schema = new mongoose.Schema({
     type: Date,
     default: Date.now()
   },
-  rivew: {
+  reviews: {
     type: Array,
-
+    default: []
   },
   users: {
     type: Array

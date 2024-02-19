@@ -3,6 +3,7 @@ import UserNavbar from "../../../component/Navbar/UserNavbar";
 import Rating from "@mui/material/Rating";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+import ReactPlayer from "react-player";
 import {
   selectCurrentUser,
   selectCurrentToken,
@@ -66,14 +67,23 @@ const VideoSection = () => {
             },
           }
         );
-        console.log("response", response);
+        console.log("response", response.data.course);
+        console.log("video", currentVideo?.demoVideo?.url);
+
         setCourseTitle(response.data.course.title);
         setChapters(response.data.course.chapters);
         // setReviews(response.data.course.reviews);
         const reversedReviews = [...response.data.course.reviews].reverse();
         setReviews(reversedReviews);
 
-        setCurrentVideo(response.data.course.chapters[0]);
+        setCurrentVideo({
+          ...response.data.course.chapters[0],
+          coverImage: response.data.course.coverImage,
+          demoVideo: response.data.course.demoVideo,
+          title: response.data.course.title,
+          description: response.data.course.description,
+        });
+
         const isReviewed = response.data.course.reviews.some(
           (review) => review.user === user
         );
@@ -104,8 +114,8 @@ const VideoSection = () => {
                 src={currentVideo?.demoVideo?.url}
                 className="w-full h-[240px] md:h-[480px] object-cover rounded-md mb-4"
                 poster={currentVideo?.coverImage?.url}
-                // autoPlay
-                // muted
+                autoPlay
+                muted
               />
 
               {/* <ReactPlayer
@@ -114,7 +124,12 @@ const VideoSection = () => {
         width="800px"
         height='450px'
         /> */}
-
+              {/* <ReactPlayer
+                url={currentVideo?.demoVideo?.url}
+                controls={true}
+                width="100%"
+                height="100%"
+              /> */}
               <div className="mt-2 overflow-y-hidden ">
                 <h2 className="text-lg font-semibold">{currentVideo?.title}</h2>
                 <p className="text-md">

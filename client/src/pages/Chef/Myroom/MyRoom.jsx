@@ -8,22 +8,31 @@ const MyRoom = () => {
   const [roomCode, setRoomCode] = useState("");
   const navigate = useNavigate();
   const token = useSelector(selectCurrentToken);
-  const liveStream = `http://localhost:5173/user/live-room/${roomCode}`;
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    const liveStream = `http://localhost:5173/user/live-room/${roomCode}`;
+    console.log("token", token);
     console.log("live " + liveStream);
-    const response = await axiosPrivate.post(
-      "/user/sendmail",
-      { liveStreamLink: liveStream },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          // Add any other headers if needed
-        },
-      }
-    );
-    navigate(`/chef/room/${roomCode}`);
+    try {
+      const response = await axiosPrivate.post(
+        "/chef/sendmail",
+        { liveStreamLink: liveStream },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // Add any other headers if needed
+          },
+        }
+      );
+
+      // Replace 'placeholderRoomCode' with the actual variable or value you intend to use
+
+      navigate(`/chef/room/${roomCode}`);
+    } catch (error) {
+      // Handle errors, e.g., log them or show a user-friendly message
+      console.error(error);
+    }
   };
 
   return (

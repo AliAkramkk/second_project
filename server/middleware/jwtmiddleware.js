@@ -5,9 +5,9 @@ require('dotenv').config(); // Import the dotenv package
 
 const verifyJWT = async (req, res, next) => {
   const authHeader = req.headers['authorization'];
-  console.log('Authorization Header:', req.headers);
+  // console.log('Authorization Header:', req.headers);
   if (!authHeader) {
-    console.log('df');
+    // console.log('df');
     return res.sendStatus(403); // Forbidden if no token provided
   }
 
@@ -15,7 +15,7 @@ const verifyJWT = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    console.log("Decoded Token jwt:", decoded);
+    // console.log("Decoded Token jwt:", decoded);
     req.user = decoded.email; // Assuming email is stored in the JWT payload
 
     // Additional verification if needed

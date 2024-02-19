@@ -6,6 +6,8 @@ admin_route.get('/students', adminController.getStudents)
 admin_route.get('/chefs', adminController.getChefs)
 admin_route.get('/category', adminController.getAllCategory)
 admin_route.get('/adminTable', adminController.adminTable)
+admin_route.get('/dashboard', adminController.getDashboardData)
+admin_route.get('/graph', adminController.getGraphData)
 
 admin_route.put('/updateUserStatus', adminController.updateAccessStatus)
 admin_route.put('/changeName/:id', adminController.editCategoryName)

@@ -63,12 +63,12 @@ function AdminNavbar() {
           >
             CATEGORY
           </Link>
-          <Link
+          {/* <Link
             to="/admin/allCourse"
             className="text-white hover:text-gray-300 transition"
           >
             COURSE
-          </Link>
+          </Link> */}
         </div>
         <div className="md:hidden" onClick={toggleMobileMenu}>
           <Hamburger />

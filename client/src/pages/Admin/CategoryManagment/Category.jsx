@@ -27,7 +27,7 @@ const Category = () => {
   const [editName, setEditName] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
 
-  const [searchQuery, setSearchQuery] = useState("");
+  // const [searchQuery, setSearchQuery] = useState("");
   const [pageCount, setPageCount] = useState(1);
   const currentPage = useRef();
   const token = useSelector(selectCurrentToken);
@@ -164,12 +164,15 @@ const Category = () => {
       )
       .then((res) => {
         console.log(res);
-        setMessage(res.data.message);
+        if (res.data) {
+          setMessage(res.data.message);
+        }
         closeEditModal();
-        // toastHelper.showToast(res?.data?.message);
       })
+
       .catch((err) => {
         toastHelper.showToast(err?.response?.data?.message);
+
         console.log(err);
       });
   };
@@ -207,23 +210,28 @@ const Category = () => {
     currentPage.current = e.selected + 1;
     fetchCategory();
   };
+  const cardStyle4 = {
+    background:
+      "linear-gradient(to right, hsl(210, 40%, 95%), hsl(0, 40%, 95%), hsl(60, 100%, 95%))",
+  };
+
   return (
     <>
-      <div className="w-screen h-screen+50 md:h-screen overflow-x-hidden">
+      <div className="w-screen h-screen+50 md:h-screen overflow-x-hidden  bg-gray-100">
         <AdminNavbar />
         <div className="bg-opacity-50 bg-otp-bg text-black p-4">
           <div className="w-full h-20 flex items-center justify-end px-0 md:px-4 gap-4">
             <div className="flex ">
-              <input
+              {/* <input
                 type="text"
                 placeholder="Search..."
                 className="p-2 rounded-l-md w-full md:w-64 text-white text-verySmall-1 bg-dashboard-bg outline-none"
                 value={searchQuery}
                 onChange={handleInputChange}
-              />
-              <div className="w-14 h-10 rounded-r-md bg-black flex justify-center items-center cursor-pointer">
+              /> */}
+              {/* <div className="w-14 h-10 rounded-r-md bg-black flex justify-center items-center cursor-pointer">
                 <FaSearch className="text-white" />
-              </div>
+              </div> */}
             </div>
             <Button onClick={openModal}>Add</Button>
           </div>
@@ -250,7 +258,10 @@ const Category = () => {
                   <tbody>
                     {categories?.map((category, index) => {
                       return (
-                        <tr className=" border-b border-black bg-white  text-gray-700">
+                        <tr
+                          className=" border-b border-black bg-white  text-gray-700"
+                          style={cardStyle4}
+                        >
                           <th
                             scope="row"
                             className="px-6 py-4 font-medium whitespace-nowrap"
