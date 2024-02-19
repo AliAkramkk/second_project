@@ -123,9 +123,9 @@ const AdminTable = () => {
                 size="sm"
                 variant="outlined"
                 color={isDivided ? "green" : "amber"}
-                onClick={() => handlePayment(_id, isDivided)}
+                // onClick={() => handlePayment(_id, isDivided)}
               >
-                {isDivided ? "Paid" : "Pay"}
+                {isDivided ? "Paid" : "Unpaid"}
               </Button>
             </td>
           </tr>

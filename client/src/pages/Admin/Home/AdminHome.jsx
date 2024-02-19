@@ -8,7 +8,7 @@ import totalstd from "../../../assets/Lets cook/stud.png";
 import { axiosPrivate } from "../../../api/axios";
 import course from "../../../assets/Lets cook/course.png";
 import revenue from "../../../assets/Lets cook/revenue.png";
-import AdminTable from "../../../component/AdminHomeCard/AdminTable";
+import AdminTable from "../../../component/Admin/AdminTable";
 import AdminDashboardGraph from "../../../component/Admin/AdminDashboardGraph";
 
 function AdminHome() {
@@ -115,7 +115,7 @@ function AdminHome() {
         {/* <AdminHome /> */}
         {/* <AdminDashbordCard /> */}
         <AdminDashboardGraph />
-        {/* <AdminTable /> */}
+        <AdminTable />
         <Footer />
       </div>
     </>

@@ -299,7 +299,70 @@ const getGraphData = async (req, res, next) => {
     next(error);
   }
 };
+// ........................get the teachers payment.................
+const getPayments = async (req, res, next) => {
+  // console.log("hii from get payments");
+  try {
+    const ITEMS_PER_PAGE = 4;
+    let page = +req.query.page || 1;
 
+    const AllPayments = await payment_schema
+      .find()
+      .populate("course_id")
+      .populate("chef_id", "-password");
+
+    const startIndex = (page - 1) * ITEMS_PER_PAGE;
+    const lastIndex = page * ITEMS_PER_PAGE;
+
+    const results = {};
+    results.totalPayments = AllPayments.length;
+    results.pageCount = Math.ceil(AllPayments.length / ITEMS_PER_PAGE);
+
+    if (lastIndex < AllPayments.length) {
+      results.next = {
+        page: page + 1,
+      };
+    }
+
+    if (startIndex > 0) {
+      results.prev = {
+        page: page - 1,
+      };
+    }
+
+    results.page = page - 1;
+    results.payments = AllPayments.slice(startIndex, lastIndex);
+
+    res.status(200).json({ results });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const handleTeacherPay = async (req, res, next) => {
+  console.log("hii from handleTeacherPay");
+  try {
+    const { paymentId } = req.body;
+    const existPayment = await payment_schema.findById(paymentId);
+
+    console.log(existPayment);
+
+    if (!existPayment) {
+      return res.status(404).json({ message: "payment not found" });
+    }
+
+    if (existPayment.isDivided) {
+      return res.status(400).json({ message: "already done payment" });
+    }
+
+    existPayment.isDivided = true;
+    await existPayment.save();
+
+    res.status(200).json({ message: "Payment Success!" });
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   getStudents,
   updateAccessStatus,
@@ -312,5 +375,7 @@ module.exports = {
   adminTable,
   updatePayment,
   getDashboardData,
-  getGraphData
+  getGraphData,
+  handleTeacherPay,
+  getPayments
 }

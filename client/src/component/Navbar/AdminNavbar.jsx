@@ -63,6 +63,12 @@ function AdminNavbar() {
           >
             CATEGORY
           </Link>
+          <Link
+            to="/admin/transaction"
+            className="text-white hover:text-gray-300 transition"
+          >
+            TRANSACTIONS
+          </Link>
           {/* <Link
             to="/admin/allCourse"
             className="text-white hover:text-gray-300 transition"

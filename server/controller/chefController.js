@@ -4,6 +4,8 @@ const course_schema = require('../models/courseSchema');
 const public_controller = require('./publicController');
 const category_schema = require('../models/categorySchema');
 const payment_schema = require('../models/paymentSchema')
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 // const public_controller = require('../controller/publicController')
 
 const getStudent = async (req, res) => {
@@ -91,81 +93,6 @@ const editCourse = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-// const editCourse = async (req, res) => {
-//   try {
-//     console.log("hii from edit course");
-//     const { id } = req.params;
-//     const updatedCourseData = req.body
-
-//     console.log("hiii from editcourse", updatedCourseData);
-//     const { title, category, description, price, aboutChef, blurb, user } = req.body;
-//     // const uploadImageResult = await public_controller.uploadimage(req.files.coverImage);
-//     // const uploadVideoResult = await public_controller.uploadVideo(req.files.demoVideo);
-//     console.log("id", id);
-//     // console.log("1", uploadImageResult);
-//     const updatedCourse = await course_schema.findByIdAndUpdate(
-//       { _id: id },
-//       {
-//         title: updatedCourseData.title,
-//         category: updatedCourseData.category,
-//         description: updatedCourseData.description,
-//         price: updatedCourseData.price,
-//         aboutChef: updatedCourseData.aboutChef,
-//         blurb: updatedCourseData.blurb,
-//         coverImage: updatedCourseData.coverImage, // Use existing cover image if upload fails
-//         demoVideo: updatedCourseData.demoVideo, // Use existing demo video if upload fails
-//       },
-//       { new: true, runValidators: true }
-//     );
-
-//     console.log(updatedCourse);
-//     if (updatedCourse) {
-//       res.status(200).json({ message: "Course updated successfully", data: updatedCourse });
-//     } else {
-//       res.status(404).json({ message: "Course not found" });
-//     }
-//   } catch (error) {
-//     console.error(error.message);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
-
-
-// const editCourse = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const { title, category, description, price, aboutChef, blurb, user } = req.body;
-
-//     const updatedCourseData = {
-//       title,
-//       category,
-//       description,
-//       price,
-//       aboutChef,
-//       blurb,
-//     };
-
-
-
-//     console.log("hii 1", updatedCourseData);
-//     const updatedCourse = await course_schema.findByIdAndUpdate(
-//       { _id: id },
-//       updatedCourseData,
-//       { new: true, runValidators: true }
-//     );
-
-//     if (updatedCourse) {
-//       res.status(200).json({ message: "Course updated successfully", data: updatedCourse });
-//     } else {
-//       res.status(404).json({ message: "Course not found" });
-//     }
-//   } catch (error) {
-//     console.error(error.message);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
 
 // ...........................get Categories.................................
 const getCategories = async (req, res) => {
@@ -416,6 +343,50 @@ const sendLiveStreamLink = async (req, res) => {
     res.status(500).json({ error: 'Internal server error.' });
   }
 };
+
+const chefData = async (req, res) => {
+  try {
+    const userId = req.query.id;
+
+
+    // Convert userId to ObjectId
+    const userIdObjectId = new ObjectId(userId);
+
+    // Retrieve chef details
+    const chef = await user_schema.findOne({ _id: userIdObjectId });
+
+    // Count the number of courses the chef has
+    const coursesCount = await payment_schema.countDocuments({ chef_id: userIdObjectId });
+
+
+    // Sum the total income of the chef (when isDivided is true)
+    const totalIncomeResult = await payment_schema.aggregate([
+      { $match: { chef_id: userIdObjectId, isDivided: true } },
+      { $group: { _id: null, totalIncome: { $sum: "$amount" } } }
+    ]);
+
+
+    const totalIncome = totalIncomeResult.length > 0 ? totalIncomeResult[0].totalIncome / 2 : 0;
+
+    // Count the number of students who purchased courses from the chef
+    const studentsCount = await payment_schema.distinct("user_id", { chef_id: userIdObjectId });
+
+    // Build the response object
+    const chefDetails = {
+      chef,
+      coursesCount,
+      totalIncome: totalIncome || 0,
+      studentsCount: studentsCount.length,
+    };
+    console.log(totalIncome);
+    res.status(200).json(chefDetails);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
 module.exports = {
   getStudent,
   addCourse,
@@ -429,5 +400,6 @@ module.exports = {
   currentChefCourse,
   editCourse,
   checkPayment,
-  sendLiveStreamLink
+  sendLiveStreamLink,
+  chefData
 };
