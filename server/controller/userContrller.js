@@ -90,7 +90,7 @@ const paymentHandle = async (req, res) => {
       ],
       mode: "payment",
       success_url: `http://localhost:3000/successpayment?session_id={CHECKOUT_SESSION_ID}&course_id=${courseData._id}&user_name=${user.user}`,
-      cancel_url: "http://localhost:5173/allcourses",
+      cancel_url: "http://localhost:5173/coursedetails",
     });
     res.status(200).json({ id: session.id });
     console.log("hai", session);
@@ -231,6 +231,15 @@ const addReview = async (req, res) => {
 }
 
 
+const getChapter = async (req, res, next) => {
+  try {
+    const chapterId = req.params.id;
+    const chapter = await course_schema.findById(chapterId);
+    res.status(200).json({ chapter });
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   getStudent,
   editProfile,
@@ -240,5 +249,5 @@ module.exports = {
   // sendLiveStreamLink,
   getCurrentCourse,
   addReview,
-
+  getChapter
 }

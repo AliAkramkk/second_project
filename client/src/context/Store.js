@@ -6,7 +6,14 @@ import storage from "redux-persist/lib/storage";
 
 const authPersitConfig = {
   key: 'auth',
-  storage
+  storage,
+  //   serialize: {
+  //     replacer: (key, value) => (typeof value === 'function' ? undefined : value),
+  //   },
+  //   deserialize: {
+  //     replacer: (key, value) => (typeof value === 'function' ? undefined : value),
+  //   },
+  // };
 }
 
 const persistedAuthReducer = persistReducer(authPersitConfig, authSlice)

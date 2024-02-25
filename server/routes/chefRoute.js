@@ -12,7 +12,8 @@ chef_route.get('/getcourse/:course_id', chefController.getVideoCourse)
 chef_route.get('/checkPayment/:id', chefController.checkPayment)
 chef_route.get('/categories', chefController.getCategories)
 chef_route.get('/chefDetails', chefController.chefData)
-
+chef_route.get('/paymentData', chefController.getPayments)
+chef_route.get('/graph/:chefId', chefController.getGraphData);
 
 chef_route.delete('/deleteCourse/:id', chefController.deleteCourse)
 

@@ -13,8 +13,9 @@ const verifyJWT = require('./middleware/jwtmiddleware')
 const user_router = require('./routes/userRoute');
 const chef_route = require('./routes/chefRoute');
 const bodyParser = require('body-parser');
-
-const path = require('path')
+const { Server } = require('socket.io');
+const path = require('path');
+const { Socket } = require('dgram');
 // const http = require('http');
 const app = express();
 
@@ -47,10 +48,14 @@ mongoose.connect(DB_URL)
     // app.use(cors(corsOptions));
   });
 
+const io = new Server(8000);
+
+io.on("connection", (socket) => {
+  console.log(`Socket connected`, socket.id);
+})
 
 // Handle preflight requests
 
-// app.use(jwtMiddleware);
 app.use("/", authRouter);
 app.use("/refresh", require('./routes/refreshRouter'));
 app.use(verifyJWT);

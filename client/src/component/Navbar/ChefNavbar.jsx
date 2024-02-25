@@ -52,6 +52,12 @@ function ChefNavbar() {
           >
             MY COURSE
           </Link>
+          <Link
+            to="/chef/transaction"
+            className="text-gray-500 lg:mb-0 font-semibold dark:text-gray-400 hover:underline me-4 md:me-6"
+          >
+            TRANSACTION
+          </Link>
           {/* Add other navigation links as needed */}
         </div>
         <div className="md:hidden" onClick={toggleMobileMenu}>

@@ -35,16 +35,17 @@ const HomeCard = () => {
         <div className="flex ">
           <form
             action=""
-            className="bg-[#e4f7f1] border max-w-[650px] w-full md:p-4 p-2 mb-2  md:ml-10  shadow-lg rounded-lg flex  sm:me-10  "
+            className="bg-linear-gradient(to right, rgb(235, 245, 255), rgb(255, 235, 235), rgb(255, 255, 225)) border max-w-[650px] w-full md:p-4 p-2 mb-2  md:ml-10  shadow-lg rounded-lg flex  sm:me-10  "
             style={{ marginTop: "20px" }}
           >
             <input
-              className="bg-[#e4f7f1] placeholder-gray-400 w-full text-sm outline-none focus:outline-none"
+              className="bg-gray-100 placeholder-gray-400 w-full text-sm outline-none focus:outline-none"
               type="text"
               placeholder="What do you want to Cook today?"
               value={searchTerm}
               onChange={handleSearchChange}
               style={{ color: "black" }}
+              sty
             />
             <div
               className=" cursor-pointer"

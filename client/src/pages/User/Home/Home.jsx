@@ -8,9 +8,11 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "../../../api/axios";
 import { motion } from "framer-motion";
+
 const Home = () => {
   const [categories, setCategories] = useState([]);
   const token = useSelector(selectCurrentToken);
+  const user = useSelector(auth);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,44 +52,39 @@ const Home = () => {
   return (
     <>
       <div className=" bg-gray-100 ">
-        <UserNavbar />
+        {user.role == 1000 ? (
+          <AdminNavbar />
+        ) : user.role == 3000 ? (
+          <ChefNavbar />
+        ) : (
+          <UserNavbar />
+        )}
+
         <HomeCard />
 
         <h4 className="text-xl font-bold text-gray-800 mb-4 mt-4 text-center">
           Verity of Category to Excel
         </h4>
-        <div className="grid p-4 grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-6 z-10 relative">
+        <div className="grid p-4 grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-6 z-10 relative bg-gray-100 ">
           {categories.map((category, index) => (
             <motion.div
               key={index}
               whileHover={{ scale: 1.05 }}
-              className="feature text-center p-b-6 bg-gray-200 rounded-lg border-b"
+              className="feature text-center p-b-6 bg-gray-200 rounded-lg border-b "
               onClick={() =>
                 navigate("/all-courses", { state: { category: category.name } })
               }
             >
               <img
                 src={category.image.url}
-                className="w-full h-60  object-cover mb-4"
+                className="w-full h-60  object-cover mb-4 "
                 style={{ objectPosition: "bottom" }}
               />
-              <h3 className="text-xl font-semibold mb-2">{category.name}</h3>
+              <h3 className="text-xl font-semibold mb-2 ">{category.name}</h3>
             </motion.div>
           ))}
         </div>
 
-        {/* <div className="max-w-screen-xl mx-auto p-8">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-blue-600 mb-8">
-            Explore the Next Level of Cooking
-          </h1>
-          <img
-            src="src/assets/cook1.jpg"
-            alt="Cooking Image"
-            className="w-full h-auto rounded-md shadow-md"
-          />
-        </div>
-      </div> */}
         <div
           className="bg-white rounded-lg shadow dark:bg-gray-900 m-4"
           style={cardStyle3}
@@ -110,7 +107,7 @@ const Home = () => {
               <img src={myImage} alt="Your Image" className="w-64 h-48" />
             </div>
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md ml-7 mt-6"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md ml-7 mt-6 "
               // onClick={handleCourse}
             >
               EXPLORE COURSE

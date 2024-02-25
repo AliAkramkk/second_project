@@ -15,6 +15,7 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
+import "../../../component/Navbar/UserNavbarStyle.css";
 
 const CourseDetails = () => {
   const cardStyle3 = {
@@ -28,7 +29,11 @@ const CourseDetails = () => {
   const location = useLocation();
   const [videoVisible, setVideoVisible] = useState(false);
   const [courseData, setCourseData] = useState([]);
-  const course_id = location.state?.id;
+  const navigate = useNavigate();
+  console.log(location);
+
+  const mycourse_id = location.state?.id;
+  console.log(mycourse_id);
   const user = useSelector(auth);
   const token = useSelector(selectCurrentToken);
   console.log("user1", user);
@@ -36,7 +41,7 @@ const CourseDetails = () => {
     const fetchCourse = async () => {
       try {
         const response = await axiosPrivate.get(
-          `/selectedCourse/${course_id}`,
+          `/selectedCourse/${mycourse_id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -51,10 +56,17 @@ const CourseDetails = () => {
       }
     };
     fetchCourse();
-  }, [course_id]);
+  }, [mycourse_id]);
 
   const makePayment = async () => {
     try {
+      if (!user.user) {
+        console.log(user);
+        return navigate("/signin", {
+          state: { from: location, id: mycourse_id },
+        });
+        // console.log(state);
+      }
       const stripe = await loadStripe(
         "pk_test_51OISQWSBQLVhDmRfAhLKSBBKcyKeeIUvfUe1urrofu6ZeWJqqY5N6pVwJ7ItTIVpPSm1kAAWuuR5WJmQMfFUCn6800Wi7hSBjG"
       );
@@ -182,7 +194,7 @@ const CourseDetails = () => {
                 onClick={makePayment}
                 ripple={false}
                 fullWidth={true}
-                className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
+                className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100 hover:animate-shake hover:bg-slate-200"
               >
                 BUY NOW
               </Button>

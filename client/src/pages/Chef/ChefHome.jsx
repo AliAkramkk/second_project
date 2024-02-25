@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { axiosPrivate } from "../../api/axios";
 import { auth, selectCurrentToken } from "../../context/authReducer";
 import { useSelector } from "react-redux";
+import TeacherDashboardGraph from "../../component/TeacherComponent/TeacherDashboardGraph";
 
 function ChefHome() {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ function ChefHome() {
           },
           withCredentials: true,
         });
-        console.log(response.data);
+        console.log("response", response.data);
         setDetails(response.data);
       } catch (error) {
         console.error("Error fetching chef details:", error);
@@ -56,6 +57,7 @@ function ChefHome() {
           },
           withCredentials: true,
         });
+        console.log(response.data);
         setCourses(response.data.courses);
       } catch (error) {
         console.error("Error fetching chef courses:", error);
@@ -90,10 +92,15 @@ function ChefHome() {
               />
               <Card
                 icon={course}
-                title="Your Course"
+                title="Listed Course"
                 value={details?.coursesCount}
               />
-              <Card icon={certificate} title="Certificate" value={0} />
+              <Card
+                icon={course}
+                title="Unlisted Course"
+                value={details?.totalUnlistedCourses}
+              />
+              {/* <Card icon={certificate} title="Certificate" value={0} /> */}
               <Card
                 icon={revenue}
                 title="Total Revenue"
@@ -116,7 +123,7 @@ function ChefHome() {
             No courses available. Create your first course now!
           </p>
         )}
-
+        {/* <TeacherDashboardGraph /> */}
         <div
           className="flex flex-col md:flex-row bg-white rounded-lg shadow dark:bg-gray-900 m-4"
           style={cardStyle3}

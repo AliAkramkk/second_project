@@ -347,11 +347,12 @@ const sendLiveStreamLink = async (req, res) => {
 const chefData = async (req, res) => {
   try {
     const userId = req.query.id;
-
-
     // Convert userId to ObjectId
     const userIdObjectId = new ObjectId(userId);
-
+    const totalUnlistedCourses = await course_schema.countDocuments({
+      chef: userIdObjectId,
+      isShow: false
+    });
     // Retrieve chef details
     const chef = await user_schema.findOne({ _id: userIdObjectId });
 
@@ -377,8 +378,9 @@ const chefData = async (req, res) => {
       coursesCount,
       totalIncome: totalIncome || 0,
       studentsCount: studentsCount.length,
+      totalUnlistedCourses
     };
-    console.log(totalIncome);
+
     res.status(200).json(chefDetails);
   } catch (error) {
     console.error(error.message);
@@ -386,6 +388,85 @@ const chefData = async (req, res) => {
   }
 };
 
+const getGraphData = async (req, res) => {
+  try {
+    console.log("hiii");
+    const { chefId } = req.params;
+    const chefIdObjectId = new ObjectId(chefId);
+    console.log("chef", chefId);
+    // const chefId = new mongoose.Types.ObjectId(req.userId);
+    const paymentData = await payment_schema.aggregate([
+      {
+        $match: {
+          chef_id: chefIdObjectId,
+          isDivided: true,
+        },
+      },
+      {
+        $group: {
+          _id: {
+            month: { $month: "$date" },
+          },
+          date: { $first: "$date" },
+          totalAmount: { $sum: "$amount" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          month: "$_id.month",
+          date: 1,
+          totalAmount: 1,
+        },
+      },
+    ]);
+
+    console.log("paymentData", paymentData);
+
+    res.status(200).json({ paymentData });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+const getPayments = async (req, res) => {
+  try {
+    const ITEMS_PER_PAGE = 4;
+    let page = +req.query.page || 1;
+
+    const AllPayments = await payment_schema
+      .find({ isDivided: true })
+      .populate("course_id")
+      .populate("user_id", "-password");
+
+    const startIndex = (page - 1) * ITEMS_PER_PAGE;
+    const lastIndex = page * ITEMS_PER_PAGE;
+
+    const results = {};
+    results.totalPayments = AllPayments.length;
+    results.pageCount = Math.ceil(AllPayments.length / ITEMS_PER_PAGE);
+
+    if (lastIndex < AllPayments.length) {
+      results.next = {
+        page: page + 1,
+      };
+    }
+
+    if (startIndex > 0) {
+      results.prev = {
+        page: page - 1,
+      };
+    }
+
+    results.page = page - 1;
+    results.payments = AllPayments.slice(startIndex, lastIndex);
+
+    res.status(200).json({ results });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   getStudent,
@@ -401,5 +482,7 @@ module.exports = {
   editCourse,
   checkPayment,
   sendLiveStreamLink,
-  chefData
+  chefData,
+  getGraphData,
+  getPayments
 };

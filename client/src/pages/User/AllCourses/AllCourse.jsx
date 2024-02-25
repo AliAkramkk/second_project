@@ -9,6 +9,7 @@ import { selectCurrentId } from "../../../context/authReducer";
 import UserNavbar from "../../../component/Navbar/UserNavbar";
 import { axiosPrivate } from "../../../api/axios";
 import Footer from "../Footer/Footer";
+import "../../../component/Navbar/UserNavbarStyle.css";
 
 const AllCourse = () => {
   const [courses, setCourses] = useState([]);
@@ -146,7 +147,7 @@ const AllCourse = () => {
                           state: { id: course._id },
                         })
                       }
-                      className="btn hvr-shutter-in-horizontal justify-center  rounded-md border-black text-black  px-4 py-2 hover:bg-slate-200 transition duration-300 ease-in-out"
+                      className="btn hvr-shutter-in-horizontal justify-center  rounded-md border-black text-black  px-4 py-2 hover:bg-slate-200 transition duration-300 ease-in-out hover:animate-shake"
                     >
                       Enroll now
                       {/* <FontAwesomeIcon icon={faArrowRight} className="ml-2" /> */}

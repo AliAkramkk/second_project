@@ -34,7 +34,7 @@ function AdminNavbar() {
     <nav className="bg-gray-800 p-4" style={navbarStyle}>
       <div className="container mx-auto flex justify-between items-center">
         <div>
-          <Link to="/" className="text-white text-2xl font-bold">
+          <Link to="/admin" className="text-white text-2xl font-bold">
             Let's Cook
           </Link>
         </div>

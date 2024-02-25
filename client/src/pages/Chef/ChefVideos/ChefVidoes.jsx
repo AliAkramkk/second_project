@@ -93,14 +93,20 @@ const ChefVidoes = () => {
   };
 
   const deleteCourses = async (id) => {
+    console.log("Delete function started");
     showDeleteAlert(async () => {
       try {
+        console.log("Inside showDeleteAlert");
         // Check if the course has been purchased
-        const paymentRecord = await axiosPrivate.get(`/checkPayment/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const paymentRecord = await axiosPrivate.get(
+          `/chef/checkPayment/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
+        );
         console.log("payment", paymentRecord);
         if (paymentRecord.data.purchased) {
           // If purchased, show an error message
@@ -116,6 +122,7 @@ const ChefVidoes = () => {
               Authorization: `Bearer ${token}`,
               // Add any other headers if needed
             },
+            withCredentials: true,
           }
         );
 

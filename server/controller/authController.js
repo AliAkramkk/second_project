@@ -48,11 +48,12 @@ const signUp_post = async (req, res) => {
 };
 
 const signIn_post = async (req, res) => {
+  console.log("hiiii");
   try {
 
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-
+    console.log(user);
     if (user) {
       const isPasswordValid = await bcrypt.compare(password, user.password);
 
@@ -64,13 +65,13 @@ const signIn_post = async (req, res) => {
               process.env.ACCESS_TOKEN_SECRET,
               { expiresIn: "1d" }
             );
-            console.log("access signin", accessToken);
+
             const refreshToken = jwt.sign(
               { email: user.email },
               process.env.REFRESH_TOKEN_SECRET,
               { expiresIn: "2d" }
             );
-            console.log("refresh signin", refreshToken);
+
 
             await User.updateOne(
               { _id: user._id },
@@ -81,10 +82,7 @@ const signIn_post = async (req, res) => {
               httpOnly: true,
               maxAge: 48 * 60 * 60 * 1000,
             });
-            console.log('Cookie Configuration:', {
-              httpOnly: true,
-              maxAge: 48 * 60 * 60 * 1000,
-            });
+
             return res.status(201).json({
               message: "success",
               accessToken,
@@ -108,6 +106,8 @@ const signIn_post = async (req, res) => {
     } else {
       return res.status(400).json({ message: "User not found" });
     }
+    console.log("role", role);
+    console.log("user", user);
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ message: "An error occurred during signin." });
@@ -362,8 +362,8 @@ const allListCourse = async (req, res) => {
 const selectedCourse = async (req, res) => {
   try {
     const id = req.params.id;
-
-    const course = await course_schema.findById({ _id: id });
+    console.log("id", id);
+    const course = await course_schema.findById({ _id: id }).populate("chef");;
     if (course) {
       res.status(200).json({ course })
     }
@@ -377,7 +377,7 @@ const selectedCourse = async (req, res) => {
 const homeCategory = async (req, res) => {
   try {
     const category = await category_schema.find({});
-    console.log("home cat", category);
+
     res.status(200).json({ category })
   } catch (error) {
     console.log(error.message);

@@ -84,6 +84,7 @@ function Signup() {
     background:
       "linear-gradient(to right, hsl(210, 40%, 95%), hsl(0, 40%, 95%), hsl(60, 100%, 95%))",
   };
+
   return (
     <>
       <SignInNavbar />
@@ -91,188 +92,184 @@ function Signup() {
         className="min-h-screen flex flex-col items-center justify-center bg-cover"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
-        <div className="flex p-4 ml-96 justify-end">
-          <div
-            className="min-h-screen flex items-center justify-end bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 ml-64 rounded-lg"
-            style={cardStyle4}
-          >
-            <div className=" bg-white bg-opacity-80 p-8 rounded-md shadow-md w-96">
-              <h3 className="mt-0 p-1 text-center text-3xl font-extrabold text-gray-900">
-                Sign up
-              </h3>
-              <form onSubmit={handleSubmit} className="ml-auto">
-                <div className="rounded-md shadow-sm -space-y-px">
-                  <div>
-                    <label htmlFor="username" className="sr-only">
-                      Username
-                    </label>
+        <div className="flex p-4 justify-center">
+          {/* <div
+            className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 rounded-lg"
+            style={{ ...cardStyle4, width: "24rem" }} // Adjusted width for small screens
+          > */}
+          <div className="bg-white bg-opacity-80 p-8 rounded-md shadow-md w-full">
+            <h3 className="mt-0 p-1 text-center text-3xl font-extrabold text-gray-900">
+              Sign up
+            </h3>
+            <form onSubmit={handleSubmit}>
+              <div className="rounded-md shadow-sm -space-y-px">
+                <div>
+                  <label htmlFor="username" className="sr-only">
+                    Username
+                  </label>
+                  <input
+                    id="username"
+                    name="username"
+                    type="text"
+                    autoComplete="username"
+                    value={values.username}
+                    onChange={handleChange}
+                    required
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    placeholder="Username"
+                  />
+                  {errors.username && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.username}
+                    </p>
+                  )}
+                </div>
+                <br />
+                <div>
+                  <label htmlFor="email" className="sr-only">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="text"
+                    autoComplete="email"
+                    value={values.email}
+                    onChange={handleChange}
+                    required
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    placeholder="Email"
+                  />
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                  )}
+                </div>
+                <br />
+                <div>
+                  <label htmlFor="password" className="sr-only">
+                    Password
+                  </label>
+                  <div className="relative">
                     <input
-                      id="username"
-                      name="username"
-                      type="text"
-                      autoComplete="username"
-                      value={values.username}
-                      onChange={handleChange}
-                      required
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                      placeholder="Username"
-                    />
-                    {errors.username && (
-                      <p className="text-red-500 text-xs mt-1">
-                        {errors.username}
-                      </p>
-                    )}
-                  </div>
-                  <br />
-                  <div>
-                    <label htmlFor="email" className="sr-only">
-                      Email
-                    </label>
-                    <input
-                      id="email"
-                      name="email"
-                      type="text"
-                      autoComplete="email"
-                      value={values.email}
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="new-password"
+                      value={values.password}
                       onChange={handleChange}
                       required
                       className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                      placeholder="Email"
+                      placeholder="Password"
                     />
-                    {errors.email && (
-                      <p className="text-red-500 text-xs mt-1">
-                        {errors.email}
-                      </p>
-                    )}
+                    <span
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <FaEyeSlash className="h-5 w-5 text-gray-400" />
+                      ) : (
+                        <FaEye className="h-5 w-5 text-gray-400" />
+                      )}
+                    </span>
                   </div>
-                  <br />
-                  <div>
-                    <label htmlFor="password" className="sr-only">
-                      Password
-                    </label>
-                    <div className="relative">
-                      <input
-                        id="password"
-                        name="password"
-                        type={showPassword ? "text" : "password"}
-                        autoComplete="new-password"
-                        value={values.password}
-                        onChange={handleChange}
-                        required
-                        className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                        placeholder="Password"
-                      />
-                      <span
-                        className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? (
-                          <FaEyeSlash className="h-5 w-5 text-gray-400" />
-                        ) : (
-                          <FaEye className="h-5 w-5 text-gray-400" />
-                        )}
-                      </span>
-                    </div>
-                    {errors.password && (
-                      <p className="text-red-500 text-xs mt-1">
-                        {errors.password}
-                      </p>
-                    )}
-                  </div>
-                  <br />
-                  <div>
-                    <label htmlFor="confirmPassword" className="sr-only">
-                      Confirm Password
-                    </label>
-                    <div className="relative">
-                      <input
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        type={showConfirmPassword ? "text" : "password"}
-                        autoComplete="new-password"
-                        value={values.confirmPassword}
-                        onChange={handleChange}
-                        required
-                        className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                        placeholder="Confirm Password"
-                      />
-                      <span
-                        className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-                        onClick={() =>
-                          setShowConfirmPassword(!showConfirmPassword)
-                        }
-                      >
-                        {showConfirmPassword ? (
-                          <FaEyeSlash className="h-5 w-5 text-gray-400" />
-                        ) : (
-                          <FaEye className="h-5 w-5 text-gray-400" />
-                        )}
-                      </span>
-                    </div>
-                    {errors.confirmPassword && (
-                      <p className="text-red-500 text-xs mt-1">
-                        {errors.confirmPassword}
-                      </p>
-                    )}
-                  </div>
-                  <br />
-                  <div>
-                    <label htmlFor="phone" className="sr-only">
-                      Phone
-                    </label>
+                  {errors.password && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.password}
+                    </p>
+                  )}
+                </div>
+                <br />
+                <div>
+                  <label htmlFor="confirmPassword" className="sr-only">
+                    Confirm Password
+                  </label>
+                  <div className="relative">
                     <input
-                      id="phone"
-                      name="phone"
-                      type="tel"
-                      autoComplete="tel"
-                      value={values.phone}
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      autoComplete="new-password"
+                      value={values.confirmPassword}
                       onChange={handleChange}
                       required
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                      placeholder="Phone"
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                      placeholder="Confirm Password"
                     />
-                    {errors.phone && (
-                      <p className="text-red-500 text-xs mt-1">
-                        {errors.phone}
-                      </p>
-                    )}
+                    <span
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                    >
+                      {showConfirmPassword ? (
+                        <FaEyeSlash className="h-5 w-5 text-gray-400" />
+                      ) : (
+                        <FaEye className="h-5 w-5 text-gray-400" />
+                      )}
+                    </span>
                   </div>
-                  <br />
-                  <div className="mt-6">
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        name="isChef"
-                        checked={values.isChef}
-                        onChange={handleCheckboxChange}
-                        className="hidden"
-                      />
-                      <div className="w-12 h-6 bg-gray-300 rounded-full p-1 flex items-center">
-                        <div
-                          className={`bg-${
-                            values.isChef ? "blue" : "gray"
-                          }-500 w-5 h-5 rounded-full shadow-md transform duration-300 ease-in-out ${
-                            values.isChef ? "translate-x-6" : "translate-x-1"
-                          }`}
-                        ></div>
-                      </div>
-                      <p className="ml-2  font-medium text-base">
-                        Are you a chef?
-                      </p>
-                    </label>
-                  </div>
+                  {errors.confirmPassword && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.confirmPassword}
+                    </p>
+                  )}
                 </div>
+                <br />
+                <div>
+                  <label htmlFor="phone" className="sr-only">
+                    Phone
+                  </label>
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    autoComplete="tel"
+                    value={values.phone}
+                    onChange={handleChange}
+                    required
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    placeholder="Phone"
+                  />
+                  {errors.phone && (
+                    <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+                  )}
+                </div>
+                <br />
                 <div className="mt-6">
-                  <button
-                    type="submit"
-                    className="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
-                    Sign Up
-                  </button>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="isChef"
+                      checked={values.isChef}
+                      onChange={handleCheckboxChange}
+                      className="hidden"
+                    />
+                    <div className="w-12 h-6 bg-gray-300 rounded-full p-1 flex items-center">
+                      <div
+                        className={`bg-${
+                          values.isChef ? "blue" : "gray"
+                        }-500 w-5 h-5 rounded-full shadow-md transform duration-300 ease-in-out ${
+                          values.isChef ? "translate-x-6" : "translate-x-1"
+                        }`}
+                      ></div>
+                    </div>
+                    <p className="ml-2  font-medium text-base">
+                      Are you a chef?
+                    </p>
+                  </label>
                 </div>
-              </form>
-            </div>
+              </div>
+              <div className="mt-6">
+                <button
+                  type="submit"
+                  className="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Sign Up
+                </button>
+              </div>
+            </form>
           </div>
+          {/* </div> */}
         </div>
       </div>
     </>
