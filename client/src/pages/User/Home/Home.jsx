@@ -8,7 +8,9 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "../../../api/axios";
 import { motion } from "framer-motion";
-
+import AdminNavbar from "../../../component/Navbar/AdminNavbar";
+import ChefNavbar from "../../../component/Navbar/ChefNavbar";
+import "../../../component/Navbar/UserNavbarStyle.css";
 const Home = () => {
   const [categories, setCategories] = useState([]);
   const token = useSelector(selectCurrentToken);
@@ -106,12 +108,12 @@ const Home = () => {
 
               <img src={myImage} alt="Your Image" className="w-64 h-48" />
             </div>
-            <button
+            {/* <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md ml-7 mt-6 "
               // onClick={handleCourse}
             >
               EXPLORE COURSE
-            </button>
+            </button> */}
           </div>
         </div>
 

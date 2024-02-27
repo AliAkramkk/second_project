@@ -15,13 +15,14 @@ import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import EditProfile from "../../../component/ProfilePage/EditProfile";
 import Footer from "../Footer/Footer";
 import { config } from "@fortawesome/fontawesome-svg-core";
-
+import { useNavigate } from "react-router-dom";
 const Profile = () => {
   const [data, setData] = useState([]);
   const id = useSelector(selectCurrentId);
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
   const token = useSelector(selectCurrentToken);
+  const navigate = useNavigate();
   console.log("==============================");
   console.log(user);
 
@@ -58,6 +59,13 @@ const Profile = () => {
   const closeModal = () => {
     setIsEditModalOpen(false);
   };
+  const handleCourse = () => {
+    navigate("/user/my-learning");
+  };
+  const handleBlog = () => {
+    navigate("/user/my-blog");
+  };
+
   const cardStyle2 = {
     background:
       "linear-gradient(to right, hsl(210, 60%, 95%), hsl(0, 60%, 95%), hsl(60, 100%, 95%))",
@@ -101,6 +109,24 @@ const Profile = () => {
             <li className="flex flex-col items-center justify-around">
               <div className="text-xs text-gray-500">Join Date</div>
               <div className="font-semibold">{dateOnlyString}</div>
+            </li>
+          </ul>
+          <ul className="py-4 mt-2 text-gray-700 flex items-center justify-around">
+            <li>
+              <button
+                className="text-base text-gray-500 font-semibold hover:animate-shake hover:bg-gray-150"
+                onClick={handleCourse}
+              >
+                MY COURSE
+              </button>
+            </li>
+            <li>
+              <button
+                className="text-base font-semibold text-gray-500 hover:animate-shake "
+                onClick={handleBlog}
+              >
+                MY BLOG
+              </button>
             </li>
           </ul>
           <div className="p-4 border-t mx-8 mt-2">

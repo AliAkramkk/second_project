@@ -45,7 +45,7 @@ const HomeCard = () => {
               value={searchTerm}
               onChange={handleSearchChange}
               style={{ color: "black" }}
-              sty
+              
             />
             <div
               className=" cursor-pointer"
@@ -67,7 +67,7 @@ const HomeCard = () => {
               </span>
             </h1>
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md mt-6"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md mt-6 "
               onClick={handleCourse}
             >
               EXPLORE COURSE

@@ -2,19 +2,21 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import RequerAuth from "../features/RequerAuth";
 import Loading from "../component/Loading/Loading";
-// import ChefHome from "../pages/Chef/ChefHome";
-// import Profile from "../pages/User/UserProfile/Profile";
-import Classes from "../pages/Chef/Classes/Classes";
-import AddCourse from "../pages/Chef/AddCourse/AddCourse";
-import MyCourse from "../pages/Chef/MyCourse/MyCourse";
-// import ChefVidoes from "../pages/Chef/ChefVideos/ChefVidoes";
-import AddChapters from "../pages/Chef/AddChapters/AddChapters";
+
+const Classes = React.lazy(() => import("../pages/Chef/Classes/Classes"));
+const AddCourse = React.lazy(() => import("../pages/Chef/AddCourse/AddCourse"));
+const MyCourse = React.lazy(() => import("../pages/Chef/MyCourse/MyCourse"));
+const AddChapters = React.lazy(() =>
+  import("../pages/Chef/AddChapters/AddChapters")
+);
 import VideoDetatils from "../pages/videoDetails/VideoDetatils";
-import LiveRoom from "../pages/Chef/LiveRoom/LiveRoom";
+const LiveRoom = React.lazy(() => import("../pages/Chef/LiveRoom/LiveRoom"));
 import MyRoom from "../pages/Chef/Myroom/MyRoom";
-import EditCourse from "../pages/Chef/EditCourse/EditCourse";
+const EditCourse = React.lazy(() =>
+  import("../pages/Chef/EditCourse/EditCourse")
+);
 import ChefTransactions from "../pages/Chef/ChefTransaction/ChefTransactions";
-// import ChefProfile from "../pages/Chef/ChefProfile/ChefProfile";
+import LottieLoading from "../component/Loading/LottieLoading";
 const ChefHome = React.lazy(() => import("../pages/Chef/ChefHome"));
 const ChefVidoes = React.lazy(() =>
   import("../pages/Chef/ChefVideos/ChefVidoes")
@@ -31,7 +33,7 @@ function Chef() {
           exact
           path="/"
           element={
-            <React.Suspense fallback={<Loading />}>
+            <React.Suspense fallback={<LottieLoading />}>
               <ChefHome />
             </React.Suspense>
           }
@@ -39,27 +41,72 @@ function Chef() {
         <Route
           path="/profile"
           element={
-            <React.Suspense fallback={<Loading />}>
+            <React.Suspense fallback={<LottieLoading />}>
               <ChefProfile />
             </React.Suspense>
           }
         />
-        <Route path="/courseList" element={<Classes />} />
-        <Route path="/add-course" element={<AddCourse />} />
-        <Route path="/my-course" element={<MyCourse />} />
+        <Route
+          path="/courseList"
+          element={
+            <React.Suspense fallback={<LottieLoading />}>
+              <Classes />{" "}
+            </React.Suspense>
+          }
+        />
+
+        <Route
+          path="/add-course"
+          element={
+            <React.Suspense fallback={<LottieLoading />}>
+              <AddCourse />{" "}
+            </React.Suspense>
+          }
+        />
+
+        <Route
+          path="/my-course"
+          element={
+            <React.Suspense fallback={<LottieLoading />}>
+              <MyCourse />{" "}
+            </React.Suspense>
+          }
+        />
         <Route path="/my-room" element={<MyRoom />} />
-        <Route path="/room/:roomCode" element={<LiveRoom />} />
+        <Route
+          path="/room/:roomCode"
+          element={
+            <React.Suspense fallback={<LottieLoading />}>
+              <LiveRoom />{" "}
+            </React.Suspense>
+          }
+        />
         <Route
           path="/videos"
           element={
-            <React.Suspense fallback={<Loading />}>
+            <React.Suspense fallback={<LottieLoading />}>
               <ChefVidoes />
             </React.Suspense>
           }
         />
-        <Route path="/add-chapter" element={<AddChapters />} />
+        <Route
+          path="/add-chapter"
+          element={
+            <React.Suspense fallback={<LottieLoading />}>
+              <AddChapters />{" "}
+            </React.Suspense>
+          }
+        />
         <Route path="/video-details" element={<VideoDetatils />} />
-        <Route path="/edit-course" element={<EditCourse />} />
+        <Route
+          path="/edit-course"
+          element={
+            <React.Suspense fallback={<LottieLoading />}>
+              {" "}
+              <EditCourse />{" "}
+            </React.Suspense>
+          }
+        />
         <Route path="/transaction" element={<ChefTransactions />} />
       </Route>
     </Routes>

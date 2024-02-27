@@ -12,6 +12,7 @@ import { axiosPrivate } from "../../api/axios";
 import { auth, selectCurrentToken } from "../../context/authReducer";
 import { useSelector } from "react-redux";
 import TeacherDashboardGraph from "../../component/TeacherComponent/TeacherDashboardGraph";
+import "../../component/Navbar/UserNavbarStyle.css";
 
 function ChefHome() {
   const navigate = useNavigate();
@@ -134,13 +135,13 @@ function ChefHome() {
                 Ready to share your expertise with the world?
               </span>
               <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md ml-7 mt-4 md:mt-0"
+                className="bg-gray-800 hover:bg-gray-950 text-white font-bold py-2 px-4 rounded-md ml-7 mt-4 md:mt-0 hover:animate-shake"
                 onClick={handleCourse}
               >
                 ADD COURSE
               </button>
               <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md ml-0 mt-4 md:mt-0"
+                className="bg-gray-800 hover:bg-gray-950 text-white font-bold py-2 px-4 rounded-md ml-0 mt-4 md:mt-0 hover:animate-shake"
                 onClick={handleRoom}
               >
                 LIVE

@@ -35,7 +35,7 @@ const addCourse = async (req, res) => {
       title,
       category,
       description,
-      coverImage: uploadImageResult,  // Set coverImage to the uploaded file result
+      coverImage: uploadImageResult, 
       demoVideo: uploadVideoResult,
       price,
       blurb,
@@ -61,9 +61,7 @@ const editCourse = async (req, res) => {
     const { title, category, description, price, aboutChef, blurb, user } = req.body;
 
     const updatedCourseData = req.body;
-    // console.log(updatedCourseData);
-
-    // Check if new coverImage is provided
+   
     if (req.files && req.files.coverImage) {
       const uploadImageResult = await public_controller.uploadimage(req.files.coverImage);
       updatedCourseData.coverImage = uploadImageResult;

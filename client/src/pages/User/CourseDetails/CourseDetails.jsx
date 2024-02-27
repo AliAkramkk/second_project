@@ -15,6 +15,7 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
+import { Rating } from "@mui/material";
 import "../../../component/Navbar/UserNavbarStyle.css";
 
 const CourseDetails = () => {
@@ -29,14 +30,12 @@ const CourseDetails = () => {
   const location = useLocation();
   const [videoVisible, setVideoVisible] = useState(false);
   const [courseData, setCourseData] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const navigate = useNavigate();
-  console.log(location);
-
   const mycourse_id = location.state?.id;
-  console.log(mycourse_id);
   const user = useSelector(auth);
   const token = useSelector(selectCurrentToken);
-  console.log("user1", user);
+
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -112,13 +111,13 @@ const CourseDetails = () => {
       <UserNavbar />
       <Toaster />
       {/* <p>Hash: {location.state}</p> */}
-      <div className="flex bg-gray-100">
+      <div className="flex flex-col md:flex-row bg-gray-100">
         <div className="flex-1 text-left p-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4 mt-4 ml-4">
-            Westrn Cake
+          <h2 className="text-sm md:text-2xl font-bold text-gray-800 mb-4 mt-4 ml-4">
+            {courseData.title}
           </h2>
           <h4 className="text-lg font-bold text-gray-800 mb-4 mt-4 ml-4">
-            Westrn Cake - Chef Chrstepher
+            {courseData.title} - Chef Chrstepher
           </h4>
           <p className="ml-4">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
@@ -142,32 +141,71 @@ const CourseDetails = () => {
                   Ut enim ad minim veniam, quis nostrud exercitation ullamco
                   laboris nisi ut aliquip ex ea commodo consequat. Incepted with
                   a vision and fueled by passion, our story unfolds amidst the
-                  dynamic landscape of possibilities. Lorem ipsum dolor sit
-                  amet, consectetur adipiscing elit. Vivamus fringilla risus eu
-                  ipsum fermentum, ut tincidunt nisl tincidunt. Quisque
-                  malesuada urna eu odio iaculis, sit amet venenatis ex
-                  consequat.
+                  dynamic landscape of possibilities. Lorem ipsum dolor sit amet
                 </p>
                 {/* <img src={myImage} alt="Your Image" className="w-64 h-48" /> */}
               </div>
             </div>
           </div>
+
+          <div className="font-medium text-lg mb-4 mt-8 md:mt-0">
+            What People have to say
+          </div>
+          {courseData.reviews && courseData.reviews.length > 0 ? (
+            courseData.reviews.map((review, i) => (
+              <div key={i} className="p-5 mb-3">
+                <article className="p-6 text-base bg-gray-100 rounded-xl mb-3">
+                  <footer className="flex justify-between items-center mb-2">
+                    <div className="flex items-center">
+                      <p className="inline-flex items-center mr-3 text-sm text-gray-700 font-semibold">
+                        <img
+                          className="mr-2 w-6 h-6 rounded-full"
+                          src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"
+                          alt="Profile"
+                        />
+                        {review?.user}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        <time>
+                          {new Date(review?.date).toLocaleDateString("en-GB")}
+                        </time>
+                      </p>
+                    </div>
+                  </footer>
+                  <Rating name="rating" value={review?.rating} readOnly />
+                  <p className="text-gray-500">{review?.review}</p>
+                </article>
+              </div>
+            ))
+          ) : (
+            <article className="p-5 text-base bg-white rounded-lg mb-3">
+              <footer className="flex justify-between items-center mb-2">
+                <div className="flex items-center"></div>
+              </footer>
+              <p className="text-orange-400 text-xl font-semibold">
+                Be the first to Review the Course
+              </p>
+            </article>
+          )}
         </div>
-        <div className="flex-1 p-4 ml-24">
-          <Card className="w-96 h-96 mt-28 " style={cardStyle4}>
+        <div className="flex-1 md:p-6">
+          <Card
+            className="w-full md:w-96 h-auto mt-8 md:mt-0 md:ml-4 md:p-4"
+            style={cardStyle4}
+          >
             <CardHeader shadow={false} floated={false} className="h-96">
               {videoVisible ? (
                 <video
                   controls
                   src={courseData?.demoVideo?.url}
-                  className="h-full w-full object-cover"
+                  className="h-48 w-full object-cover md:h-full md:w-auto"
                   onClick={handleVideoClose}
                 />
               ) : (
                 <img
                   src={courseData?.coverImage?.url}
                   alt="card-image"
-                  className="h-full w-full object-cover cursor-pointer"
+                  className="h-48 w-full object-cover cursor-pointer md:h-full md:w-auto"
                   onClick={handleImageClick}
                 />
               )}

@@ -200,7 +200,7 @@ function UserNavbar() {
           </Link>
         </div>
         <div className="hidden md:flex space-x-4 text-gray-500 lg:mb-0 font-bold dark:text-gray-400  me-4 md:me-6">
-          {["/", "/all-courses", "/user/my-learning"].map((path) => (
+          {/* {["/", "/all-courses", "/user/my-learning"].map((path) => (
             <button
               key={path}
               className="nav-button p-2  hvr-underline-from-center  hover:transform hover:shadow-md transition-transform duration-300 hover:bg-gray hover:animate-shake"
@@ -211,6 +211,21 @@ function UserNavbar() {
                 : path === "/user/my-learning"
                 ? "MYLEARNINGS"
                 : path.split("/")[1].toUpperCase()}
+            </button>
+          ))} */}
+          {[
+            { path: "/", label: "HOME" },
+            { path: "/all-courses", label: "ALL COURSE" },
+            { path: "/user/my-learning", label: "MY LEARNING" },
+            { path: "/user/blog", label: "BLOG" },
+            // { path: "/blog", label: "BLOG" },
+          ].map((item) => (
+            <button
+              key={item.path}
+              className="nav-button p-2  hvr-underline-from-center  hover:transform hover:shadow-md transition-transform duration-300 hover:bg-gray hover:animate-shake"
+              onClick={() => usenavigate(item.path)}
+            >
+              {item.label}
             </button>
           ))}
         </div>
@@ -239,10 +254,12 @@ function UserNavbar() {
                   ) : (
                     <FontAwesomeIcon className="me-1" icon={faUser} size="lg" />
                   )}
-                  <span className="text-white">{user?.user}</span>
+                  <span className="text-white hover:animate-shake">
+                    {user?.user}
+                  </span>
                 </div>
                 <button
-                  className="border rounded px-2 py-1 text-white"
+                  className="border rounded px-2 py-1 text-white hover:bg-gray-300 hover:animate-shake"
                   onClick={HandlelogOut}
                 >
                   Logout
@@ -285,22 +302,40 @@ function UserNavbar() {
               className="absolute z-50 top-16 left-0 right-0 bg-gray-800"
               style={navbarStyle}
             >
-              {["/", "/all-courses", "/user/my-learning"].map((path) => (
+              {[
+                { path: "/", label: "HOME" },
+                { path: "/all-courses", label: "ALL COURSE" },
+                { path: "/user/my-learning", label: "MY LEARNING" },
+                { path: "/user/blog", label: "BLOG" },
+                // { path: "/blog", label: "BLOG" },
+              ].map((item) => (
                 <button
-                  key={path}
+                  key={item.path}
                   className="block w-full py-2 px-4 text-left hover:bg-gray-700"
-                  onClick={() => {
-                    usenavigate(path);
-                    toggleMobileMenu();
-                  }}
+                  onClick={() => usenavigate(item.path)}
                 >
-                  {path === "/"
-                    ? "HOME"
-                    : path === "/user/mylearnings"
-                    ? "MYLEARNINGS"
-                    : path.split("/")[1].toUpperCase()}
+                  {item.label}
                 </button>
               ))}
+
+              {/* {["/", "/all-courses", "/user/my-learning", "/user/blog"].map(
+                (path) => (
+                  <button
+                    key={path}
+                    className="block w-full py-2 px-4 text-left hover:bg-gray-700"
+                    onClick={() => {
+                      usenavigate(path);
+                      toggleMobileMenu();
+                    }}
+                  >
+                    {path === "/"
+                      ? "HOME"
+                      : path === "/user/mylearnings"
+                      ? "MYLEARNINGS"
+                      : path.split("/")[1].toUpperCase()}
+                  </button>
+                )
+              )} */}
               {!user?.user ? (
                 <div className="hidden md:flex items-center space-x-4">
                   <a

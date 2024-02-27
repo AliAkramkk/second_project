@@ -6,6 +6,8 @@ import MyLearning from "../pages/User/MyLearnings/MyLearning";
 import UserRoom from "../pages/User/UserRoom/UserRoom";
 import VideoSection from "../pages/User/VideoSection/VideoSection";
 import Blog from "../pages/User/Blog/Blog";
+import MyBlog from "../pages/User/MyBlog";
+import BlogDetails from "../pages/User/Blog/BlogDetails";
 
 const Role = 2000;
 function User() {
@@ -17,6 +19,8 @@ function User() {
         <Route path="/live-room/:roomCode" element={<UserRoom />} />
         <Route path="/coursefullvideos" element={<VideoSection />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/blogDetails" element={<BlogDetails />} />
+        <Route path="/my-blog" element={<MyBlog />} />
       </Route>
     </Routes>
   );

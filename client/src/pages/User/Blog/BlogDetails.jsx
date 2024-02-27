@@ -7,17 +7,20 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import TimeAgo from "react-timeago";
+import { selectCurrentToken } from "../../../context/authReducer";
 import ToastHelper from "../../../helper/ToastHelper";
 import { axiosPrivate } from "../../../api/axios";
 import UserNavbar from "../../../component/Navbar/UserNavbar";
+
 const BlogDetails = () => {
   const toastHelper = new ToastHelper();
   const location = useLocation();
   const navigate = useNavigate();
   const blogId = location.state && location.state.blogId;
+  console.log("id blog", blogId);
   const prevLocation = location.state?.prevLocation;
   const authState = useSelector((state) => state.auth);
-
+  const token = useSelector(selectCurrentToken);
   const [comment, setComment] = useState("");
   const [blog, setBlog] = useState(null);
   const [fetch, setFetch] = useState(false);
@@ -54,7 +57,6 @@ const BlogDetails = () => {
       blogId,
       reason,
     };
-
     axiosPrivate
       .post("/user/blogReport", postData, {
         headers: {
@@ -74,16 +76,15 @@ const BlogDetails = () => {
   };
 
   const handleCommentSubmit = () => {
+    console.log("Submit button clicked");
     if (comment.trim() === "") {
       toastHelper.showToast("please enter any comment");
       return;
     }
-
     const postData = {
       blogId,
       comment: comment.trim(),
     };
-
     axiosPrivate
       .post("/user/blogComment", postData, {
         headers: {
@@ -101,23 +102,28 @@ const BlogDetails = () => {
         console.log(err);
       });
   };
-  useEffect(() => {
-    const fetchBlog = async () => {
-      const response = await axiosPrivate.get(`/user/blog/${blogId}`, {
+  const fetchBlog = () => {
+    axiosPrivate
+      .get(`/user/blog/${blogId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           // Add any other headers if needed
         },
         withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setBlog(res?.data?.blog);
+
+        if (res?.data?.blog === null) {
+          navigate(prevLocation);
+        }
+
+        setAllComments(res?.data?.blog?.comments);
       });
-      setBlog(res?.data?.blog);
-
-      if (res?.data?.blog === null) {
-        navigate(prevLocation);
-      }
-
-      setAllComments(res?.data?.blog?.comments);
-    };
+  };
+  console.log("id", blogId);
+  useEffect(() => {
     fetchBlog();
     setFetch(false);
   }, [fetch, navigate]);
@@ -131,13 +137,17 @@ const BlogDetails = () => {
   }
   return (
     <>
-      <div className="w-screen h-screen overflow-x-hidden">
+      <div className="w-screen h-screen overflow-x-hidden bg-gray-50">
         <UserNavbar />
         <div className="w-full h-full px-0 md:px-32 py-0 md:py-10">
           <div
-            className="h-72 w-full bg-center bg-cover flex justify-center items-center"
-            style={{ backgroundImage: `url(${blog?.coverImage?.url})` }}
+            className="h-64 w-full bg-center bg-cover flex justify-center items-center"
+            style={{
+              backgroundImage: `url(${blog?.coverImage?.url})`,
+              backgroundSize: "cover",
+            }}
           ></div>
+
           <div className="w-full p-5 flex flex-col gap-4">
             <div className="">
               <div className="text-verySmall-1">
@@ -172,7 +182,7 @@ const BlogDetails = () => {
               </div>
             </div>
             <div className="font-semibold text-sm">
-              By {blog?.user?.fullname}
+              By {blog?.user.username}
             </div>
             <div className="text-sm overflow-hidden break-words leading-7">
               {blog?.description}.
@@ -187,11 +197,24 @@ const BlogDetails = () => {
               Comments({allComments?.length})
             </div>
             <div>
-              <Textarea
-                label="Comment"
+              {/* <Textarea
+                label=""
                 name="comment"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
+              /> */}
+              <textarea
+                name="comment"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Enter your comment..."
+                className="my-custom-textarea"
+                style={{
+                  width: "100%",
+                  padding: "8px",
+                  borderRadius: "4px",
+                  border: "1px solid #ccc",
+                }}
               />
               <Button size="sm" onClick={handleCommentSubmit}>
                 Submit
@@ -205,7 +228,7 @@ const BlogDetails = () => {
                       <div className="flex items-center text-verySmall font-bold">
                         {authState?.userId == oneComment?.user?._id
                           ? "You"
-                          : oneComment?.user?.fullname}
+                          : oneComment?.user?.username}
                       </div>
                       {/* <div className='flex items-center text-veryVerySmall'>1 hour ago</div> */}
                       <TimeAgo

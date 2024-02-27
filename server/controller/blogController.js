@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+const userModel = require('../models/userSchema')
 const blogModel = require('../models/blogSchema');
 const blogCommentModel = require('../models/blogComment');
 const reportModel = require('../models/blogReportSchema');
@@ -7,23 +8,39 @@ const { uploadimage } = require('../controller/publicController')
 
 const addBlog = async (req, res, next) => {
   try {
-    const userId = req.userId;
+    console.log("add a blog please");
+    const userEmail = req.user;
+    const user = await userModel.findOne({ email: userEmail })
+
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     const { title, description } = req.body;
     const image = req.files.coverImage;
-
     const coverImage = await uploadimage(image);
-    const user = new mongoose.Types.ObjectId(userId);
+    // const user = new mongoose.Types.ObjectId(userId);
 
-    const newBlog = new blogModel({
-      title,
-      description,
-      coverImage,
-      user
-    });
 
-    newBlog.save();
 
-    res.status(200).json({ message: "blog created" });
+    // Move the user declaration outside the try block
+    let newBlog;
+
+    try {
+      newBlog = new blogModel({
+        title,
+        description,
+        coverImage,
+        user,
+      });
+
+      await newBlog.save();
+      console.log("new blog", newBlog);
+      res.status(200).json({ message: "blog created" });
+    } catch (error) {
+      next(error);
+    }
   } catch (error) {
     next(error);
   }
@@ -88,7 +105,7 @@ const deleteBlog = async (req, res, next) => {
 
 const getAllBlogs = async (req, res, next) => {
   try {
-    console.log("hooiii getblog");
+    // console.log("hooiii getblog");
     const ITEMS_PER_PAGE = 3;
     let page = +req.query.page || 1;
     let search = "";
@@ -103,8 +120,8 @@ const getAllBlogs = async (req, res, next) => {
       title: { $regex: new RegExp(`^${search}`, "i") },
     };
 
-    const allBlogs = await blogModel.find(query).populate("users");
-
+    const allBlogs = await blogModel.find(query).populate("user");
+    // console.log("all blog", allBlogs);
     const startIndex = (page - 1) * ITEMS_PER_PAGE;
     const lastIndex = page * ITEMS_PER_PAGE;
 
@@ -137,29 +154,30 @@ const getAllBlogs = async (req, res, next) => {
 const getBlog = async (req, res, next) => {
   try {
     console.log('hii from getblog');
-    const userId = req.userId;
+    const userEmail = req.user;
+    // console.log("user id", userId);
     const blogId = req.params.id;
-    const user = new mongoose.Types.ObjectId(userId);
+    const user = await userModel.findOne({ email: userEmail })
     let blog = await blogModel
       .findOne({ _id: blogId, isAccess: true })
       .populate({
         path: "comments",
         populate: {
-          path: "users",
+          path: "user",
         },
         options: {
           sort: { createdAt: -1 },
         },
       })
       .populate("reports")
-      .populate("users", "-password");
-
+      .populate("user", "-password");
+    // console.log("blog details", blog);
     if (!blog) {
       res.status(404).json({ message: "blog not found" });
       return;
     }
 
-    const liked = !!(await blogModel.findOne({ _id: blogId, likes: userId }));
+    const liked = !!(await blogModel.findOne({ _id: blogId, likes: user }));
     const reported = !!(await reportModel.findOne({ blog: blogId, user }));
 
     const likes = blog.likes.length;
@@ -179,14 +197,22 @@ const getBlog = async (req, res, next) => {
 
 const getAllMyBlogs = async (req, res, next) => {
   try {
-    console.log("hii from get all my blogs");
+    // console.log("hii from get all my blogs 123");
     const ITEMS_PER_PAGE = 3;
     let page = +req.query.page || 1;
-    const userId = req.userId;
+    const userEmail = req.user;
+    // console.log("userId :", userId);
+    const user = await userModel.findOne({ email: userEmail })
 
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // const userObjectId = new mongoose.Types.ObjectId(userId);
     const query = {
       isAccess: true,
-      user: userId,
+      user: user,
     };
 
     const myBlogs = await blogModel.find(query);
@@ -214,6 +240,7 @@ const getAllMyBlogs = async (req, res, next) => {
     results.myBlogs = myBlogs.slice(startIndex, lastIndex);
 
     res.status(200).json({ results });
+    console.log("result from my blog", results);
   } catch (error) {
     next(error);
   }
@@ -221,9 +248,9 @@ const getAllMyBlogs = async (req, res, next) => {
 
 const handleLike = async (req, res, next) => {
   try {
-    const userId = req.userId;
+    const userEmail = req.user;
     const blogId = req.body.blogId;
-    const user = new mongoose.Types.ObjectId(userId);
+    const user = await userModel.findOne({ email: userEmail })
     const isLiked = await blogModel.findOne({ _id: blogId, likes: user });
 
     if (isLiked) {
@@ -241,9 +268,9 @@ const handleLike = async (req, res, next) => {
 
 const handleReport = async (req, res, next) => {
   try {
-    const userId = req.userId;
+    const userEmail = req.user;
     const { blogId, reason } = req.body;
-    const user = new mongoose.Types.ObjectId(userId);
+    const user = await userModel.findOne({ email: userEmail })
     const blog = new mongoose.Types.ObjectId(blogId);
     // const minimumReports = 10;
 
@@ -292,8 +319,9 @@ const handleReport = async (req, res, next) => {
 
 const handleComment = async (req, res, next) => {
   try {
-    const userId = req.userId;
-    const user = new mongoose.Types.ObjectId(userId);
+    console.log("hii from comment");
+    const userEmail = req.user;
+    const user = await userModel.findOne({ email: userEmail })
     const { blogId, comment } = req.body;
 
     const newComment = blogCommentModel({
@@ -305,6 +333,7 @@ const handleComment = async (req, res, next) => {
     await blogModel.findByIdAndUpdate(blogId, {
       $push: { comments: newAddedComment._id },
     });
+    console.log("comment", newAddedComment);
     res.status(200).json({ message: "comment added" });
   } catch (error) {
     next(error);

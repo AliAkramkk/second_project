@@ -362,7 +362,7 @@ const allListCourse = async (req, res) => {
 const selectedCourse = async (req, res) => {
   try {
     const id = req.params.id;
-    console.log("id", id);
+
     const course = await course_schema.findById({ _id: id }).populate("chef");;
     if (course) {
       res.status(200).json({ course })

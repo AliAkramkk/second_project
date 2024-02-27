@@ -8,7 +8,9 @@ import { MdDelete } from "react-icons/md";
 import ReactPaginate from "react-paginate";
 import ToastHelper from "../../helper/ToastHelper";
 import UserNavbar from "../../component/Navbar/UserNavbar";
-
+import { axiosPrivate } from "../../api/axios";
+import { useSelector } from "react-redux";
+import { selectCurrentToken } from "../../context/authReducer";
 const MyBlog = () => {
   const toastHelper = new ToastHelper();
 
@@ -35,7 +37,7 @@ const MyBlog = () => {
   const [editContent, setEditContent] = useState("");
   const [pageCount, setPageCount] = useState(1);
   const currentPage = useRef();
-
+  const token = useSelector(selectCurrentToken);
   function closeModal() {
     setCoverImage(null);
     setIsOpen(false);
@@ -110,7 +112,10 @@ const MyBlog = () => {
     console.log(postData);
     axiosPrivate
       .post("/user/myBlog", postData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
       })
       .then((res) => {
         console.log(res);
@@ -208,7 +213,7 @@ const MyBlog = () => {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
         setBlogs(res?.data?.results?.myBlogs);
         setPageCount(res?.data?.results?.pageCount);
         currentPage.current = res?.data?.results?.page;
