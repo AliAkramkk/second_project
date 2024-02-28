@@ -252,9 +252,13 @@ function UserNavbar() {
                   {user?.pro ? (
                     user.pro
                   ) : (
-                    <FontAwesomeIcon className="me-1" icon={faUser} size="lg" />
+                    <FontAwesomeIcon
+                      className="me-1 transition duration-300 ease-in-out transform hover:scale-105"
+                      icon={faUser}
+                      size="lg"
+                    />
                   )}
-                  <span className="text-white hover:animate-shake">
+                  <span className="text-gray-100 font-bold hover:animate-shake">
                     {user?.user}
                   </span>
                 </div>

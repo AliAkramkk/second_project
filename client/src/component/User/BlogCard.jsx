@@ -41,7 +41,7 @@ const BlogCard = ({ blog }) => {
     // };
     <div className="flex justify-center">
       <div
-        className="w-full sm:w-1/2 md:w-1/3 lg:w-80  bg-gray-200 mx-2 rounded-md my-4 overflow-hidden hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105"
+        className="w-full sm:w-1/2 md:w-1/3 lg:w-80  bg-gray-200 mx-2 rounded-md my-4 overflow-hidden hover:bg-gray-300 transition duration-1000 ease-out-in transform hover:scale"
         // style={cardStyle1}
       >
         <div className="flex justify-center pt-2">
@@ -49,7 +49,7 @@ const BlogCard = ({ blog }) => {
         </div>
         <Link>
           <img
-            className="w-full h-56 object-cover px-4"
+            className="w-full h-56 object-cover px-4 transition duration-300 ease-in-out transform hover:scale-105"
             style={{ objectFit: "cover" }}
             src={blog.coverImage.url}
             alt=""

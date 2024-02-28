@@ -2,15 +2,18 @@ import { useState, Fragment, useEffect, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Input, Textarea } from "@material-tailwind/react";
 import Dropzone from "react-dropzone";
-import { Toaster } from "react-hot-toast";
+// import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
 import { MdDelete } from "react-icons/md";
+import { Link } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import ToastHelper from "../../helper/ToastHelper";
 import UserNavbar from "../../component/Navbar/UserNavbar";
 import { axiosPrivate } from "../../api/axios";
 import { useSelector } from "react-redux";
 import { selectCurrentToken } from "../../context/authReducer";
+import Swal from "sweetalert2";
 const MyBlog = () => {
   const toastHelper = new ToastHelper();
 
@@ -38,6 +41,23 @@ const MyBlog = () => {
   const [pageCount, setPageCount] = useState(1);
   const currentPage = useRef();
   const token = useSelector(selectCurrentToken);
+
+  const showDeleteAlert = async (onDelete) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      onDelete();
+    }
+  };
+
   function closeModal() {
     setCoverImage(null);
     setIsOpen(false);
@@ -185,22 +205,24 @@ const MyBlog = () => {
     closeImageModal();
   };
 
-  const handleBlogDelete = (id) => {
-    axiosPrivate
-      .delete(`/user/myBlog/${id}`, {
+  const handleDeleteBlog = async (id) => {
+    showDeleteAlert(async () => {
+      // Display confirmation message
+      const result = window.confirm(
+        "Are you sure you want to delete this blog?"
+      );
+
+      // If confirmed, proceed with the deletion
+      const response = await axiosPrivate.delete(`/user/myBlog/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
-          // Add any other headers if needed
         },
         withCredentials: true,
-      })
-      .then((res) => {
-        setFetch(true);
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
       });
+      toast.success(response.data.message);
+      setFetch(true);
+      // return "Blog deleted successfully!";
+    });
   };
 
   const fetchMyBlogs = () => {
@@ -235,45 +257,90 @@ const MyBlog = () => {
 
   return (
     <>
-      <div className="w-screen h-screen overflow-x-hidden">
+      <div className="bg-gray-100 w-screen h-screen overflow-x-hidden">
         <UserNavbar />
-        <div className="w-full h-full p-5 flex flex-col gap-5 bg-gray-300">
-          {blogs &&
-            blogs.map((blog) => (
-              <div className="w-full h-24 rounded-lg shadow-lg bg-white flex gap-5 cursor-pointer">
-                <img
-                  src={blog?.coverImage?.url}
-                  className="w-1/6 h-full object-fit rounded-l-lg hover:bg-black hover:opacity-80"
-                  alt="pic"
-                  onClick={() => openImageModal(blog?._id)}
-                />
-                <div
-                  className="w-full h-full font-bold flex justify-center items-center truncate"
-                  onClick={() =>
-                    openEditModal(blog?._id, blog?.title, blog?.description)
-                  }
-                >
-                  {blog?.title}
-                </div>
-                <div className="bg-gray-400 flex justify-center items-center rounded-r-lg px-10">
-                  <MdDelete
-                    className="text-2xl"
-                    onClick={() => handleBlogDelete(blog?._id)}
-                  />
-                </div>
-              </div>
-            ))}
+        <Toaster />
+        <div className="w-full h-full p-5 flex flex-col gap-5  ">
+          <div className="flex justify-center flex-wrap">
+            {blogs &&
+              blogs.map((blog) => (
+                //   <div className="w-full h-24 rounded-lg shadow-lg bg-white flex gap-5 cursor-pointer">
+                //     <img
+                //       src={blog?.coverImage?.url}
+                //       className="w-1/6 h-full object-fit rounded-l-lg hover:bg-black hover:opacity-80"
+                //       alt="pic"
+                //       onClick={() => openImageModal(blog?._id)}
+                //     />
+                //     <div
+                //       className="w-full h-full font-bold flex justify-center items-center truncate"
+                //       onClick={() =>
+                //         openEditModal(blog?._id, blog?.title, blog?.description)
+                //       }
+                //     >
+                //       {blog?.title}
+                //     </div>
+                //     <div className="bg-gray-400 flex justify-center items-center rounded-r-lg px-10">
+                //       <MdDelete
+                //         className="text-2xl"
+                //         onClick={() => handleBlogDelete(blog?._id)}
+                //       />
+                //     </div>
+                //   </div>
+                // ))}
+                <div className="flex justify-center ">
+                  <div className="w-full sm:w-1/2 md:w-1/3 lg:w-80 bg-gray-200 mx-2 rounded-md my-4 overflow-hidden hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105">
+                    <div className="flex justify-center pt-2">
+                      <p className="text-lg font-semibold text-gray-800 mb-2"></p>
+                    </div>
+                    <Link>
+                      <img
+                        className="w-full h-56 object-cover px-4"
+                        style={{ objectFit: "cover" }}
+                        src={blog.coverImage.url}
+                        alt=""
+                        onClick={() => openImageModal(blog?._id)}
+                      />
+                    </Link>
+                    <div className="p-5">
+                      <Link>
+                        <h5
+                          className="text-gray-900 font-bold text-2xl tracking-tight mb-2"
+                          onClick={() =>
+                            openEditModal(
+                              blog?._id,
+                              blog?.title,
+                              blog?.description
+                            )
+                          }
+                        >
+                          {blog.title}
+                        </h5>
+                      </Link>
+                      <p className="font-normal text-gray-700 mb-3">
+                        {blog.description}
+                      </p>
 
+                      <button
+                        className="text-white bg-red-500 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center mt-2"
+                        onClick={() => handleDeleteBlog(blog._id)}
+                      >
+                        Delete Blog
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
           <div
             className="w-full h-24 rounded-lg shadow-lg bg-white flex gap-5 cursor-pointer"
             onClick={openModal}
           >
-            <div className="w-full h-full font-extrabold text-lg flex justify-center items-center">
+            <div className=" w-full h-16 font-extrabold text-lg flex justify-center items-center hover:bg-gray-300">
               Add Blog
             </div>
           </div>
 
-          <div className="w-full flex justify-center py-5 bg-gray-300">
+          <div className="w-full flex justify-center py-5">
             <ReactPaginate
               nextLabel=">"
               onPageChange={handlePageClick}

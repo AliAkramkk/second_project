@@ -5,14 +5,19 @@ import HomeCard from "../../../component/Card/HomeCard";
 import myImage from "../../../assets/Lets cook/network.png";
 import { auth, selectCurrentToken } from "../../../context/authReducer";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import axios from "../../../api/axios";
+import { useNavigate, Link } from "react-router-dom";
+import axios, { axiosPrivate } from "../../../api/axios";
 import { motion } from "framer-motion";
 import AdminNavbar from "../../../component/Navbar/AdminNavbar";
 import ChefNavbar from "../../../component/Navbar/ChefNavbar";
 import "../../../component/Navbar/UserNavbarStyle.css";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import BlogCard from "../../../component/User/BlogCard";
 const Home = () => {
   const [categories, setCategories] = useState([]);
+  const [blogs, setBlogs] = useState(null);
   const token = useSelector(selectCurrentToken);
   const user = useSelector(auth);
   const navigate = useNavigate();
@@ -35,9 +40,53 @@ const Home = () => {
     fetchData();
   }, []);
 
+  // ...............blogFetching.........................
+  useEffect(() => {
+    const fetchBlog = async () => {
+      try {
+        const response = await axiosPrivate.get("/blogs", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("blog res", response.data.results);
+        setBlogs(response.data.results);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchBlog();
+  }, []);
+
+  // ......blog slider settings......
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 1000,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
+  };
+
   const cardStyle = {
     background:
-      "linear-gradient(to right, rgb(220, 230, 255), rgb(255, 220, 220), rgb(255, 250, 210))",
+      "linear-gradient(to right, rgb(220, 220, 226), rgb(200, 223, 200))",
   };
   const cardStyle1 = {
     background:
@@ -116,7 +165,61 @@ const Home = () => {
             </button> */}
           </div>
         </div>
-
+        <h4 className="text-xl font-bold text-gray-800 mb-4 mt-4 text-center">
+          Popular Blogs
+        </h4>
+        <Slider {...settings}>
+          {blogs && blogs.length !== 0 ? (
+            blogs.map((blog) => (
+              <div key={blog._id} className="flex justify-center">
+                <div className="w-full sm:w-1/2 md:w-1/3 lg:w-80 bg-gray-200 mx-2 rounded-md my-4 overflow-hidden hover:bg-gray-300 ">
+                  <div className=" pt-2">
+                    <p className="text-lg font-semibold text-gray-800 mb-2"></p>
+                  </div>
+                  <Link>
+                    <img
+                      className="w-full h-56 object-cover px-4 transition duration-300 ease-in-out transform hover:scale-105"
+                      style={{ objectFit: "cover" }}
+                      src={blog.coverImage.url}
+                      alt=""
+                    />
+                  </Link>
+                  <div className="p-5">
+                    <div className="flex">
+                      <Link>
+                        <h5 className="text-gray-900 font-bold text-2xl tracking-tight mb-2">
+                          {blog.title}
+                        </h5>
+                      </Link>
+                    </div>
+                    <p className="font-normal text-gray-700 mb-3">
+                      {blog.description}
+                    </p>
+                    <p className="text-gray-500 font-bold text-xs tracking-tight mb-2 text-end">
+                      From: {blog.user.username}
+                    </p>
+                    {/* <button
+                      className="text-white bg-gray-700 hover:bg-gray-900 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center"
+                      // onClick={() =>
+                      //   navigate("/user/blogDetails", {
+                      //     state: { blogId: blog._id, prevLocation: location },
+                      //   })
+                      // }
+                    >
+                      Blog Details
+                    </button> */}
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="h-40 w-full flex justify-center items-center">
+              <div className="text-black text-4xl capitalize font-bold text-center">
+                not found anything<span className="text-red-500">!</span>
+              </div>
+            </div>
+          )}
+        </Slider>
         <Footer />
       </div>
     </>

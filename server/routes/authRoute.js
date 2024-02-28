@@ -8,7 +8,7 @@ router.get('/courses', authController.allListCourse)
 router.get('/selectedCourse/:id', authController.selectedCourse);
 router.get('/categories', authController.homeCategory)
 router.get('/successpayment', usercontroller.handleSuccessPayment);
-
+router.get('/blogs', authController.getBlogs)
 
 router.post('/signup', authController.signUp_post)
 router.post('/signin', authController.signIn_post)

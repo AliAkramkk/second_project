@@ -1,8 +1,11 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import RequerAuth from "../features/RequerAuth";
+import LottieLoading from "../component/Loading/LottieLoading";
 import Profile from "../pages/User/UserProfile/Profile";
-import MyLearning from "../pages/User/MyLearnings/MyLearning";
+const MyLearning = React.lazy(() =>
+  import("../pages/User/MyLearnings/MyLearning")
+);
 import UserRoom from "../pages/User/UserRoom/UserRoom";
 import VideoSection from "../pages/User/VideoSection/VideoSection";
 import Blog from "../pages/User/Blog/Blog";
@@ -15,7 +18,14 @@ function User() {
     <Routes>
       <Route element={<RequerAuth allows={[Role]} />}>
         <Route exact path="/profile" element={<Profile />} />
-        <Route path="/my-learning" element={<MyLearning />} />
+        <Route
+          path="/my-learning"
+          element={
+            <React.Suspense fallback={<LottieLoading />}>
+              <MyLearning />{" "}
+            </React.Suspense>
+          }
+        />
         <Route path="/live-room/:roomCode" element={<UserRoom />} />
         <Route path="/coursefullvideos" element={<VideoSection />} />
         <Route path="/blog" element={<Blog />} />
