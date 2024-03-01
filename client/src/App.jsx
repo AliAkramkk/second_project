@@ -9,7 +9,7 @@ const Home = React.lazy(() => import("./pages/User/Home/Home"));
 import UserSignup from "./pages/SignUp/UserSignup";
 // import UserSignin from "./pages/SignIn/UserSignin";
 const UserSignin = React.lazy(() => import("./pages/SignIn/UserSignin"));
-import OTP from "./pages/OTP/Otp";
+import OTP from "./pages/OTP/OTP";
 import Layout from "./features/Layout";
 import User from "./routers/User";
 import Admin from "./routers/Admin";
