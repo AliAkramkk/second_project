@@ -64,48 +64,54 @@ const MyLearning = () => {
         <div className="text-center mt-8 mb-8">
           <h2 className="text-3xl font-bold text-black-600">MY LEARNINGS</h2>
         </div>
-
-        <div className="flex justify-center  gap-4  flex-wrap mt-8">
-          {currentCourses.map((course, i) => (
-            <div
-              key={i}
-              className="w-full sm:w-1/2 md:w-1/3 lg:w-80  bg-gray-200 mx-2 rounded-md my-4 overflow-hidden hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105"
-              style={cardStyle1}
-            >
-              <div className="flex justify-center pt-2">
-                <p className="text-lg font-semibold text-gray-800 mb-2">
-                  {course.title}
-                </p>
-              </div>
-              <div className="h-48 overflow-hidden">
-                <img
-                  className="w-full h-full object-cover px-4"
-                  src={course.coverImage.url}
-                  alt={course.title}
-                />
-              </div>
-              <div className="p-4 flex-grow">
-                <p className="text-sm text-gray-600 h-12 overflow-hidden leading-4 mb-4">
-                  {course.blurb}
-                </p>
-                <div className="flex justify-between items-center">
-                  <button
-                    onClick={() =>
-                      usenavigate("/user/coursefullvideos", {
-                        state: { course_id: course._id },
-                      })
-                    }
-                    className="btn hvr-shutter-in-horizontal justify-center  rounded-md border-black text-black  px-4 py-2 hover:bg-slate-200 transition duration-300 ease-in-out"
-                  >
-                    Watch now
-                    {/* <FontAwesomeIcon icon={faArrowRight} className="ml-2" /> */}
-                  </button>
+        {currentCourses.length === 0 ? (
+          <div className="text-center mt-8 mb-8">
+            <p className="text-lg font-medium text-gray-900">
+              Hurry and purchase a course to start your culinary journey!
+            </p>
+          </div>
+        ) : (
+          <div className="flex justify-center  gap-4  flex-wrap mt-8">
+            {currentCourses.map((course, i) => (
+              <div
+                key={i}
+                className="w-full sm:w-1/2 md:w-1/3 lg:w-80  bg-gray-200 mx-2 rounded-md my-4 overflow-hidden hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105"
+                style={cardStyle1}
+              >
+                <div className="flex justify-center pt-2">
+                  <p className="text-lg font-semibold text-gray-800 mb-2">
+                    {course.title}
+                  </p>
+                </div>
+                <div className="h-48 overflow-hidden">
+                  <img
+                    className="w-full h-full object-cover px-4"
+                    src={course.coverImage.url}
+                    alt={course.title}
+                  />
+                </div>
+                <div className="p-4 flex-grow">
+                  <p className="text-sm text-gray-600 h-12 overflow-hidden leading-4 mb-4">
+                    {course.blurb}
+                  </p>
+                  <div className="flex justify-between items-center">
+                    <button
+                      onClick={() =>
+                        usenavigate("/user/coursefullvideos", {
+                          state: { course_id: course._id },
+                        })
+                      }
+                      className="btn hvr-shutter-in-horizontal justify-center  rounded-md border-black text-black  px-4 py-2 hover:bg-slate-200 transition duration-300 ease-in-out"
+                    >
+                      Watch now
+                      {/* <FontAwesomeIcon icon={faArrowRight} className="ml-2" /> */}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-
+            ))}
+          </div>
+        )}
         <div className="mt-4 p-4 flex justify-center">
           {pageNumbers.map((number) => (
             <button

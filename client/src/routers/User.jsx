@@ -8,7 +8,7 @@ const MyLearning = React.lazy(() =>
 );
 import UserRoom from "../pages/User/UserRoom/UserRoom";
 import VideoSection from "../pages/User/VideoSection/VideoSection";
-import Blog from "../pages/User/Blog/Blog";
+const Blog = React.lazy(() => import("../pages/User/Blog/Blog"));
 import MyBlog from "../pages/User/MyBlog";
 import BlogDetails from "../pages/User/Blog/BlogDetails";
 
@@ -28,7 +28,14 @@ function User() {
         />
         <Route path="/live-room/:roomCode" element={<UserRoom />} />
         <Route path="/coursefullvideos" element={<VideoSection />} />
-        <Route path="/blog" element={<Blog />} />
+        <Route
+          path="/blog"
+          element={
+            <React.Suspense fallback={<LottieLoading />}>
+              <Blog />{" "}
+            </React.Suspense>
+          }
+        />
         <Route path="/blogDetails" element={<BlogDetails />} />
         <Route path="/my-blog" element={<MyBlog />} />
       </Route>

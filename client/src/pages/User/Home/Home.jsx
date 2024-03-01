@@ -15,12 +15,33 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import BlogCard from "../../../component/User/BlogCard";
+import TestimonialCard from "../../../component/Card/Reviewcard";
+import Reviewcard from "../../../component/Card/Reviewcard";
 const Home = () => {
   const [categories, setCategories] = useState([]);
   const [blogs, setBlogs] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const token = useSelector(selectCurrentToken);
   const user = useSelector(auth);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchReview = async () => {
+      try {
+        const response = await axiosPrivate.get("/reviews", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // Add any other headers if needed
+          },
+        });
+        console.log("res data", response.data.reviews);
+        setReviews(response.data.reviews);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchReview();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -83,6 +104,13 @@ const Home = () => {
       },
     ],
   };
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
+  const toggleDescription = () => {
+    setShowFullDescription(!showFullDescription);
+  };
+
+  const truncatedDescription = blogs?.description?.slice(0, 100);
 
   const cardStyle = {
     background:
@@ -135,17 +163,17 @@ const Home = () => {
             </motion.div>
           ))}
         </div>
-
+        {/* <Slider {...settings}> */}
         <div
           className="bg-white rounded-lg shadow dark:bg-gray-900 m-4"
           style={cardStyle3}
         >
           <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
             <div className="sm:flex sm:items-center sm:justify-between">
-              <h1 className="text-2xl font-bold text-gray-800 mb-4 mt-4">
-                PLATFORM FOR CONNECT AND
+              <h1 className="text-2xl font-bold text-gray-800 mb-4 mt-2">
+                Experience the Live video
                 <br />
-                BUILD YOUR CAREER
+                Call with the Chef
                 <br />
                 <span className="text-xs text-gray-700 ml-4 ">
                   "OUR PLATFORM FACILITATES DIRECT COMMUNICATION BETWEEN USERS
@@ -155,7 +183,11 @@ const Home = () => {
                 </span>
               </h1>
 
-              <img src={myImage} alt="Your Image" className="w-64 h-48" />
+              <img
+                src={myImage}
+                alt="Your Image"
+                className="w-64 h-48  transition duration-300 ease-in-out transform hover:scale-105"
+              />
             </div>
             {/* <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md ml-7 mt-6 "
@@ -165,6 +197,7 @@ const Home = () => {
             </button> */}
           </div>
         </div>
+        {/* </Slider> */}
         <h4 className="text-xl font-bold text-gray-800 mb-4 mt-4 text-center">
           Popular Blogs
         </h4>
@@ -178,7 +211,7 @@ const Home = () => {
                   </div>
                   <Link>
                     <img
-                      className="w-full h-56 object-cover px-4 transition duration-300 ease-in-out transform hover:scale-105"
+                      className="w-full h-56 object-cover px-4 transition duration-300 ease-in-out transform hover:scale-150"
                       style={{ objectFit: "cover" }}
                       src={blog.coverImage.url}
                       alt=""
@@ -220,6 +253,19 @@ const Home = () => {
             </div>
           )}
         </Slider>
+        {/* <div className="m-5 flex justify-center">
+          {Array.isArray(reviews) && reviews.length > 0 ? (
+            reviews.map((review) => (
+              <Reviewcard
+                key={review.date}
+                review={review}
+                coverImage={review.coverImage.url}
+              />
+            ))
+          ) : (
+            <p>No reviews available</p>
+          )}
+        </div> */}
         <Footer />
       </div>
     </>

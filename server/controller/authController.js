@@ -399,6 +399,16 @@ const getBlogs = async (req, res) => {
     res.status(500).json({ message: "Internal server error" })
   }
 }
+const courseReview = async (req, res) => {
+  try {
+    const reviews = await course_schema.find({ reviews: { $exists: true, $ne: [] } });
+    console.log(reviews);
+    res.status(200).json({ reviews });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 module.exports = {
   signUp_post,
   signIn_post,
@@ -411,5 +421,6 @@ module.exports = {
   signIn_google,
   selectedCourse,
   homeCategory,
-  getBlogs
+  getBlogs,
+  courseReview
 };

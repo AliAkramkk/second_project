@@ -21,6 +21,9 @@ import SetPassword from "./pages/ForgotPassword/SetPassword";
 const AllCourse = React.lazy(() => import("./pages/User/AllCourses/AllCourse"));
 import Unotherised from "./pages/Unotherised/Unotherised";
 import CourseDetails from "./pages/User/CourseDetails/CourseDetails";
+import About from "./pages/User/Footer/About";
+import Contact from "./pages/User/Footer/Contact";
+import PrivacyPage from "./pages/User/Footer/PrivacyPage";
 
 function App() {
   return (
@@ -48,6 +51,9 @@ function App() {
             </React.Suspense>
           }
         />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/privacypolicy" element={<PrivacyPage />} />
         <Route path="/otp" element={<OTP />} />
         <Route exact path="/signup" element={<UserSignup />} />
         <Route exact path="/forgot-password" element={<ForgetPassword />} />

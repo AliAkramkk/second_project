@@ -72,7 +72,7 @@ const Blog = () => {
               style={{ color: "black" }}
             />
             <div
-              className=" cursor-pointer"
+              className=" cursor-pointer  transition duration-300 ease-in-out transform hover:scale-150"
               // onClick={() =>
               //   navigate("/all-courses", { state: { searchTerm: searchTerm } })
               // }

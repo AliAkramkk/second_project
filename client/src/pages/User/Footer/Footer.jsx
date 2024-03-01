@@ -1,8 +1,12 @@
 import React from "react";
 import myLogo from "../../../assets/Lets cook/log1.png";
 import myBackground from "../../../assets/Lets cook/bg4.jpg";
-
+import { useNavigate, Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { auth } from "../../../context/authReducer";
 const Footer = () => {
+  const navigate = useNavigate();
+
   const footerStyle = {
     background:
       "linear-gradient(to right, rgb(243, 244, 246), rgb(209, 213, 219))",
@@ -25,14 +29,17 @@ const Footer = () => {
           </a>
           <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
             <li>
-              <a href="#" className="hover:underline me-4 md:me-6">
+              <Link to="/about" className="hover:underline me-4 md:me-6">
                 About
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="hover:underline me-4 md:me-6">
+              <Link
+                to="/privacypolicy"
+                className="hover:underline me-4 md:me-6"
+              >
                 Privacy Policy
-              </a>
+              </Link>
             </li>
             <li>
               <a href="#" className="hover:underline me-4 md:me-6">
@@ -40,9 +47,9 @@ const Footer = () => {
               </a>
             </li>
             <li>
-              <a href="#" className="hover:underline">
-                Contact
-              </a>
+              <Link to="/contact" className="hover:underline me-4 md:me-6">
+                contact
+              </Link>
             </li>
           </ul>
         </div>

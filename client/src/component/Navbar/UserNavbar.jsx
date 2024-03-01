@@ -194,7 +194,7 @@ function UserNavbar() {
         <div>
           <Link
             to="/"
-            className="text-gray-600 text-2xl font-bold hover:text-black"
+            className="text-gray-600 text-2xl font-bold hover:text-black  transition duration-300 ease-in-out transform hover:scale-150"
           >
             Let's Cook
           </Link>
@@ -253,7 +253,7 @@ function UserNavbar() {
                     user.pro
                   ) : (
                     <FontAwesomeIcon
-                      className="me-1 transition duration-300 ease-in-out transform hover:scale-105"
+                      className="me-1 transition duration-300 ease-in-out transform hover:scale-125"
                       icon={faUser}
                       size="lg"
                     />

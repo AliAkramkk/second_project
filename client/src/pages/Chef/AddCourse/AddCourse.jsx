@@ -173,13 +173,7 @@ const AddCourse = () => {
       setValues({ ...values, category: selectedCategory });
     }
   };
-  // const handleCoverImageChange = (e) => {
-  //   setCoverImage(e.currentTarget.files[0]);
-  // };
 
-  // const handleDemoVideoChange = (e) => {
-  //   setDemoVideo(e.currentTarget.files[0]);
-  // };
   const handleCoverImageChange = (e) => {
     const file = e.target.files[0];
 

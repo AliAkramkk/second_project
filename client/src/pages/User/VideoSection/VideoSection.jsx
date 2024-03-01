@@ -17,6 +17,7 @@ const VideoSection = () => {
   const [courseTitle, setCourseTitle] = useState("");
   const [chapters, setChapters] = useState([]);
   const [reviews, setReviews] = useState([]);
+
   const [isReviewAdded, setIsReviewAdded] = useState(false);
   const location = useLocation();
   const course_id = location?.state?.course_id;
@@ -26,6 +27,22 @@ const VideoSection = () => {
     user: user,
     course_id: course_id,
   });
+  const [completedChapters, setCompletedChapters] = useState(() => {
+    // Load completed chapters from localStorage or an initial value
+    const storedChapters = localStorage.getItem("completedChapters");
+    return storedChapters ? JSON.parse(storedChapters) : [];
+  });
+
+  const handleChapterCompletion = (completedChapterId) => {
+    setCompletedChapters((prevChapters) => {
+      const updatedChapters = [...prevChapters, completedChapterId];
+      localStorage.setItem(
+        "completedChapters",
+        JSON.stringify(updatedChapters)
+      );
+      return updatedChapters;
+    });
+  };
 
   const [showFullDescription, setShowFullDescription] = useState(false);
 
@@ -231,7 +248,7 @@ const VideoSection = () => {
             <h2 className="text-2xl mt-8 md:mt-0 font-bold mb-4">
               Full Chapters
             </h2>
-            {chapters.map((chapter, i) => (
+            {/* {chapters.map((chapter, i) => (
               <div
                 key={i}
                 onClick={() => setCurrentVideo(chapter)}
@@ -247,7 +264,7 @@ const VideoSection = () => {
                 className="w-1/3 h-full min-w-[110px] rounded-md  mb-4 md:mb-0"
               /> */}
 
-                <img
+            {/* <img
                   src={chapter.coverImage.url}
                   alt="video"
                   className="w-1/4 h-full min-w-[70px] rounded-md  mb-4 md:mb-0"
@@ -259,6 +276,54 @@ const VideoSection = () => {
                     {chapter.description}
                   </p>
                 </div>
+              </div>  ))}*/}
+
+            {chapters.map((chapter) => (
+              <div
+                key={chapter.id}
+                onClick={() => {
+                  const isCompleted = completedChapters.includes(chapter.id);
+                  if (isCompleted) {
+                    setCurrentVideo(chapter);
+                  } else {
+                    toast.error("Complete the previous chapter first.");
+                  }
+                }}
+                className={`w-full ${
+                  currentVideo.id === chapter.id
+                    ? "bg-blue-200 md:scale-105 shadow-lg"
+                    : completedChapters.includes(chapter.id)
+                    ? "bg-green-200" // Change background color for completed chapters
+                    : "bg-white "
+                } mt-1 border border-gray-300 cursor-pointer h-24 overflow-hidden rounded p-2 flex flex-row items-center`}
+              >
+                <img
+                  src={chapter.coverImage.url}
+                  alt="video"
+                  className="w-1/4 h-full min-w-[70px] rounded-md mb-4 md:mb-0"
+                />
+
+                <div className="md:ms-4 flex-1">
+                  <h1 className="font-semibold  my-1">{chapter.title}</h1>
+                  <p className="text-sm text-gray-600 h-12 overflow-hidden leading-4 mb-2">
+                    {chapter.description}
+                  </p>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent the chapter div from being clicked when the button is clicked
+                    handleChapterCompletion(chapter.id);
+                  }}
+                  className={`${
+                    completedChapters.includes(chapter.id)
+                      ? "bg-green-500"
+                      : "bg-blue-500"
+                  }  text-white py-2 px-4 rounded-md`}
+                >
+                  {completedChapters.includes(chapter.id)
+                    ? "completed"
+                    : "pending"}
+                </button>
               </div>
             ))}
           </div>

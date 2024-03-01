@@ -6,6 +6,7 @@ const category_schema = require('../models/categorySchema');
 const payment_schema = require('../models/paymentSchema')
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+// const { ObjectId } = require('mongoose').Types;
 // const public_controller = require('../controller/publicController')
 
 const getStudent = async (req, res) => {
@@ -35,7 +36,7 @@ const addCourse = async (req, res) => {
       title,
       category,
       description,
-      coverImage: uploadImageResult, 
+      coverImage: uploadImageResult,
       demoVideo: uploadVideoResult,
       price,
       blurb,
@@ -61,7 +62,7 @@ const editCourse = async (req, res) => {
     const { title, category, description, price, aboutChef, blurb, user } = req.body;
 
     const updatedCourseData = req.body;
-   
+
     if (req.files && req.files.coverImage) {
       const uploadImageResult = await public_controller.uploadimage(req.files.coverImage);
       updatedCourseData.coverImage = uploadImageResult;
@@ -199,7 +200,7 @@ const deleteChapter = async (req, res) => {
       return res.status(404).json({ message: "Course not found" })
     }
     const result = await course_schema.findOneAndUpdate({ _id: id },
-      { $pull: { chapters: { id: index }, }, }, { new: true });
+      { $pull: { chapters: { id: new ObjectId(index) }, }, }, { new: true });
 
     if (result) {
       res.status(200).json({ message: "Chapter deleted successfully" });
@@ -219,25 +220,28 @@ const addChapter = async (req, res) => {
     const { chapterNo, title, description } = req.body;
     const { id } = req.body;
     const { coverImage, demoVideo } = req.files;
-    // console.log(id);
-    // console.log(coverImage, demoVideo);
 
-    const duplicate = await course_schema.findOne({
-      chapters: { $elemMatch: { id: chapterNo } },
+
+    const chapterNoAsNumber = parseInt(chapterNo, 10);
+
+    if (isNaN(chapterNoAsNumber)) {
+      // Handle the case where chapterNo is not a valid number
+      res.status(422).json({ message: "Invalid chapter number!" });
+      return;
+    }
+    const existingChapter = await course_schema.findOne({
+      _id: id,
+      'chapters.id': new ObjectId(chapterNoAsNumber),
     });
-    // console.log("duplicate", duplicate);
-    if (duplicate) {
+
+    if (existingChapter) {
       res.status(422).json({ message: "Chapter already exists!" });
     } else {
-      const uploadVideoResult = await public_controller.uploadVideo(
-        demoVideo
-      );
-      const uploadImageResult = await public_controller.uploadimage(
-        coverImage
-      );
+      const uploadVideoResult = await public_controller.uploadVideo(demoVideo);
+      const uploadImageResult = await public_controller.uploadimage(coverImage);
 
       const newChapter = {
-        id: chapterNo,
+        id: new ObjectId(), // Generate a new ObjectId
         title,
         description,
         coverImage: uploadImageResult,
@@ -248,6 +252,7 @@ const addChapter = async (req, res) => {
         { _id: id },
         { $push: { chapters: newChapter } }
       );
+
       console.log("newChapter", savedChapter);
       res.status(201).json({ message: "Chapter uploaded successfully!" });
     }
@@ -256,6 +261,7 @@ const addChapter = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 const currentChefCourse = async (req, res) => {
   try {

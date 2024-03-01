@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
 const BlogCard = ({ blog }) => {
@@ -6,6 +6,12 @@ const BlogCard = ({ blog }) => {
   const location = useLocation();
   const maxLength = 200;
 
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
+  const toggleDescription = () => {
+    setShowFullDescription(!showFullDescription);
+  };
+  const truncatedDescription = blog?.description?.slice(0, 100);
   const cardStyle1 = {
     background:
       "linear-gradient(to right, rgb(250, 230, 205), rgb(255, 235, 235), rgb(255, 255, 225))",
@@ -61,7 +67,27 @@ const BlogCard = ({ blog }) => {
               {blog.title}
             </h5>
           </Link>
-          <p className="font-normal text-gray-700 mb-3">{blog.description}</p>
+          <p className="font-normal text-gray-700 mb-3">
+            {showFullDescription ? blog?.description : truncatedDescription}
+            {!showFullDescription && truncatedDescription?.length >= 20 && (
+              <span
+                className="text-blue-500 cursor-pointer"
+                onClick={toggleDescription}
+              >
+                {" "}
+                Read More
+              </span>
+            )}
+            {showFullDescription && (
+              <span
+                className="text-blue-500 cursor-pointer"
+                onClick={toggleDescription}
+              >
+                {" "}
+                Read Less
+              </span>
+            )}
+          </p>
           <button
             className="text-white bg-gray-700 hover:bg-gray-900 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center"
             onClick={() =>
